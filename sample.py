@@ -40,7 +40,7 @@ def odd_numbers(n: int) -> list[int]:
         else:
             continue
     else:  # no break
-        print("infinite loop finished")
+        pass # infinite loop finished
     return result
 
 

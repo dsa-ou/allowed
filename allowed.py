@@ -7,23 +7,26 @@ import re
 
 # ----- configuration -----
 
-# STATEMENTS contains the `ast` classes of the allowed statements.
-# See https://docs.python.org/3/library/ast.html#statements for the available classes.
-# For example, to allow `break` and `continue`, add `ast.Break` and `ast.Continue`.
+# FILE_UNIT is a regexp that extracts the unit from the file's name.
+# If there's a match, the unit number is the first group.
+# If your file names don't include the unit number, set `FILE_UNIT` to `None`.
+# For example, if the unit number appears last, set it to `r"(\d+).py$"`.
 
-STATEMENTS = (
-    ast.Assign,
-    ast.Expr,
-    ast.If,
-    ast.For,
-    ast.While,
-    ast.FunctionDef,
-    ast.Return,
-    ast.Pass,
-    ast.Import,
-    ast.ImportFrom,
-    ast.ClassDef,
-)
+FILE_UNIT = r"^(\d+)"   # file name starts with the unit number
+
+# STATEMENTS maps unit numbers to the statements they introduce.
+# Statements are represented by the corresponding `ast` classes, taken from
+# https://docs.python.org/3/library/ast.html#statements.
+# For example, if `break` and `continue` are introduced in unit 5, add an entry
+# `5: (ast.Break, ast.Continue),`.
+
+STATEMENTS = {
+    2: (ast.Expr, ast.Assign, ast.Import, ast.FunctionDef, ast.Return),
+    3: (ast.If,),
+    4: (ast.For, ast.While),
+    6: (ast.Pass, ast.ClassDef),
+    7: (ast.ImportFrom,),
+}
 
 FOR_ELSE = False  # allow for-else statements?
 WHILE_ELSE = False  # allow while-else statements?
@@ -38,8 +41,16 @@ WHILE_ELSE_MSG = "disallowed else in while-loop"
 class AllowedChecker:
     """Check if only the allowed statements are used."""
 
-    def __init__(self, filename: str) -> None:
+    def __init__(self, filename: str, unit: int = -1) -> None:
         """Open and parse the given file."""
+        self._statements = ()
+        if unit == -1 and FILE_UNIT:
+            match = re.match(FILE_UNIT, filename)
+            if match:
+                unit = int(match.group(1))
+        for key, statements in STATEMENTS.items():
+            if unit == -1 or key <= unit:
+                self._statements += statements
         self._filename = filename
         with open(filename) as file:
             source = file.read()
@@ -59,7 +70,7 @@ class AllowedChecker:
         """Run the checker."""
         for node in ast.walk(self._tree):
             if isinstance(node, ast.stmt):
-                if not isinstance(node, STATEMENTS):
+                if not isinstance(node, self._statements):
                     self._msg(node, STMT_MSG)
                 elif isinstance(node, ast.For) and not FOR_ELSE:
                     if node.orelse:
@@ -72,7 +83,7 @@ class AllowedChecker:
             print(f"{self._filename}:{line}: {message}{extra}")
 
 
-def check_folder(folder: str) -> None:
+def check_folder(folder: str, unit: int = -1) -> None:
     """Check all Python files in `folder` and its subfolders."""
     for current, subfolders, files in os.walk(folder):
         subfolders.sort()
@@ -80,7 +91,7 @@ def check_folder(folder: str) -> None:
             if filename.endswith(".py"):
                 path = os.path.join(current, filename)
                 try:
-                    AllowedChecker(path).run()
+                    AllowedChecker(path, unit).run()
                 except SyntaxError as error:
                     message = str(error)
                     match = re.search(r"\(.*, line (\d+)\)", message)
@@ -93,10 +104,13 @@ def check_folder(folder: str) -> None:
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python restrict.py <filename or folder>")
+    if len(sys.argv) < 2:
+        print("Usage: python restrict.py <filename or folder> [<unit>]")
+        print()
+        print("unit: a non-negative number; if omitted, use all units")
         sys.exit(1)
+    unit = -1 if len(sys.argv) < 3 else int(sys.argv[2])
     if os.path.isdir(sys.argv[1]):
-        check_folder(sys.argv[1])
+        check_folder(sys.argv[1], unit)
     else:
-        AllowedChecker(sys.argv[1]).run()
+        AllowedChecker(sys.argv[1], unit).run()
