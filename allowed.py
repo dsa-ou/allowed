@@ -45,14 +45,15 @@ class AllowedChecker:
             source = file.read()
         self._tree = ast.parse(source)
         self._source = source.splitlines()
+        self._messages = []
 
     def _msg(self, node: ast.AST, message: str) -> None:
         line = node.lineno
-        print(f"{self._filename}:{line}: {message}", end="")
         if message is STMT_MSG:
-            print(":", self._source[line - 1].strip())
+            extra = ": " + self._source[line - 1].strip()
         else:
-            print()
+            extra = ""
+        self._messages.append((line, message, extra))
 
     def run(self) -> None:
         """Run the checker."""
@@ -66,6 +67,9 @@ class AllowedChecker:
                 elif isinstance(node, ast.While) and not WHILE_ELSE:
                     if node.orelse:
                         self._msg(node.orelse[0], WHILE_ELSE_MSG)
+        self._messages.sort()
+        for (line, message, extra) in self._messages:
+            print(f"{self._filename}:{line}: {message}{extra}")
 
 
 def check_folder(folder: str) -> None:
