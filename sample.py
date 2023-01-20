@@ -40,9 +40,11 @@ def odd_numbers(n: int) -> list[int]:
         else:
             continue
     else:  # no break
-        pass # infinite loop finished
+        pass  # infinite loop finished
     return result
 
 
 FIRST = 5
 print(f"first {FIRST} odd numbers: {odd_numbers(FIRST)}")
+
+print(1 << 6)

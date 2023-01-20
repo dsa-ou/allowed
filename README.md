@@ -1,4 +1,8 @@
-This program allows you to check if a Python program only uses certain statements.
+This program allows you to check if a Python program only uses certain constructs.
+The check is purely syntactic: the various uses of a construct can't be
+individually allowed or disallowed. For example, you can't allow integer addition
+and disallow string concatenation (or vice versa): either you allow
+the `+` operator (and all its uses) or not.
 
 Like all static analysis tools, `allowed` isn't perfect and will never be.
 It will likely let pass some violations of the subset of Python you intend to enforce.
@@ -18,6 +22,10 @@ If you want to check all Python files in a folder and its subfolders, type:
 python allowed.py /home/my_project
 ```
 or whatever the path to the folder is.
+
+If a line of code uses several disallowed constructs, it's reported multiple times.
+If the Python parser doesn't keep the line number for a disallowed construct,
+it's reported first, at 'line zero'.
 
 To check code in a Jupyter notebook, save it as a Python file and check that file.
 In the classic web interface, use menu File -> Download as -> Python.
@@ -57,8 +65,8 @@ python allowed.py 01_submission.py 5
 The program is already configured for our course,
 [M269](https://www.open.ac.uk/courses/modules/m269), but you can change that.
 
-You can define which statements are introduced in which units by setting
-the constant `STATEMENTS` in `allowed.py`. See the file for details.
+You can define which constructs are introduced in which units by setting
+the constant `CONSTRUCTS` in `allowed.py`. See the file for details.
 
 You can also decide whether to allow the `else` clause in for- and while-loops
 by setting the Boolean constants `FOR_ELSE` and `WHILE_ELSE` in `allowed.py`.
