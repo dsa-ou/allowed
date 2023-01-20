@@ -72,7 +72,7 @@ You can also decide whether to allow the `else` clause in for- and while-loops
 by setting the Boolean constants `FOR_ELSE` and `WHILE_ELSE` in `allowed.py`.
 
 You can set constant `FILE_UNIT` to the
-[regular expression](https://docs.python.org/3/library/re.html)
+[regular expression](https://docs.python.org/3/howto/regex.html)
 that extracts the unit number from the file name. See the file for details.
 
 ## Contributing
