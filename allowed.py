@@ -73,6 +73,19 @@ CONSTRUCTS = {
     ),
 }
 
+# IMPORTS maps units to the modules and names they introduce.
+IMPORTS = {
+    2: {"math": ["floor", "ceil", "trunc", "pi"]},
+    6: {"math": ["inf"]},
+    7: {"collections": ["deque"]},
+    8: {"collections": ["Counter"]},
+    11: {"math": ["sqrt", "factorial"], "itertools": ["permutations", "combinations"]},
+    14: {"random": ["shuffle"], "typing": ["Callable"]},
+    16: {"heapq": ["heappush", "heappop", "heapify"]},
+    17: {"typing": ["Hashable"], "random": ["random"]},
+    27: {"inspect": ["getsource"]},
+}
+
 FOR_ELSE = False  # allow for-else statements?
 WHILE_ELSE = False  # allow while-else statements?
 
@@ -100,6 +113,20 @@ def get_constructs(last_unit: int) -> tuple[ast.AST]:
             allowed += constructs
     return allowed
 
+def get_imports(last_unit: int) -> dict[str, list[str]]:
+    """Return the allowed imports up to the given unit.
+
+    If `last_unit` is zero, return the imports in all units.
+    """
+    allowed = {}
+    for unit, imports in IMPORTS.items():
+        if not last_unit or unit <= last_unit:
+            for module, names in imports.items():
+                if module in allowed:
+                    allowed[module].extend(names)
+                else:
+                    allowed[module] = names
+    return allowed
 
 IGNORE = (  # wrapper nodes that can be skipped
     ast.Module,
@@ -147,13 +174,13 @@ OPERATORS = {
 }
 
 
-def check_tree(tree: ast.AST, allowed: tuple, source: list) -> list:
-    """Return the constructs in the tree that are not allowed."""
+def check_tree(tree: ast.AST, constructs: tuple, imports: dict, source: list) -> list:
+    """Check if tree only uses allowed constructs and imports."""
     errors = []
     for node in ast.walk(tree):
         if isinstance(node, IGNORE):
             pass
-        elif not isinstance(node, allowed):
+        elif not isinstance(node, constructs):
             if isinstance(node, OPERATOR_CLASSES):
                 line = 0
                 message = OPERATORS.get(type(node), "operator not allowed")
@@ -161,6 +188,30 @@ def check_tree(tree: ast.AST, allowed: tuple, source: list) -> list:
                 line = node.lineno
                 message = source[line - 1].strip()
             errors.append((line, message))
+        elif isinstance(node, ast.Import):
+            for alias in node.names:
+                if alias.name not in imports:
+                    line = alias.lineno
+                    message = f"import {alias.name}"
+                    errors.append((line, message))
+        elif isinstance(node, ast.ImportFrom):
+            if node.module not in imports:
+                line = node.lineno
+                message = f"from {node.module} import ..."
+                errors.append((line, message))
+            else:
+                for alias in node.names:
+                    if alias.name not in imports[node.module]:
+                        line = alias.lineno
+                        message = f"from {node.module} import {alias.name}"
+                        errors.append((line, message))
+        elif isinstance(node, ast.Attribute) and isinstance(node.value, ast.Name):
+            module = node.value.id
+            attribute = node.attr
+            if module in imports and attribute not in imports[module]:
+                line = node.lineno
+                message = f"{module}.{attribute}"
+                errors.append((line, message))
         elif isinstance(node, ast.For) and node.orelse and not FOR_ELSE:
             line = node.orelse[0].lineno
             message = "else in for-loop"
@@ -191,12 +242,12 @@ def check_file(filename: str, last_unit: int) -> None:
         with open(filename) as file:
             source = file.read()
         tree = ast.parse(source)
-        if last_unit:
-            allowed = get_constructs(last_unit)
-        else:
-            allowed = get_constructs(get_unit(filename))
+        if not last_unit:
+            last_unit = get_unit(filename)
+        constructs = get_constructs(last_unit)
+        imports = get_imports(last_unit)
         source = source.splitlines()
-        errors = check_tree(tree, allowed, source)
+        errors = check_tree(tree, constructs, imports, source)
         errors.sort()
         for line, message in errors:
             print(f"{filename}:{line}: {message}")

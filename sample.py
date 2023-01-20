@@ -1,7 +1,8 @@
 """Sample code to test the checker."""
 
 import math
-
+from random import shuffle, choice
+import sys
 
 def is_prime(n: int) -> bool:
     """Check if a positive integer is prime."""
@@ -48,3 +49,4 @@ FIRST = 5
 print(f"first {FIRST} odd numbers: {odd_numbers(FIRST)}")
 
 print(1 << 6)
+print(math.e)
