@@ -2,7 +2,8 @@
 
 import math
 from random import shuffle, choice
-import sys
+import types
+
 
 def is_prime(n: int) -> bool:
     """Check if a positive integer is prime."""
@@ -48,5 +49,7 @@ def odd_numbers(n: int) -> list[int]:
 FIRST = 5
 print(f"first {FIRST} odd numbers: {odd_numbers(FIRST)}")
 
-print(1 << 6)
-print(math.e)
+print("2^6 =", 1 << 6)
+print("Euler number e =", math.e)
+if type(odd_numbers) == types.FunctionType:
+    print("odd_numbers is a function")

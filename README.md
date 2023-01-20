@@ -1,14 +1,16 @@
 This program allows you to check if a Python program only uses certain constructs.
-The check is purely syntactic: the various uses of a construct can't be
-individually allowed or disallowed. For example, you can't allow integer addition
+The check is purely syntactic and therefore assumes the program compiles.
+The various uses of a construct can't be individually allowed or disallowed.
+For example, you can't allow integer addition
 and disallow string concatenation (or vice versa): either you allow
 the `+` operator (and all its uses) or not.
 
 Like all static analysis tools, `allowed` isn't perfect and will never be.
-It will likely let pass some violations of the subset of Python you intend to enforce.
+There will be false positives (code reported as a violation, but isn't)
+and false negatives (code is a violation but isn't reported).
 
 ## Usage
-Download the files in this repository and type in a terminal or Command Prompt:
+Download the files in this repository and type in a terminal:
 ```bash
 python allowed.py path/to/folder_or_file
 ```
@@ -36,17 +38,15 @@ a Python construct introduced in a unit can be used in any subsequent unit.
 
 Typing a unit number after the file or folder path will check the file(s)
 only against the Python constructs introduced up to that unit (inclusive).
-For example, to check your submission to an assessment that covers units 1 to 5,
-check it with:
+Checking a submission to an assessment that covers units 1 to 5 can be done with:
 ```bash
 python allowed.py submission.py 5
 ```
-For example, try
+To see the weekly difference in the allowed constructs, type for example:
 ```bash
 python allowed.py sample.py 2
 python allowed.py sample.py 4
 ```
-to see the difference in the allowed constructs.
 
 The earlier examples, without a unit number, correspond to considering all units,
 i.e. checking against _all_ allowed Python constructs.
@@ -65,8 +65,10 @@ python allowed.py 01_submission.py 5
 The program is already configured for our course,
 [M269](https://www.open.ac.uk/courses/modules/m269), but you can change that.
 
-You can define which constructs are introduced in which units by setting
-the constant `CONSTRUCTS` in `allowed.py`. See the file for details.
+You can define which constructs, modules and built-in functions
+are introduced in which units by setting the constants
+`CONSTRUCTS`, `IMPORTS` and `FUNCTIONS` in `allowed.py`.
+See the file for details.
 
 You can also decide whether to allow the `else` clause in for- and while-loops
 by setting the Boolean constants `FOR_ELSE` and `WHILE_ELSE` in `allowed.py`.

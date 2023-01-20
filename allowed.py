@@ -86,6 +86,14 @@ IMPORTS = {
     27: {"inspect": ["getsource"]},
 }
 
+FUNCTIONS = {
+    2: ["help", "min", "max", "round", "print", "int", "float"],
+    4: ["len", "sorted", "str", "range", "list", "tuple"],
+    8: ["dict", "set", "ord", "hash"],
+    17: ["super"],
+    18: ["abs"],
+}
+
 FOR_ELSE = False  # allow for-else statements?
 WHILE_ELSE = False  # allow while-else statements?
 
@@ -113,6 +121,7 @@ def get_constructs(last_unit: int) -> tuple[ast.AST]:
             allowed += constructs
     return allowed
 
+
 def get_imports(last_unit: int) -> dict[str, list[str]]:
     """Return the allowed imports up to the given unit.
 
@@ -127,6 +136,19 @@ def get_imports(last_unit: int) -> dict[str, list[str]]:
                 else:
                     allowed[module] = names
     return allowed
+
+
+def get_functions(last_unit: int) -> list[str]:
+    """Return the allowed functions up to the given unit.
+
+    If `last_unit` is zero, return the functions in all units.
+    """
+    allowed = []
+    for unit, functions in FUNCTIONS.items():
+        if not last_unit or unit <= last_unit:
+            allowed.extend(functions)
+    return allowed
+
 
 IGNORE = (  # wrapper nodes that can be skipped
     ast.Module,
@@ -145,6 +167,85 @@ IGNORE = (  # wrapper nodes that can be skipped
 )
 
 OPERATOR_CLASSES = (ast.operator, ast.boolop, ast.cmpop, ast.unaryop)
+
+# list of all built-in functions
+BUILTINS = [
+    "abs",
+    "aiter",
+    "all",
+    "anext",
+    "any",
+    "ascii",
+    "bin",
+    "bool",
+    "breakpoint",
+    "bytearray",
+    "bytes",
+    "callable",
+    "chr",
+    "classmethod",
+    "compile",
+    "complex",
+    "copyright",
+    "credits",
+    "delattr",
+    "dict",
+    "dir",
+    "divmod",
+    "enumerate",
+    "eval",
+    "exec",
+    "exit",
+    "filter",
+    "float",
+    "format",
+    "frozenset",
+    "getattr",
+    "globals",
+    "hasattr",
+    "hash",
+    "help",
+    "hex",
+    "id",
+    "input",
+    "int",
+    "isinstance",
+    "issubclass",
+    "iter",
+    "len",
+    "license",
+    "list",
+    "locals",
+    "map",
+    "max",
+    "memoryview",
+    "min",
+    "next",
+    "object",
+    "oct",
+    "open",
+    "ord",
+    "pow",
+    "print",
+    "property",
+    "quit",
+    "range",
+    "repr",
+    "reversed",
+    "round",
+    "set",
+    "setattr",
+    "slice",
+    "sorted",
+    "staticmethod",
+    "str",
+    "sum",
+    "super",
+    "tuple",
+    "type",
+    "vars",
+    "zip",
+]
 
 # ast doesn't unparse operators, so we need to do it ourselves
 OPERATORS = {
@@ -174,7 +275,13 @@ OPERATORS = {
 }
 
 
-def check_tree(tree: ast.AST, constructs: tuple, imports: dict, source: list) -> list:
+def check_tree(
+    tree: ast.AST,
+    constructs: tuple[ast.AST],
+    imports: dict,
+    functions: list[str],
+    source: list,
+) -> list:
     """Check if tree only uses allowed constructs and imports."""
     errors = []
     for node in ast.walk(tree):
@@ -212,6 +319,12 @@ def check_tree(tree: ast.AST, constructs: tuple, imports: dict, source: list) ->
                 line = node.lineno
                 message = f"{module}.{attribute}"
                 errors.append((line, message))
+        elif isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
+            function = node.func.id
+            if function in BUILTINS and function not in functions:
+                line = node.lineno
+                message = f"built-in function {function}()"
+                errors.append((line, message))
         elif isinstance(node, ast.For) and node.orelse and not FOR_ELSE:
             line = node.orelse[0].lineno
             message = "else in for-loop"
@@ -246,8 +359,9 @@ def check_file(filename: str, last_unit: int) -> None:
             last_unit = get_unit(filename)
         constructs = get_constructs(last_unit)
         imports = get_imports(last_unit)
+        functions = get_functions(last_unit)
         source = source.splitlines()
-        errors = check_tree(tree, constructs, imports, source)
+        errors = check_tree(tree, constructs, imports, functions, source)
         errors.sort()
         for line, message in errors:
             print(f"{filename}:{line}: {message}")
