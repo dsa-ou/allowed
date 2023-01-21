@@ -391,6 +391,17 @@ def check_file(filename: str, last_unit: int, constructs: tuple) -> None:
             print(f"{filename}: can't parse: {message}")
 
 
+def first_import_and_module() -> tuple[int, int]:
+    """Return when an import statement and a module are first introduced."""
+    statements = []
+    for unit, elements in LANGUAGE.items():
+        if ast.Import in elements or ast.ImportFrom in elements:
+            statements.append(unit)
+    first_import = min(statements) if statements else 0
+    first_module = min(IMPORTS.keys()) if IMPORTS else 0
+    return first_import, first_module
+
+
 # ---- main program ----
 
 HELP = """Usage: python allowed.py <file or folder> [<unit>]
@@ -411,6 +422,29 @@ if __name__ == "__main__":
         assert UNIT >= 0
     except:
         print(HELP)
+        sys.exit(1)
+
+    first_import, first_module = first_import_and_module()
+    if first_module and not first_import:
+        print(
+            "error: modules are allowed but import statements aren't\n"
+            "fix 1: make IMPORTS empty\n"
+            "fix 2: add ast.Import and/or ast.ImportFrom to LANGUAGE"
+        )
+        sys.exit(1)
+    elif first_import and not first_module:
+        print(
+            "error: import statement is allowed but no modules are introduced\n"
+            "fix 1: add modules to IMPORTS\n"
+            "fix 2: remove ast.Import and ast.ImportFrom from LANGUAGE"
+        )
+        sys.exit(1)
+    elif first_module < first_import:
+        print(
+            "error: modules are introduced before import statement\n"
+            "fix 1: in IMPORTS, move modules to unit {first_import} or later\n"
+            "fix 2: in LANGUAGE, move import statements to unit {first_module} or sooner"
+        )
         sys.exit(1)
 
     language = IGNORE + get_language(UNIT)
