@@ -15,13 +15,14 @@ FILE_UNIT = r"^(\d+)"  # file name starts with the unit number
 # FILE_UNIT = r"(\d+).py$"  # file name ends with the unit number
 # FILE_UNIT = ""  # file names don't include a unit number
 
-# CONSTRUCTS maps unit numbers to the Python constructs they introduce.
-# Constructs are represented by the corresponding `ast` classes, taken from
-# https://docs.python.org/3/library/ast.html.
+# LANGUAGE[n] are the language elements introduced in unit n.
+# Language elements are represented by the corresponding `ast` classes,
+# taken from https://docs.python.org/3/library/ast.html.
 # For example, if `break` and `continue` are introduced in unit 5,
 # add an entry `5: (ast.Break, ast.Continue),`.
+# Each entry must be a tuple (not a list or set).
 
-CONSTRUCTS = {
+LANGUAGE = {
     2: (
         ast.Assign,
         ast.Name,
@@ -73,7 +74,7 @@ CONSTRUCTS = {
     ),
 }
 
-# IMPORTS maps units to the modules and names they introduce.
+# IMPORTS[n] is a dictionary of the modules and names introduced in unit n.
 IMPORTS = {
     2: {"math": ["floor", "ceil", "trunc", "pi"]},
     6: {"math": ["inf"]},
@@ -86,6 +87,7 @@ IMPORTS = {
     27: {"inspect": ["getsource"]},
 }
 
+# FUNCTIONS[n] are the functions introduced in unit n.
 FUNCTIONS = {
     2: ["help", "min", "max", "round", "print", "int", "float"],
     4: ["len", "sorted", "str", "range", "list", "tuple"],
@@ -110,15 +112,15 @@ def get_unit(filename: str) -> int:
         return 0
 
 
-def get_constructs(last_unit: int) -> tuple[ast.AST]:
-    """Return the allowed constructs up to the given unit.
+def get_language(last_unit: int) -> tuple[ast.AST]:
+    """Return the allowed language elements up to the given unit.
 
-    If `last_unit` is zero, return the constructs in all units.
+    If `last_unit` is zero, return the elements in all units.
     """
     allowed = ()
-    for unit, constructs in CONSTRUCTS.items():
+    for unit, elements in LANGUAGE.items():
         if not last_unit or unit <= last_unit:
-            allowed += constructs
+            allowed += elements
     return allowed
 
 
@@ -138,15 +140,15 @@ def get_imports(last_unit: int) -> dict[str, list[str]]:
     return allowed
 
 
-def get_functions(last_unit: int) -> list[str]:
+def get_functions(last_unit: int) -> set[str]:
     """Return the allowed functions up to the given unit.
 
     If `last_unit` is zero, return the functions in all units.
     """
-    allowed = []
+    allowed = set()
     for unit, functions in FUNCTIONS.items():
         if not last_unit or unit <= last_unit:
-            allowed.extend(functions)
+            allowed.update(functions)
     return allowed
 
 
@@ -168,8 +170,8 @@ IGNORE = (  # wrapper nodes that can be skipped
 
 OPERATOR_CLASSES = (ast.operator, ast.boolop, ast.cmpop, ast.unaryop)
 
-# list of all built-in functions
-BUILTINS = [
+# set of all built-in functions
+BUILTINS = {
     "abs",
     "aiter",
     "all",
@@ -245,7 +247,7 @@ BUILTINS = [
     "type",
     "vars",
     "zip",
-]
+}
 
 # ast doesn't unparse operators, so we need to do it ourselves
 OPERATORS = {
@@ -275,14 +277,9 @@ OPERATORS = {
 }
 
 
-def check_tree(
-    tree: ast.AST,
-    constructs: tuple[ast.AST],
-    imports: dict,
-    functions: list[str],
-    source: list,
-) -> list:
-    """Check if tree only uses allowed constructs and imports."""
+def check_tree(tree: ast.AST, constructs: tuple, source: list) -> list:
+    """Check if tree only uses allowed constructs."""
+    language, imports, functions = constructs
     errors = []
     for node in ast.walk(tree):
         if isinstance(node, IGNORE):
@@ -339,35 +336,35 @@ def check_tree(
 # ----- main functions -----
 
 
-def check_folder(folder: str, last_unit: int) -> None:
+def check_folder(folder: str, last_unit: int, constructs: tuple) -> None:
     """Check all Python files in `folder` and its subfolders."""
     for current, subfolders, files in os.walk(folder):
         subfolders.sort()
         for filename in sorted(files):
             if filename.endswith(".py"):
                 fullname = os.path.join(current, filename)
-                check_file(fullname, last_unit)
+                check_file(fullname, last_unit, constructs)
 
 
-def check_file(filename: str, last_unit: int) -> None:
+def check_file(filename: str, last_unit: int, constructs: tuple) -> None:
     """Check that the file only uses construct up to `last_unit`."""
     try:
         with open(filename) as file:
             source = file.read()
         tree = ast.parse(source)
-        if not last_unit:
-            last_unit = get_unit(filename)
-        constructs = get_constructs(last_unit)
-        imports = get_imports(last_unit)
-        functions = get_functions(last_unit)
-        source = source.splitlines()
-        errors = check_tree(tree, constructs, imports, functions, source)
+        if not last_unit and (file_unit := get_unit(filename)):
+            language = get_language(file_unit)
+            imports = get_imports(file_unit)
+            functions = get_functions(file_unit)
+            constructs = (language, imports, functions)
+        errors = check_tree(tree, constructs, source.splitlines())
         errors.sort()
         for line, message in errors:
             print(f"{filename}:{line}: {message}")
     except OSError as error:
         print(error)
     except SyntaxError as error:
+        #  write 'file:n: error' instead of 'file: error (..., line n)'
         message = str(error)
         if match := re.search(r"\(.*, line (\d+)\)", message):
             line = int(match.group(1))
@@ -390,16 +387,19 @@ See allowed.py for how to configure the allowed constructs.
 
 if __name__ == "__main__":
     try:
-        argn = len(sys.argv)
-        assert argn in (2, 3)
-        name = sys.argv[1]
-        unit = int(sys.argv[2]) if argn == 3 else 0
-        assert unit >= 0
+        ARGN = len(sys.argv)
+        assert ARGN in (2, 3)
+        NAME = sys.argv[1]
+        UNIT = int(sys.argv[2]) if ARGN == 3 else 0
+        assert UNIT >= 0
     except:
         print(HELP)
         sys.exit(1)
 
-    if os.path.isdir(name):
-        check_folder(name, unit)
+    language = IGNORE + get_language(UNIT)
+    imports = get_imports(UNIT)
+    functions = get_functions(UNIT)
+    if os.path.isdir(NAME):
+        check_folder(NAME, UNIT, (language, imports, functions))
     else:
-        check_file(name, unit)
+        check_file(NAME, UNIT, (language, imports, functions))
