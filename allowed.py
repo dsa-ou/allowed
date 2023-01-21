@@ -8,8 +8,8 @@ import sys
 # ----- configuration -----
 
 # FILE_UNIT is a regexp that extracts the unit from the file's name.
-# If there's a match, the unit number is the first group.
-# If there's no match, the file is considered to be in all units.
+# If there's a match, the unit number must be the first group.
+# If there's no match, the user-given unit will be used.
 
 FILE_UNIT = r"^(\d+)"  # file name starts with the unit number
 # FILE_UNIT = r"(\d+).py$"  # file name ends with the unit number
@@ -82,7 +82,7 @@ IMPORTS = {
     8: {"collections": ["Counter"]},
     11: {"math": ["sqrt", "factorial"], "itertools": ["permutations", "combinations"]},
     14: {"random": ["shuffle"], "typing": ["Callable"]},
-    16: {"heapq": ["heappush", "heappop", "heapify"]},
+    16: {"heapq": ["heappush", "heappop"]},
     17: {"typing": ["Hashable"], "random": ["random"]},
     27: {"inspect": ["getsource"]},
 }
@@ -150,6 +150,15 @@ def get_functions(last_unit: int) -> set[str]:
         if not last_unit or unit <= last_unit:
             allowed.update(functions)
     return allowed
+
+
+def get_constructs(last_unit: int) -> tuple:
+    """Return the allowed constructs up to the given unit."""
+    return (
+        IGNORE + get_language(last_unit),
+        get_imports(last_unit),
+        get_functions(last_unit),
+    )
 
 
 IGNORE = (  # wrapper nodes that can be skipped
@@ -353,29 +362,28 @@ def check_tree(tree: ast.AST, constructs: tuple, source: list) -> list:
 # ----- main functions -----
 
 
-def check_folder(folder: str, last_unit: int, constructs: tuple) -> None:
+def check_folder(folder: str, last_unit: int) -> None:
     """Check all Python files in `folder` and its subfolders."""
+    global_constructs = get_constructs(last_unit)
     for current, subfolders, files in os.walk(folder):
         subfolders.sort()
         for filename in sorted(files):
             if filename.endswith(".py"):
+                if not last_unit and (file_unit := get_unit(filename)):
+                    constructs = get_constructs(file_unit)
+                else:
+                    constructs = global_constructs
                 fullname = os.path.join(current, filename)
-                check_file(fullname, last_unit, constructs)
+                check_file(fullname, constructs)
 
 
-def check_file(filename: str, last_unit: int, constructs: tuple) -> None:
-    """Check that the file only uses construct up to `last_unit`."""
+def check_file(filename: str, constructs: tuple) -> None:
+    """Check that the file only uses the allowed constructs."""
     try:
         with open(filename) as file:
             source = file.read()
         tree = ast.parse(source)
-        if not last_unit and (file_unit := get_unit(filename)):
-            language = get_language(file_unit)
-            imports = get_imports(file_unit)
-            functions = get_functions(file_unit)
-            constructs = (language, imports, functions)
         errors = check_tree(tree, constructs, source.splitlines())
-        errors.sort()
         for line, message in errors:
             print(f"{filename}:{line}: {message}")
     except OSError as error:
@@ -418,8 +426,8 @@ if __name__ == "__main__":
         ARGN = len(sys.argv)
         assert ARGN in (2, 3)
         NAME = sys.argv[1]
-        UNIT = int(sys.argv[2]) if ARGN == 3 else 0
-        assert UNIT >= 0
+        unit = int(sys.argv[2]) if ARGN == 3 else 0
+        assert unit >= 0
     except:
         print(HELP)
         sys.exit(1)
@@ -447,10 +455,12 @@ if __name__ == "__main__":
         )
         sys.exit(1)
 
-    language = IGNORE + get_language(UNIT)
-    imports = get_imports(UNIT)
-    functions = get_functions(UNIT)
     if os.path.isdir(NAME):
-        check_folder(NAME, UNIT, (language, imports, functions))
+        check_folder(NAME, unit)
     else:
-        check_file(NAME, UNIT, (language, imports, functions))
+        if not NAME.endswith(".py"):
+            print(f"{NAME}: not a Python file")
+            sys.exit(1)
+        if not unit:
+            unit = get_unit(NAME)
+        check_file(NAME, get_constructs(unit))
