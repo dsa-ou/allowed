@@ -25,10 +25,6 @@ python allowed.py /home/my_project
 ```
 or whatever the path to the folder is.
 
-If a line of code uses several disallowed constructs, it's reported multiple times.
-If the Python parser doesn't keep the line number for a disallowed construct,
-it's reported first, at 'line zero'.
-
 To check code in a Jupyter notebook, save it as a Python file and check that file.
 In the classic web interface, use menu File -> Download as -> Python.
 

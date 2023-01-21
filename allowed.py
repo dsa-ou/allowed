@@ -168,8 +168,6 @@ IGNORE = (  # wrapper nodes that can be skipped
     ast.Compare,
 )
 
-OPERATOR_CLASSES = (ast.operator, ast.boolop, ast.cmpop, ast.unaryop)
-
 # set of all built-in functions
 BUILTINS = {
     "abs",
@@ -254,16 +252,19 @@ OPERATORS = {
     ast.Add: "+",
     ast.Sub: "-",
     ast.Mult: "*",
+    ast.MatMult: "@",  # matrix multiplication
     ast.Div: "/",
     ast.FloorDiv: "//",
     ast.Mod: "%",
-    ast.USub: "-",
     ast.Pow: "**",
     ast.BitOr: "|",
+    ast.BitXor: "^",
     ast.BitAnd: "&",
     ast.LShift: "<<",
     ast.RShift: ">>",
-    ast.BitXor: "^",
+    # unary operators
+    ast.USub: "-",
+    ast.UAdd: "+",
     ast.Invert: "~",
     ast.Not: "not",
     ast.And: "and",
@@ -274,6 +275,10 @@ OPERATORS = {
     ast.LtE: "<=",
     ast.Gt: ">",
     ast.GtE: ">=",
+    ast.Is: "is",
+    ast.IsNot: "is not",
+    ast.In: "in",
+    ast.NotIn: "not in",
 }
 
 
@@ -282,15 +287,23 @@ def check_tree(tree: ast.AST, constructs: tuple, source: list) -> list:
     language, imports, functions = constructs
     errors = []
     for node in ast.walk(tree):
-        if isinstance(node, IGNORE):
+        # an operator node has no line number, so handle it via its parent
+        if isinstance(node, (ast.operator, ast.unaryop, ast.boolop, ast.cmpop)):
             pass
-        elif not isinstance(node, constructs):
-            if isinstance(node, OPERATOR_CLASSES):
-                line = 0
-                message = OPERATORS.get(type(node), "operator not allowed")
-            else:
+        elif isinstance(node, (ast.BinOp, ast.UnaryOp, ast.BoolOp)):
+            if not isinstance(node.op, language):
                 line = node.lineno
-                message = source[line - 1].strip()
+                message = OPERATORS.get(type(node.op), "unknown operator")
+                errors.append((line, message))
+        elif isinstance(node, ast.Compare):
+            for op in node.ops:
+                if not isinstance(op, language):
+                    line = node.lineno
+                    message = OPERATORS.get(type(op), "unknown operator")
+                    errors.append((line, message))
+        elif not isinstance(node, language):
+            line = node.lineno
+            message = source[line - 1].strip()
             errors.append((line, message))
         elif isinstance(node, ast.Import):
             for alias in node.names:
@@ -330,6 +343,10 @@ def check_tree(tree: ast.AST, constructs: tuple, source: list) -> list:
             line = node.orelse[0].lineno
             message = "else in while-loop"
             errors.append((line, message))
+    errors.sort()
+    for index in range(len(errors) - 1, 0, -1):
+        if errors[index] == errors[index - 1]:
+            del errors[index]
     return errors
 
 
