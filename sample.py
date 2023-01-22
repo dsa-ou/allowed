@@ -1,8 +1,8 @@
 """Sample code to test the checker."""
 
 import math
-from random import shuffle, choice
 import types
+from random import choice, shuffle
 
 
 def is_prime(n: int) -> bool:

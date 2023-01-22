@@ -11,7 +11,8 @@ if (3, 7) <= PYTHON_VERSION <= (3, 10):
     try:
         import pytype
         from pytype.tools.annotate_ast import annotate_ast
-        PYTYPE_OPTIONS = pytype.config.Options.create(python_version = PYTHON_VERSION)
+
+        PYTYPE_OPTIONS = pytype.config.Options.create(python_version=PYTHON_VERSION)
         CHECK_METHOD_CALLS = True
     except ImportError:
         print("warning: pytype not installed: won't check method calls")
@@ -117,7 +118,10 @@ FUNCTIONS = {
 METHODS = {
     4: {"List": ["insert", "append", "pop", "sort"]},
     7: {"collections.deque": ["append", "appendleft", "pop", "popleft"]},
-    8: {"Dict": ["items"], "Set": ["add", "discard", "union", "intersection", "difference"]},
+    8: {
+        "Dict": ["items"],
+        "Set": ["add", "discard", "union", "intersection", "difference"],
+    },
     11: {"Set": ["pop"]},
 }
 
@@ -176,6 +180,7 @@ def get_functions(last_unit: int) -> set[str]:
             allowed.update(functions)
     return allowed
 
+
 def get_methods(last_unit: int) -> dict[str, list[str]]:
     """Return the allowed methods up to the given unit.
 
@@ -190,6 +195,7 @@ def get_methods(last_unit: int) -> dict[str, list[str]]:
                 else:
                     allowed[type] = names
     return allowed
+
 
 def get_constructs(last_unit: int) -> tuple:
     """Return the allowed constructs up to the given unit."""
@@ -330,14 +336,17 @@ OPERATORS = {
     ast.NotIn: "not in",
 }
 
+# These AST nodes have no associated line number.
+NO_LINE = (ast.operator, ast.unaryop, ast.boolop, ast.cmpop, ast.comprehension)
+
 
 def check_tree(tree: ast.AST, constructs: tuple, source: list) -> list:
     """Check if tree only uses allowed constructs."""
     language, imports, functions, methods = constructs
     errors = []
     for node in ast.walk(tree):
-        # an operator node has no line number, so handle it via its parent
-        if isinstance(node, (ast.operator, ast.unaryop, ast.boolop, ast.cmpop)):
+        # if a node has no line number, handle it via its parent
+        if isinstance(node, NO_LINE):
             pass
         elif isinstance(node, (ast.BinOp, ast.UnaryOp, ast.BoolOp)):
             if not isinstance(node.op, language):
@@ -351,8 +360,13 @@ def check_tree(tree: ast.AST, constructs: tuple, source: list) -> list:
                     message = OPERATORS.get(type(op), "unknown operator")
                     errors.append((line, message))
         elif not isinstance(node, language):
-            line = node.lineno
-            message = source[line - 1].strip()
+            if hasattr(node, "lineno"):
+                line = node.lineno
+                message = source[line - 1].strip()
+            else:
+                # if a node has no line number, report it for inclusion in NO_LINE
+                line = 0
+                message = f"unknown construct {str(node)} at unknown line"
             errors.append((line, message))
         elif isinstance(node, ast.Import):
             for alias in node.names:
@@ -378,11 +392,13 @@ def check_tree(tree: ast.AST, constructs: tuple, source: list) -> list:
                 line = node.lineno
                 message = f"{name.id}.{attribute}"
                 errors.append((line, message))
-            elif hasattr(name, 'resolved_annotation'):
-                type_name = re.match(r'[a-zA-Z.]*', name.resolved_annotation).group()
+            elif hasattr(name, "resolved_annotation"):
+                type_name = re.match(r"[a-zA-Z.]*", name.resolved_annotation).group()
                 if type_name in methods and attribute not in methods[type_name]:
                     line = name.lineno
-                    message = f"method {attribute} called on {type_name.lower()} {name.id}"
+                    message = (
+                        f"method {attribute} called on {type_name.lower()} {name.id}"
+                    )
                     errors.append((line, message))
         elif isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
             function = node.func.id
@@ -455,7 +471,6 @@ def check_file(filename: str, constructs: tuple) -> None:
             print(f"{filename}:{line}: can't parse: {message}")
         else:
             print(f"{filename}: can't parse: {message}")
-
 
 
 def first_import_and_module() -> tuple[int, int]:
