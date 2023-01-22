@@ -1,5 +1,6 @@
 """Check that Python files only use the allowed constructs."""
 
+import argparse
 import ast
 import os
 import re
@@ -470,25 +471,23 @@ def first_import_and_module() -> tuple[int, int]:
 
 # ---- main program ----
 
-HELP = """Usage: python allowed.py <file or folder> [<unit>]
-
-Check the Python file (or all Python files in the folder and its subfolders)
-for constructs that are NOT introduced up to the given unit (a positive number).
-If unit is omitted, use all units or the unit given in the file's name.
-
-See allowed.py for how to configure the allowed constructs.
-"""
-
 if __name__ == "__main__":
-    try:
-        ARGN = len(sys.argv)
-        assert ARGN in (2, 3)
-        NAME = sys.argv[1]
-        unit = int(sys.argv[2]) if ARGN == 3 else 0
-        assert unit >= 0
-    except:
-        print(HELP)
-        sys.exit(1)
+    argparser = argparse.ArgumentParser(
+        description="Check that the code only uses certain constructs. "
+        "See allowed.py for how to specify the allowed constructs."
+    )
+    argparser.add_argument(
+        "-u",
+        "--unit",
+        type=int,
+        default=0,
+        choices=range(0, 100),
+        help="only use constructs from units 1 to UNIT (default: all units)",
+    )
+    argparser.add_argument(
+        "file_or_folder", nargs="+", help="Python file or folder to check"
+    )
+    args = argparser.parse_args()
 
     first_import, first_module = first_import_and_module()
     if first_module and not first_import:
@@ -513,12 +512,12 @@ if __name__ == "__main__":
         )
         sys.exit(1)
 
-    if os.path.isdir(NAME):
-        check_folder(NAME, unit)
-    else:
-        if not NAME.endswith(".py"):
-            print(f"{NAME}: not a Python file")
-            sys.exit(1)
-        if not unit:
-            unit = get_unit(NAME)
-        check_file(NAME, get_constructs(unit))
+    args.file_or_folder.sort()
+    for name in args.file_or_folder:
+        if os.path.isdir(name):
+            check_folder(name, args.unit)
+        elif name.endswith(".py"):
+            unit = args.unit if args.unit else get_unit(name)
+            check_file(name, get_constructs(unit))
+        else:
+            print(f"{name}: not a folder nor a Python file")

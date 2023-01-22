@@ -1,2 +1,5 @@
 *.txt
 extra.py
+*.pyc
+*.ipynb
+.ipynb_checkpoints
