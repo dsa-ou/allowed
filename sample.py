@@ -47,9 +47,17 @@ def odd_numbers(n: int) -> list[int]:
 
 
 FIRST = 5
-print(f"first {FIRST} odd numbers: {odd_numbers(FIRST)}")
+odd = odd_numbers(FIRST)
+print(f"first {FIRST} odd numbers: {odd}")
+if odd.count(2) == 1:
+    print("2 is considered odd: that's odd!")
+print("last odd generated:", odd.pop())
 
 print("2^6 =", 1 << 6)
 print("Euler number e =", math.e)
 if type(odd_numbers) == types.FunctionType:
     print("odd_numbers is a function")
+
+
+x = 5
+x = "five"

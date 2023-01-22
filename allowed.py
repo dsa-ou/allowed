@@ -5,6 +5,20 @@ import os
 import re
 import sys
 
+PYTHON_VERSION = sys.version_info[:2]
+if (3, 7) <= PYTHON_VERSION <= (3, 10):
+    try:
+        import pytype
+        from pytype.tools.annotate_ast import annotate_ast
+        PYTYPE_OPTIONS = pytype.config.Options.create(python_version = PYTHON_VERSION)
+        CHECK_METHOD_CALLS = True
+    except ImportError:
+        print("warning: pytype not installed: won't check method calls")
+        CHECK_METHOD_CALLS = False
+else:
+    print("warning: Python version not supported: won't check method calls")
+    CHECK_METHOD_CALLS = False
+
 # ----- configuration -----
 
 # FILE_UNIT is a regexp that extracts the unit from the file's name.
@@ -96,6 +110,16 @@ FUNCTIONS = {
     18: ["abs"],
 }
 
+# METHODS[n] is a dictionary of the methods introduced in unit n: the keys are the types.
+# Other builtin types are 'str' and 'Tuple'.
+
+METHODS = {
+    4: {"List": ["insert", "append", "pop", "sort"]},
+    7: {"collections.deque": ["append", "appendleft", "pop", "popleft"]},
+    8: {"Dict": ["items"], "Set": ["add", "discard", "union", "intersection", "difference"]},
+    11: {"Set": ["pop"]},
+}
+
 FOR_ELSE = False  # allow for-else statements?
 WHILE_ELSE = False  # allow while-else statements?
 
@@ -151,6 +175,20 @@ def get_functions(last_unit: int) -> set[str]:
             allowed.update(functions)
     return allowed
 
+def get_methods(last_unit: int) -> dict[str, list[str]]:
+    """Return the allowed methods up to the given unit.
+
+    If `last_unit` is zero, return the methods in all units.
+    """
+    allowed = {}
+    for unit, methods in METHODS.items():
+        if not last_unit or unit <= last_unit:
+            for type, names in methods.items():
+                if type in allowed:
+                    allowed[type].extend(names)
+                else:
+                    allowed[type] = names
+    return allowed
 
 def get_constructs(last_unit: int) -> tuple:
     """Return the allowed constructs up to the given unit."""
@@ -158,6 +196,7 @@ def get_constructs(last_unit: int) -> tuple:
         IGNORE + get_language(last_unit),
         get_imports(last_unit),
         get_functions(last_unit),
+        get_methods(last_unit),
     )
 
 
@@ -293,7 +332,7 @@ OPERATORS = {
 
 def check_tree(tree: ast.AST, constructs: tuple, source: list) -> list:
     """Check if tree only uses allowed constructs."""
-    language, imports, functions = constructs
+    language, imports, functions, methods = constructs
     errors = []
     for node in ast.walk(tree):
         # an operator node has no line number, so handle it via its parent
@@ -332,12 +371,18 @@ def check_tree(tree: ast.AST, constructs: tuple, source: list) -> list:
                         message = f"from {node.module} import {alias.name}"
                         errors.append((line, message))
         elif isinstance(node, ast.Attribute) and isinstance(node.value, ast.Name):
-            module = node.value.id
+            name = node.value
             attribute = node.attr
-            if module in imports and attribute not in imports[module]:
+            if name.id in imports and attribute not in imports[name.id]:
                 line = node.lineno
-                message = f"{module}.{attribute}"
+                message = f"{name.id}.{attribute}"
                 errors.append((line, message))
+            elif hasattr(name, 'resolved_annotation'):
+                type_name = re.match(r'[a-zA-Z.]*', name.resolved_annotation).group()
+                if type_name in methods and attribute not in methods[type_name]:
+                    line = name.lineno
+                    message = f"method {attribute} called on {type_name.lower()} {name.id}"
+                    errors.append((line, message))
         elif isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
             function = node.func.id
             if function in BUILTINS and function not in functions:
@@ -382,7 +427,10 @@ def check_file(filename: str, constructs: tuple) -> None:
     try:
         with open(filename) as file:
             source = file.read()
-        tree = ast.parse(source)
+        if CHECK_METHOD_CALLS and METHODS:
+            tree = annotate_ast.annotate_source(source, ast, PYTYPE_OPTIONS)
+        else:
+            tree = ast.parse(source)
         errors = check_tree(tree, constructs, source.splitlines())
         for line, message in errors:
             print(f"{filename}:{line}: {message}")
@@ -397,6 +445,16 @@ def check_file(filename: str, constructs: tuple) -> None:
             print(f"{filename}:{line}: can't parse: {message}")
         else:
             print(f"{filename}: can't parse: {message}")
+    except annotate_ast.PytypeError as error:
+        #  write 'file:n: error' instead of 'Error reading file ... at line n: error'
+        message = str(error)
+        if match := re.match(r"Error .* at line (\d+): (.*)", message):
+            line = int(match.group(1))
+            message = match.group(2)
+            print(f"{filename}:{line}: can't parse: {message}")
+        else:
+            print(f"{filename}: can't parse: {message}")
+
 
 
 def first_import_and_module() -> tuple[int, int]:
