@@ -1,5 +1,6 @@
-This program allows you to check if a Python program only uses certain constructs.
-The check is purely syntactic and therefore assumes the program compiles.
+This program checks if your Python code only uses certain constructs,
+which you can configure.
+The check is purely syntactic and therefore assumes that your code compiles.
 
 The various uses of a construct can't be individually allowed or disallowed.
 For example, you can't allow integer addition
@@ -77,7 +78,7 @@ the file is checked against that unit. For example,
 ```bash
 python allowed.py 05_submission.py
 ```
-also checks the submisison against the constructs introduced in units 1–5.
+also checks the submission against the constructs introduced in units 1–5.
 However, if the file name starts with a number that isn't the intended unit,
 you must provide it,
 e.g. if the file name starts with the number of the assignment, not of the unit:
@@ -85,7 +86,7 @@ e.g. if the file name starts with the number of the assignment, not of the unit:
 python allowed.py 01_submission.py -u 5
 ```
 
-### Checking motebooks
+### Checking notebooks
 There are two ways of checking Python code in a Jupyter notebook.
 
 The first is to save the notebook as a Python file
@@ -133,4 +134,12 @@ For anything else, like an idea for a feature or
 a query on how to use and configure `allowed`, please use the
 [discussion forum](https://github.com/dsa-ou/allowed/discussion).
 
-Please _don't_ submit pull requests: this project isn't stable yet.
+Please only submit pull requests for open issues.
+
+## Licences
+
+The code and text in this repository are
+Copyright © 2023 by The Open University, UK.
+The code is licensed under a [BSD-3-clause licence](LICENCE.MD).
+The text is licensed under a
+[Creative Commons Attribution 4.0 International Licence](http://creativecommons.org/licenses/by/4.0).
