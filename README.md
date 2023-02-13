@@ -115,7 +115,9 @@ like `path/to/notebook1.ipynb:cell_13:5: ...`, which helps find the issue more q
 You can still use option `-u` or `--unit`, but at the end.
 For example, if you're an M269 student or tutor, you can check the
 second assignment (on chapters 1–20) before you submit or mark it with
-`nbqa allowed path/to/TMA02.ipynb -u 20`.
+```bash
+nbqa allowed path/to/TMA02.ipynb -u 20
+```
 
 ## Configuration
 The program is already configured for our course,
@@ -153,13 +155,13 @@ If you want to contribute code to address an open issue:
 1. Install and activate the `dsa-ou` [virtual environment](https://github.com/dsa-ou/virtual-env).
 2. Fork this repository and clone it to your disk.
 3. Run `python allowed.py sample.py > sample.txt`.
-4. Run `python path/to/M269/book/python > book.txt`.
+4. Run `python allowed.py path/to/M269/book/python > book.txt`.
 5. Choose an [open issue](https://github.com/dsa-ou/allowed/issues) and assign it to yourself.
 6. Create a branch in your repository to work on the issue.
 7. Run the `black` and `isort` formatter on your modified `allowed.py` before testing it.
 8. Check that your changes didn't modify `allowed`'s behaviour:
-   1. run `python allowd.py sample.y | diff -w - sample.txt`
-   2. run `python path/to/M269/book/python | diff -w - book.txt`
+   1. run `python allowed.py sample.y | diff -w - sample.txt`
+   2. run `python allowed.py path/to/M269/book/python | diff -w - book.txt`
    3. neither run should show any differences
 9. Do any tests specific to the issue you're addressing.
 10. Make a pull request.
