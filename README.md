@@ -4,8 +4,8 @@ The check is purely syntactic and therefore assumes that your code compiles.
 
 The various uses of a construct can't be individually allowed or disallowed.
 For example, you can't allow integer addition
-and disallow string concatenation (or vice versa): either you allow
-the `+` operator (and all its uses) or not.
+and disallow string concatenation (or vice versa): you either allow
+the `+` operator (and all its uses) or you don't.
 
 Like all static analysis tools, `allowed` isn't perfect and will never be.
 There will be false positives (code reported to be a violation, but isn't)
@@ -112,7 +112,10 @@ The latter will check all notebooks in that folder and its subfolders.
 With `nbqa`, reports state which line of which code cell uses a disallowed construct,
 like `path/to/notebook1.ipynb:cell_13:5: ...`, which helps find the issue more quickly.
 
-You can of course still use option `-u` or `--unit`.
+You can still use option `-u` or `--unit`, but at the end.
+For example, if you're an M269 student or tutor, you can check the
+second assignment (on chapters 1–20) before you submit or mark it with
+`nbqa allowed path/to/TMA02.ipynb -u 20`.
 
 ## Configuration
 The program is already configured for our course,
@@ -131,7 +134,7 @@ You can set constant `FILE_UNIT` to the
 that extracts the unit number from the file name. See the file for details.
 
 ## Contributing
-Any help to improve `allowed` is welcome.
+Any help to improve `allowed` is welcome and appreciated.
 
 If you spot an error in the code or documentation, please check if it
 [has been reported](https://github.com/dsa-ou/allowed/issues)
@@ -142,7 +145,7 @@ If you have an idea for a new feature, post it in the
 If you have a query about `allowed` post it in the
 [Q & A discussion forum](https://github.com/dsa-ou/allowed/discussions/categories/q-a).
 
-If you are a M269 student or tutor, you can alternatively report errors,
+If you are an M269 student or tutor, you can alternatively report errors,
 make suggestions and ask questions in the M269 technical forum.
 
 If you want to contribute code to address an open issue:
