@@ -31,63 +31,79 @@ FILE_UNIT = r"^(\d+)"  # file name starts with the unit number
 # FILE_UNIT = r"(\d+).py$"  # file name ends with the unit number
 # FILE_UNIT = ""  # file names don't include a unit number
 
-# LANGUAGE[n] are the language elements introduced in unit n.
-# Language elements are represented by the corresponding `ast` classes,
-# taken from https://docs.python.org/3/library/ast.html.
-# For example, if `break` and `continue` are introduced in unit 5,
-# add an entry `5: (ast.Break, ast.Continue),`.
-# Each entry must be a tuple (not a list or set).
-
+# LANGUAGE[n] are Python's syntax and built-in functions introduced in unit n.
+# For the possible syntactical elements, see dictionary `SYNTAX` further below.
+# Use strings "for else" and "while else" to allow the `else` clause in loops.
+# For the possible built-in functions, see set `BUILTINS` further below.
 LANGUAGE = {
     2: (
-        ast.Assign,
-        ast.Name,
-        ast.Constant,
-        ast.FunctionDef,
-        ast.Return,
-        ast.Call,
-        ast.Import,
-        ast.Add,
-        ast.Sub,
-        ast.Mult,
-        ast.Div,
-        ast.FloorDiv,  # integer division, e.g. 5 // 2
-        ast.Mod,
-        ast.Pow,
-        ast.USub,  # unary minus, e.g. -x
+        "=",
+        "name",
+        "constant",
+        "def",
+        "return",
+        "function call",
+        "import",
+        "+",
+        "-",
+        "*",
+        "/",
+        "//",
+        "%",
+        "**",
+        "-x",  # unary minus
+        "help",
+        "min",
+        "max",
+        "round",
+        "print",
+        "int",
+        "float",
     ),
     3: (
-        ast.If,
-        ast.And,
-        ast.Or,
-        ast.Not,
-        ast.Eq,
-        ast.NotEq,
-        ast.Lt,
-        ast.LtE,
-        ast.Gt,
-        ast.GtE,
+        "if",
+        "and",
+        "or",
+        "not",
+        "==",
+        "!=",
+        "<",
+        "<=",
+        ">",
+        ">=",
     ),
     4: (
-        ast.For,
-        ast.While,
-        ast.List,  # list literal, e.g. [1, 2, 3]
-        ast.Tuple,  # tuple literal, e.g. (1, 2, 3)
-        ast.In,
-        ast.Subscript,  # indexing, e.g. x[0]
-        ast.Slice,  # slicing, e.g. x[1:3], x[:3], x[1:]
-        ast.Attribute,  # dot notation, e.g. math.sqrt
-        ast.keyword,  # keyword argument, e.g. print(..., end="")
+        "for",
+        "while",
+        "list literal",
+        "tuple literal",
+        "in",
+        "index",
+        "slice",
+        "attribute",  # dot notation, e.g. math.sqrt
+        "keyword argument",  # e.g. print(..., end="")
+        "len",
+        "sorted",
+        "str",
+        "range",
+        "list",
+        "tuple",
     ),
-    6: (ast.Pass, ast.ClassDef),
-    7: (ast.ImportFrom,),
+    6: ("pass", "class"),
+    7: ("from import",),
     8: (
-        ast.Dict,  # dictionary literal, e.g. {"a": 1, "b": 2}
-        ast.Set,  # set literal, e.g. {1, 2, 3}
-        ast.NotIn,
-        ast.BitOr,  # set union, e.g. {1, 2, 3} | {2, 3, 4}
-        ast.BitAnd,  # set intersection, e.g. {1, 2, 3} & {2, 3, 4}
+        "dict literal",
+        "set literal",
+        "not in",
+        "|",
+        "&",
+        "dict",
+        "set",
+        "ord",
+        "hash",
     ),
+    17: ("super",),
+    18: ("abs",),
 }
 
 # IMPORTS[n] is a dictionary of the modules and names introduced in unit n.
@@ -103,15 +119,6 @@ IMPORTS = {
     27: {"inspect": ["getsource"]},
 }
 
-# FUNCTIONS[n] are the functions introduced in unit n.
-FUNCTIONS = {
-    2: ["help", "min", "max", "round", "print", "int", "float"],
-    4: ["len", "sorted", "str", "range", "list", "tuple"],
-    8: ["dict", "set", "ord", "hash"],
-    17: ["super"],
-    18: ["abs"],
-}
-
 # METHODS[n] is a dictionary of the methods introduced in unit n: the keys are the types.
 # Other builtin types are 'str' and 'Tuple'.
 
@@ -125,10 +132,105 @@ METHODS = {
     11: {"Set": ["pop"]},
 }
 
-FOR_ELSE = False  # allow for-else statements?
-WHILE_ELSE = False  # allow while-else statements?
-
 # ----- end of configuration -----
+
+# ----- Python's Abstract Syntax Tree (AST) -----
+
+# SYNTAX maps strings (syntax descriptions) to the `ast` node classes
+# listed in https://docs.python.org/3.10/library/ast.html.
+# The strings can appear in the values of dictionary `CONSTRUCTS` above.
+# TODO: SYNTAX doesn't yet cover all Python 3.10 syntax.
+SYNTAX = {
+    # literals
+    "constant": ast.Constant,  # a value like 'Hi!', True, None, (1, 2), ...
+    "f-string": ast.JoinedStr,  # f'Hi {name}!'
+    "list literal": ast.List,
+    "tuple literal": ast.Tuple,
+    "set literal": ast.Set,
+    "dict literal": ast.Dict,
+    # variables
+    "name": ast.Name,
+    "*name": ast.Starred,
+    # unary operators
+    "+x": ast.UAdd,
+    "-x": ast.USub,
+    "not": ast.Not,
+    "~": ast.Invert,
+    # binary operators
+    "+": ast.Add,
+    "-": ast.Sub,
+    "*": ast.Mult,
+    "/": ast.Div,
+    "//": ast.FloorDiv,
+    "%": ast.Mod,
+    "**": ast.Pow,
+    "<<": ast.LShift,
+    ">>": ast.RShift,
+    "|": ast.BitOr,
+    "^": ast.BitXor,
+    "&": ast.BitAnd,
+    "@": ast.MatMult,
+    "and": ast.And,
+    "or": ast.Or,
+    # comparisons
+    "==": ast.Eq,
+    "!=": ast.NotEq,
+    "<": ast.Lt,
+    "<=": ast.LtE,
+    ">": ast.Gt,
+    ">=": ast.GtE,
+    "is": ast.Is,
+    "is not": ast.IsNot,
+    "in": ast.In,
+    "not in": ast.NotIn,
+    # other expressions
+    "function call": ast.Call,
+    "keyword argument": ast.keyword,  # print(..., end=""), sorted(..., key=...)
+    "if expression": ast.IfExp,  # x if x > 0 else -x
+    "index": ast.Subscript,  # x[0]
+    "slice": ast.Slice,  # x[1:10:2], x[1:], x[::2], etc.
+    "list comprehension": ast.ListComp,
+    "set comprehension": ast.SetComp,
+    "dict comprehension": ast.DictComp,
+    "generator expression": ast.GeneratorExp,
+    ":=": ast.NamedExpr,
+    "x if b else y": ast.IfExp,
+    "attribute": ast.Attribute,  # dot notation, e.g. math.sqrt
+    # control flow
+    "if": ast.If,  # includes `elif` and `else`
+    "for": ast.For,
+    "while": ast.While,  # do NOT include else clauses
+    "break": ast.Break,
+    "continue": ast.Continue,
+    "raise": ast.Raise,
+    "try": ast.Try,  # includes else and finally clauses
+    "except": ast.ExceptHandler,
+    "with": ast.With,
+    # other statements
+    "=": ast.Assign,
+    "assert": ast.Assert,
+    "del": ast.Delete,
+    "pass": ast.Pass,
+    "import": ast.Import,
+    "from import": ast.ImportFrom,  # includes: ... as ...
+    "class": ast.ClassDef,
+    # function constructs
+    "def": ast.FunctionDef,
+    "lambda": ast.Lambda,
+    "global": ast.Global,
+    "nonlocal": ast.Nonlocal,
+    "return": ast.Return,
+    "yield": ast.Yield,
+    "yield from": ast.YieldFrom,
+    # asynchronous constructs
+    "async def": ast.AsyncFunctionDef,
+    "async for": ast.AsyncFor,
+    "async with": ast.AsyncWith,
+    "await": ast.Await,
+}
+
+# additional constructs that can be allowed
+OPTIONS = {"for else", "while else"}
 
 # ----- auxiliary functions -----
 
@@ -146,10 +248,26 @@ def get_language(last_unit: int) -> tuple[ast.AST]:
 
     If `last_unit` is zero, return the elements in all units.
     """
-    allowed = ()
-    for unit, elements in LANGUAGE.items():
+    allowed = []
+    for unit, constructs in LANGUAGE.items():
         if not last_unit or unit <= last_unit:
-            allowed += elements
+            for construct in constructs:
+                if ast_class := SYNTAX.get(construct, None):
+                    allowed.append(ast_class)
+    return tuple(allowed)
+
+
+def get_options(last_unit: int) -> list[str]:
+    """Return the allowed language options up to the given unit.
+
+    If `last_unit` is zero, return the options in all units.
+    """
+    allowed = []
+    for unit, constructs in LANGUAGE.items():
+        if not last_unit or unit <= last_unit:
+            for construct in constructs:
+                if construct in OPTIONS:
+                    allowed.append(construct)
     return allowed
 
 
@@ -175,9 +293,11 @@ def get_functions(last_unit: int) -> set[str]:
     If `last_unit` is zero, return the functions in all units.
     """
     allowed = set()
-    for unit, functions in FUNCTIONS.items():
+    for unit, constructs in LANGUAGE.items():
         if not last_unit or unit <= last_unit:
-            allowed.update(functions)
+            for construct in constructs:
+                if construct in BUILTINS:
+                    allowed.add(construct)
     return allowed
 
 
@@ -201,6 +321,7 @@ def get_constructs(last_unit: int) -> tuple:
     """Return the allowed constructs up to the given unit."""
     return (
         IGNORE + get_language(last_unit),
+        get_options(last_unit),
         get_imports(last_unit),
         get_functions(last_unit),
         get_methods(last_unit),
@@ -342,7 +463,7 @@ NO_LINE = (ast.operator, ast.unaryop, ast.boolop, ast.cmpop, ast.comprehension)
 
 def check_tree(tree: ast.AST, constructs: tuple, source: list) -> list:
     """Check if tree only uses allowed constructs."""
-    language, imports, functions, methods = constructs
+    language, options, imports, functions, methods = constructs
     errors = []
     for node in ast.walk(tree):
         # if a node has no line number, handle it via its parent
@@ -406,11 +527,13 @@ def check_tree(tree: ast.AST, constructs: tuple, source: list) -> list:
                 line = node.lineno
                 message = f"built-in function {function}()"
                 errors.append((line, message))
-        elif isinstance(node, ast.For) and node.orelse and not FOR_ELSE:
+        elif isinstance(node, ast.For) and node.orelse and "for else" not in options:
             line = node.orelse[0].lineno
             message = "else in for-loop"
             errors.append((line, message))
-        elif isinstance(node, ast.While) and node.orelse and not WHILE_ELSE:
+        elif (
+            isinstance(node, ast.While) and node.orelse and "while else" not in options
+        ):
             line = node.orelse[0].lineno
             message = "else in while-loop"
             errors.append((line, message))
@@ -477,7 +600,7 @@ def first_import_and_module() -> tuple[int, int]:
     """Return when an import statement and a module are first introduced."""
     statements = []
     for unit, elements in LANGUAGE.items():
-        if ast.Import in elements or ast.ImportFrom in elements:
+        if "import" in elements or "from import" in elements:
             statements.append(unit)
     first_import = min(statements) if statements else 0
     first_module = min(IMPORTS.keys()) if IMPORTS else 0
@@ -504,19 +627,26 @@ if __name__ == "__main__":
     )
     args = argparser.parse_args()
 
+    allowed = set()
+    for constructs in LANGUAGE.values():
+        allowed.update(set(constructs))
+    if unknown := allowed - SYNTAX.keys() - BUILTINS - OPTIONS:
+        print(f"error: unknown constructs: {', '.join(unknown)}")
+        sys.exit(1)
+
     first_import, first_module = first_import_and_module()
     if first_module and not first_import:
         print(
             "error: modules are allowed but import statements aren't\n"
             "fix 1: make IMPORTS empty\n"
-            "fix 2: add ast.Import and/or ast.ImportFrom to LANGUAGE"
+            "fix 2: add 'import' and/or 'from import' to LANGUAGE"
         )
         sys.exit(1)
     elif first_import and not first_module:
         print(
             "error: import statement is allowed but no modules are introduced\n"
             "fix 1: add modules to IMPORTS\n"
-            "fix 2: remove ast.Import and ast.ImportFrom from LANGUAGE"
+            "fix 2: remove 'import' and 'from import' from LANGUAGE"
         )
         sys.exit(1)
     elif first_module < first_import:

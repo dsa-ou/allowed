@@ -113,13 +113,13 @@ You can of course still use option `-u` or `--unit`.
 The program is already configured for our course,
 [M269](https://www.open.ac.uk/courses/modules/m269), but you can change that.
 
-You can define which language elements, modules, built-in functions and methods
+You can define which language elements, built-in functions, modules and methods
 are introduced in which units by setting the constants
-`LANGUAGE`, `IMPORTS`, `FUNCTIONS` and `METHODS` in `allowed.py`.
+`LANGUAGE`, `IMPORTS` and `METHODS` in `allowed.py`.
 See the file for details.
 
-You can also decide whether to allow the `else` clause in for- and while-loops
-by setting the Boolean constants `FOR_ELSE` and `WHILE_ELSE` in `allowed.py`.
+Adding `"for"` and `"while"` to `LANGUAGE` only allows the 'normal' loops.
+To also allow the `else` clause in loops, add `"for else"` and `"while else"`.
 
 You can set constant `FILE_UNIT` to the
 [regular expression](https://docs.python.org/3/howto/regex.html)
