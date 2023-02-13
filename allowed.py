@@ -136,14 +136,14 @@ METHODS = {
 
 # ----- Python's Abstract Syntax Tree (AST) -----
 
-# SYNTAX maps strings (syntax descriptions) to the `ast` node classes
+# ABSTRACT maps strings (syntax descriptions) to the `ast` node classes
 # listed in https://docs.python.org/3.10/library/ast.html.
-# The strings can appear in the values of dictionary `CONSTRUCTS` above.
-# TODO: SYNTAX doesn't yet cover all Python 3.10 syntax.
-SYNTAX = {
+# The strings can appear in the values of dictionary `LANGUAGE` above.
+# TODO: ABSTRACT doesn't cover all Python 3.10 syntax.
+ABSTRACT = {
     # literals
-    "constant": ast.Constant,  # a value like 'Hi!', True, None, (1, 2), ...
-    "f-string": ast.JoinedStr,  # f'Hi {name}!'
+    "constant": ast.Constant,  # e.g. 'Hi!', True, None, (1, 2), ...
+    "f-string": ast.JoinedStr,
     "list literal": ast.List,
     "tuple literal": ast.Tuple,
     "set literal": ast.Set,
@@ -185,25 +185,24 @@ SYNTAX = {
     "not in": ast.NotIn,
     # other expressions
     "function call": ast.Call,
-    "keyword argument": ast.keyword,  # print(..., end=""), sorted(..., key=...)
-    "if expression": ast.IfExp,  # x if x > 0 else -x
+    "keyword argument": ast.keyword,  # print(..., end=...), sorted(..., key=...)
+    "if expression": ast.IfExp,  # x if x >= 0 else -x
     "index": ast.Subscript,  # x[0]
-    "slice": ast.Slice,  # x[1:10:2], x[1:], x[::2], etc.
+    "slice": ast.Slice,  # all forms: x[1:10:2], x[1:], x[::2], etc.
     "list comprehension": ast.ListComp,
     "set comprehension": ast.SetComp,
     "dict comprehension": ast.DictComp,
     "generator expression": ast.GeneratorExp,
     ":=": ast.NamedExpr,
-    "x if b else y": ast.IfExp,
     "attribute": ast.Attribute,  # dot notation, e.g. math.sqrt
     # control flow
-    "if": ast.If,  # includes `elif` and `else`
-    "for": ast.For,
-    "while": ast.While,  # do NOT include else clauses
+    "if": ast.If,  # allows `elif` and `else`
+    "for": ast.For,  # does NOT allow `else`
+    "while": ast.While,  # does NOT allow `else`
     "break": ast.Break,
     "continue": ast.Continue,
     "raise": ast.Raise,
-    "try": ast.Try,  # includes else and finally clauses
+    "try": ast.Try,  # allows `else` and `finally`
     "except": ast.ExceptHandler,
     "with": ast.With,
     # other statements
@@ -211,8 +210,8 @@ SYNTAX = {
     "assert": ast.Assert,
     "del": ast.Delete,
     "pass": ast.Pass,
-    "import": ast.Import,
-    "from import": ast.ImportFrom,  # includes: ... as ...
+    "import": ast.Import,   # allows `as`
+    "from import": ast.ImportFrom,  # allows `as`
     "class": ast.ClassDef,
     # function constructs
     "def": ast.FunctionDef,
@@ -229,104 +228,11 @@ SYNTAX = {
     "await": ast.Await,
 }
 
-# additional constructs that can be allowed
+# CONCRETE is the inverse map. Needed for error messages.
+CONCRETE = {ast_node: string for string, ast_node in ABSTRACT.items()}
+
+# optional constructs that can be separately allowed
 OPTIONS = {"for else", "while else"}
-
-# ----- auxiliary functions -----
-
-
-def get_unit(filename: str) -> int:
-    """Return the file's unit or zero (consider all units)."""
-    if FILE_UNIT and (match := re.match(FILE_UNIT, filename)):
-        return int(match.group(1))
-    else:
-        return 0
-
-
-def get_language(last_unit: int) -> tuple[ast.AST]:
-    """Return the allowed language elements up to the given unit.
-
-    If `last_unit` is zero, return the elements in all units.
-    """
-    allowed = []
-    for unit, constructs in LANGUAGE.items():
-        if not last_unit or unit <= last_unit:
-            for construct in constructs:
-                if ast_class := SYNTAX.get(construct, None):
-                    allowed.append(ast_class)
-    return tuple(allowed)
-
-
-def get_options(last_unit: int) -> list[str]:
-    """Return the allowed language options up to the given unit.
-
-    If `last_unit` is zero, return the options in all units.
-    """
-    allowed = []
-    for unit, constructs in LANGUAGE.items():
-        if not last_unit or unit <= last_unit:
-            for construct in constructs:
-                if construct in OPTIONS:
-                    allowed.append(construct)
-    return allowed
-
-
-def get_imports(last_unit: int) -> dict[str, list[str]]:
-    """Return the allowed imports up to the given unit.
-
-    If `last_unit` is zero, return the imports in all units.
-    """
-    allowed = {}
-    for unit, imports in IMPORTS.items():
-        if not last_unit or unit <= last_unit:
-            for module, names in imports.items():
-                if module in allowed:
-                    allowed[module].extend(names)
-                else:
-                    allowed[module] = names
-    return allowed
-
-
-def get_functions(last_unit: int) -> set[str]:
-    """Return the allowed functions up to the given unit.
-
-    If `last_unit` is zero, return the functions in all units.
-    """
-    allowed = set()
-    for unit, constructs in LANGUAGE.items():
-        if not last_unit or unit <= last_unit:
-            for construct in constructs:
-                if construct in BUILTINS:
-                    allowed.add(construct)
-    return allowed
-
-
-def get_methods(last_unit: int) -> dict[str, list[str]]:
-    """Return the allowed methods up to the given unit.
-
-    If `last_unit` is zero, return the methods in all units.
-    """
-    allowed = {}
-    for unit, methods in METHODS.items():
-        if not last_unit or unit <= last_unit:
-            for type, names in methods.items():
-                if type in allowed:
-                    allowed[type].extend(names)
-                else:
-                    allowed[type] = names
-    return allowed
-
-
-def get_constructs(last_unit: int) -> tuple:
-    """Return the allowed constructs up to the given unit."""
-    return (
-        IGNORE + get_language(last_unit),
-        get_options(last_unit),
-        get_imports(last_unit),
-        get_functions(last_unit),
-        get_methods(last_unit),
-    )
-
 
 IGNORE = (  # wrapper nodes that can be skipped
     ast.Module,
@@ -342,6 +248,14 @@ IGNORE = (  # wrapper nodes that can be skipped
     ast.UnaryOp,
     ast.BoolOp,
     ast.Compare,
+)
+
+NO_LINE = (  # nodes without associated line numbers
+    ast.operator,
+    ast.unaryop,
+    ast.boolop,
+    ast.cmpop,
+    ast.comprehension,
 )
 
 # set of all built-in functions
@@ -423,42 +337,143 @@ BUILTINS = {
     "zip",
 }
 
-# ast doesn't unparse operators, so we need to do it ourselves
-OPERATORS = {
-    ast.Add: "+",
-    ast.Sub: "-",
-    ast.Mult: "*",
-    ast.MatMult: "@",  # matrix multiplication
-    ast.Div: "/",
-    ast.FloorDiv: "//",
-    ast.Mod: "%",
-    ast.Pow: "**",
-    ast.BitOr: "|",
-    ast.BitXor: "^",
-    ast.BitAnd: "&",
-    ast.LShift: "<<",
-    ast.RShift: ">>",
-    # unary operators
-    ast.USub: "-",
-    ast.UAdd: "+",
-    ast.Invert: "~",
-    ast.Not: "not",
-    ast.And: "and",
-    ast.Or: "or",
-    ast.Eq: "==",
-    ast.NotEq: "!=",
-    ast.Lt: "<",
-    ast.LtE: "<=",
-    ast.Gt: ">",
-    ast.GtE: ">=",
-    ast.Is: "is",
-    ast.IsNot: "is not",
-    ast.In: "in",
-    ast.NotIn: "not in",
-}
+# ----- check configuration -----
 
-# These AST nodes have no associated line number.
-NO_LINE = (ast.operator, ast.unaryop, ast.boolop, ast.cmpop, ast.comprehension)
+
+def check_language() -> str:
+    """Return non-empty message if some constructs in LANGUAGE are unknown."""
+    allowed = set()
+    for constructs in LANGUAGE.values():
+        allowed.update(set(constructs))
+    if unknown := allowed - ABSTRACT.keys() - BUILTINS - OPTIONS:
+        return f"error: unknown constructs: {', '.join(unknown)}"
+    return ""
+
+
+def check_imports() -> str:
+    """Return non-empty message if introduction of modules and import don't match."""
+    statements = []
+    for unit, elements in LANGUAGE.items():
+        if "import" in elements or "from import" in elements:
+            statements.append(unit)
+    first_import = min(statements) if statements else 0
+    first_module = min(IMPORTS.keys()) if IMPORTS else 0
+
+    if first_module and not first_import:
+        return (
+            "error: modules are allowed but import statements aren't\n"
+            "fix 1: make IMPORTS empty\n"
+            "fix 2: add 'import' and/or 'from import' to LANGUAGE"
+        )
+    if first_import and not first_module:
+        return (
+            "error: import statement is allowed but no modules are introduced\n"
+            "fix 1: add modules to IMPORTS\n"
+            "fix 2: remove 'import' and 'from import' from LANGUAGE"
+        )
+    if first_module < first_import:
+        return (
+            "error: modules are introduced before import statement\n"
+            "fix 1: in IMPORTS, move modules to unit {first_import} or later\n"
+            "fix 2: in LANGUAGE, move import statements to unit {first_module} or earlier"
+        )
+    return ""
+
+
+# ----- auxiliary functions -----
+
+
+def get_unit(filename: str) -> int:
+    """Return the file's unit or zero (consider all units)."""
+    if FILE_UNIT and (match := re.match(FILE_UNIT, filename)):
+        return int(match.group(1))
+    else:
+        return 0
+
+
+def get_language(last_unit: int) -> tuple[ast.AST]:
+    """Return the allowed language elements up to the given unit.
+
+    If `last_unit` is zero, return the elements in all units.
+    """
+    allowed = []
+    for unit, constructs in LANGUAGE.items():
+        if not last_unit or unit <= last_unit:
+            for construct in constructs:
+                if ast_class := ABSTRACT.get(construct, None):
+                    allowed.append(ast_class)
+    return tuple(allowed)
+
+
+def get_options(last_unit: int) -> list[str]:
+    """Return the allowed language options up to the given unit.
+
+    If `last_unit` is zero, return the options in all units.
+    """
+    allowed = []
+    for unit, constructs in LANGUAGE.items():
+        if not last_unit or unit <= last_unit:
+            for construct in constructs:
+                if construct in OPTIONS:
+                    allowed.append(construct)
+    return allowed
+
+
+def get_imports(last_unit: int) -> dict[str, list[str]]:
+    """Return the allowed imports up to the given unit.
+
+    If `last_unit` is zero, return the imports in all units.
+    """
+    allowed = {}
+    for unit, imports in IMPORTS.items():
+        if not last_unit or unit <= last_unit:
+            for module, names in imports.items():
+                if module in allowed:
+                    allowed[module].extend(names)
+                else:
+                    allowed[module] = names
+    return allowed
+
+
+def get_functions(last_unit: int) -> set[str]:
+    """Return the allowed functions up to the given unit.
+
+    If `last_unit` is zero, return the functions in all units.
+    """
+    allowed = set()
+    for unit, constructs in LANGUAGE.items():
+        if not last_unit or unit <= last_unit:
+            for construct in constructs:
+                if construct in BUILTINS:
+                    allowed.add(construct)
+    return allowed
+
+
+def get_methods(last_unit: int) -> dict[str, list[str]]:
+    """Return the allowed methods up to the given unit.
+
+    If `last_unit` is zero, return the methods in all units.
+    """
+    allowed = {}
+    for unit, methods in METHODS.items():
+        if not last_unit or unit <= last_unit:
+            for type, names in methods.items():
+                if type in allowed:
+                    allowed[type].extend(names)
+                else:
+                    allowed[type] = names
+    return allowed
+
+
+def get_constructs(last_unit: int) -> tuple:
+    """Return the allowed constructs up to the given unit."""
+    return (
+        IGNORE + get_language(last_unit),
+        get_options(last_unit),
+        get_imports(last_unit),
+        get_functions(last_unit),
+        get_methods(last_unit),
+    )
 
 
 def check_tree(tree: ast.AST, constructs: tuple, source: list) -> list:
@@ -472,13 +487,13 @@ def check_tree(tree: ast.AST, constructs: tuple, source: list) -> list:
         elif isinstance(node, (ast.BinOp, ast.UnaryOp, ast.BoolOp)):
             if not isinstance(node.op, language):
                 line = node.lineno
-                message = OPERATORS.get(type(node.op), "unknown operator")
+                message = CONCRETE.get(type(node.op), "unknown operator")
                 errors.append((line, message))
         elif isinstance(node, ast.Compare):
             for op in node.ops:
                 if not isinstance(op, language):
                     line = node.lineno
-                    message = OPERATORS.get(type(op), "unknown operator")
+                    message = CONCRETE.get(type(op), "unknown operator")
                     errors.append((line, message))
         elif not isinstance(node, language):
             if hasattr(node, "lineno"):
@@ -550,7 +565,7 @@ def check_tree(tree: ast.AST, constructs: tuple, source: list) -> list:
 def check_folder(folder: str, last_unit: int) -> None:
     """Check all Python files in `folder` and its subfolders."""
     global_constructs = get_constructs(last_unit)
-    for current, subfolders, files in os.walk(folder):
+    for current_folder, subfolders, files in os.walk(folder):
         subfolders.sort()
         for filename in sorted(files):
             if filename.endswith(".py"):
@@ -558,7 +573,7 @@ def check_folder(folder: str, last_unit: int) -> None:
                     constructs = get_constructs(file_unit)
                 else:
                     constructs = global_constructs
-                fullname = os.path.join(current, filename)
+                fullname = os.path.join(current_folder, filename)
                 check_file(fullname, constructs)
 
 
@@ -596,17 +611,6 @@ def check_file(filename: str, constructs: tuple) -> None:
             print(f"{filename}: can't parse: {message}")
 
 
-def first_import_and_module() -> tuple[int, int]:
-    """Return when an import statement and a module are first introduced."""
-    statements = []
-    for unit, elements in LANGUAGE.items():
-        if "import" in elements or "from import" in elements:
-            statements.append(unit)
-    first_import = min(statements) if statements else 0
-    first_module = min(IMPORTS.keys()) if IMPORTS else 0
-    return first_import, first_module
-
-
 # ---- main program ----
 
 if __name__ == "__main__":
@@ -619,7 +623,6 @@ if __name__ == "__main__":
         "--unit",
         type=int,
         default=0,
-        choices=range(0, 100),
         help="only use constructs from units 1 to UNIT (default: all units)",
     )
     argparser.add_argument(
@@ -627,35 +630,11 @@ if __name__ == "__main__":
     )
     args = argparser.parse_args()
 
-    allowed = set()
-    for constructs in LANGUAGE.values():
-        allowed.update(set(constructs))
-    if unknown := allowed - SYNTAX.keys() - BUILTINS - OPTIONS:
-        print(f"error: unknown constructs: {', '.join(unknown)}")
-        sys.exit(1)
+    if args.unit < 0:
+        argparser.exit(1, "error: unit must be positive")
 
-    first_import, first_module = first_import_and_module()
-    if first_module and not first_import:
-        print(
-            "error: modules are allowed but import statements aren't\n"
-            "fix 1: make IMPORTS empty\n"
-            "fix 2: add 'import' and/or 'from import' to LANGUAGE"
-        )
-        sys.exit(1)
-    elif first_import and not first_module:
-        print(
-            "error: import statement is allowed but no modules are introduced\n"
-            "fix 1: add modules to IMPORTS\n"
-            "fix 2: remove 'import' and 'from import' from LANGUAGE"
-        )
-        sys.exit(1)
-    elif first_module < first_import:
-        print(
-            "error: modules are introduced before import statement\n"
-            "fix 1: in IMPORTS, move modules to unit {first_import} or later\n"
-            "fix 2: in LANGUAGE, move import statements to unit {first_module} or sooner"
-        )
-        sys.exit(1)
+    if error := check_language() or (error := check_imports()):
+        argparser.exit(1, error)
 
     args.file_or_folder.sort()
     for name in args.file_or_folder:

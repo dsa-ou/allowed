@@ -12,7 +12,10 @@ There will be false positives (code reported to be a violation, but isn't)
 and false negatives (code that uses disallowed constructs but isn't reported).
 
 ## Usage
-Download the files in this repository and type in a terminal:
+Click on the green 'Code' button and select the 'download zip' option.
+Unzip the downloaded file if your web browser hasn't done so.
+This creates an `allowed-main` folder within your downloads folder.
+Open a terminal, change to the `allowed-main` folder and type:
 ```bash
 python allowed.py path/to/file1.py path/to/file2.py ...
 ```
@@ -43,6 +46,8 @@ the [`pytype`](https://google.github.io/pytype) type checker,
 which only works with Python versions 3.7 to 3.10.
 If you don't have such a version or have not installed `pytype`,
 `allowed` skips those checks (which by the way slow down the process substantially).
+
+Installing `pytype` on Windows requires [WSL](https://learn.microsoft.com/en-us/windows/wsl/).
 
 ### Organising by units
 
@@ -103,7 +108,7 @@ install [nbqa](https://http://nbqa.readthedocs.io) and type one of the following
 nbqa allowed path/to/notebook1.ipynb path/to/notebook2.ipynb ...
 nbqa allowed path/to/folder
 ```
-The latter will check all notebooks in that folder and its subfolder.
+The latter will check all notebooks in that folder and its subfolders.
 With `nbqa`, reports state which line of which code cell uses a disallowed construct,
 like `path/to/notebook1.ipynb:cell_13:5: ...`, which helps find the issue more quickly.
 
@@ -126,15 +131,35 @@ You can set constant `FILE_UNIT` to the
 that extracts the unit number from the file name. See the file for details.
 
 ## Contributing
-If you spot an error, please check if it
+Any help to improve `allowed` is welcome.
+
+If you spot an error in the code or documentation, please check if it
 [has been reported](https://github.com/dsa-ou/allowed/issues)
 before creating a new issue.
 
-For anything else, like an idea for a feature or
-a query on how to use and configure `allowed`, please use the
-[discussion forum](https://github.com/dsa-ou/allowed/discussion).
+If you have an idea for a new feature, post it in the
+[ideas discussion forum](https://github.com/dsa-ou/allowed/discussions/categories/ideas).
+If you have a query about `allowed` post it in the
+[Q & A discussion forum](https://github.com/dsa-ou/allowed/discussions/categories/q-a).
 
-Please only submit pull requests for open issues.
+If you are a M269 student or tutor, you can alternatively report errors,
+make suggestions and ask questions in the M269 technical forum.
+
+If you want to contribute code to address an open issue:
+
+1. Install and activate the `dsa-ou` [virtual environment](https://github.com/dsa-ou/virtual-env).
+2. Fork this repository and clone it to your disk.
+3. Run `python allowed.py sample.py > sample.txt`.
+4. Run `python path/to/M269/book/python > book.txt`.
+5. Choose an [open issue](https://github.com/dsa-ou/allowed/issues) and assign it to yourself.
+6. Create a branch in your repository to work on the issue.
+7. Run the `black` and `isort` formatter on your modified `allowed.py` before testing it.
+8. Check that your changes didn't modify `allowed`'s behaviour:
+   1. run `python allowd.py sample.y | diff -w - sample.txt`
+   2. run `python path/to/M269/book/python | diff -w - book.txt`
+   3. neither run should show any differences
+9. Do any tests specific to the issue you're addressing.
+10. Make a pull request.
 
 ## Licences
 
