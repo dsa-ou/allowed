@@ -44,10 +44,14 @@ To check if the attribute access `variable.method` is allowed,
 the program needs to know the type of `variable`. For that purpose, it uses
 the [`pytype`](https://google.github.io/pytype) type checker,
 which only works with Python versions 3.7 to 3.10.
-If you don't have such a version or have not installed `pytype`,
-`allowed` skips those checks (which by the way slow down the process substantially).
 
-Installing `pytype` on Windows requires [WSL](https://learn.microsoft.com/en-us/windows/wsl/).
+Installing `pytype` on Windows requires [WSL](https://learn.microsoft.com/en-us/windows/wsl/).  
+
+By default `allowed` skips these checks (which by the way slow down the process substantially). You can enable method call checks with option `-m` or `--methods`, for example: 
+```bash
+python allowed.py -m submission.py
+python allowed.py --methods submission.py
+```
 
 ### Organising by units
 
