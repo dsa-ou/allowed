@@ -5,6 +5,7 @@ import ast
 import os
 import re
 import sys
+import json
 
 PYTHON_VERSION = sys.version_info[:2]
 if (3, 7) <= PYTHON_VERSION <= (3, 10):
@@ -558,6 +559,10 @@ def check_tree(tree: ast.AST, constructs: tuple, source: list) -> list:
             del errors[index]
     return errors
 
+def is_filetype_supported(filename: str) -> bool:
+    """Returns whether a filename has an extension that is supported for parsing."""
+    SUPPORTED_EXTENSIONS = [".py", ".ipynb"]
+    return os.path.splitext(filename)[1] in SUPPORTED_EXTENSIONS
 
 # ----- main functions -----
 
@@ -581,7 +586,10 @@ def check_file(filename: str, constructs: tuple) -> None:
     """Check that the file only uses the allowed constructs."""
     try:
         with open(filename) as file:
-            source = file.read()
+            if file.name.endswith(".ipynb"):
+                source = read_jupyter_notebook(file.read())
+            else:
+                source = file.read()
         if CHECK_METHOD_CALLS and METHODS:
             tree = annotate_ast.annotate_source(source, ast, PYTYPE_OPTIONS)
         else:
@@ -610,6 +618,17 @@ def check_file(filename: str, constructs: tuple) -> None:
         else:
             print(f"{filename}: can't parse: {message}")
 
+def read_jupyter_notebook(file_contents: str) -> str:
+    """Returns a string representation of all code cells in a Jupyter Notebook"""
+    jobject = json.loads(file_contents)
+    code_blocks = [x for x in jobject['cells'] if x['cell_type'] == 'code']
+    code_lines = []
+    for block in code_blocks:
+        for line in block['source']:
+            code_lines.append(line)
+        code_lines.append('\n')
+    code = "".join(code_lines)
+    return code
 
 # ---- main program ----
 
@@ -640,7 +659,7 @@ if __name__ == "__main__":
     for name in args.file_or_folder:
         if os.path.isdir(name):
             check_folder(name, args.unit)
-        elif name.endswith(".py"):
+        elif is_filetype_supported(name):
             unit = args.unit if args.unit else get_unit(name)
             check_file(name, get_constructs(unit))
         else:
