@@ -96,18 +96,7 @@ python allowed.py 01_submission.py -u 5
 ```
 
 ### Checking notebooks
-There are two ways of checking Python code in a Jupyter notebook.
-
-The first is to save the notebook as a Python file
-(e.g with menu File -> Download as -> Python in the web interface) and check that file.
-When `allowed` reports a violation as `notebook1.py:line: construct`,
-that line number relates to the Python file but is meaningless for the notebook.
-To find the issue, search for the reported construct in the notebook.
-Every time you change the notebook, you must convert it again to Python
-or use [`jupytext`](https://jupytext.readthedocs.io) to do it automatically.
-
-The second way is much simpler but requires extra software:
-install [nbqa](https://http://nbqa.readthedocs.io) and type one of the following.
+It is possible to directly specify a notebook file as you would a Python file. However, this will not provide you with accurate line/cell information. To get a more accurate indication of where the problem is, you need to first install [nbqa](https://http://nbqa.readthedocs.io) and type one of the following.
 ```bash
 nbqa allowed path/to/notebook1.ipynb path/to/notebook2.ipynb ...
 nbqa allowed path/to/folder

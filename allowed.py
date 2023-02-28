@@ -5,6 +5,7 @@ import ast
 import os
 import re
 import sys
+import json
 
 PYTHON_VERSION = sys.version_info[:2]
 if (3, 7) <= PYTHON_VERSION <= (3, 10):
@@ -556,7 +557,6 @@ def check_tree(tree: ast.AST, constructs: tuple, source: list) -> list:
             del errors[index]
     return errors
 
-
 # ----- main functions -----
 
 
@@ -579,7 +579,10 @@ def check_file(filename: str, constructs: tuple, check_method_calls: bool) -> No
     """Check that the file only uses the allowed constructs."""
     try:
         with open(filename) as file:
-            source = file.read()
+            if filename.endswith(".ipynb"):
+                source = read_jupyter_notebook(file.read())
+            else:
+                source = file.read()
         if check_method_calls and METHODS:
             tree = annotate_ast.annotate_source(source, ast, PYTYPE_OPTIONS)
         else:
@@ -608,6 +611,16 @@ def check_file(filename: str, constructs: tuple, check_method_calls: bool) -> No
         else:
             print(f"{filename}: can't parse: {message}")
 
+def read_jupyter_notebook(file_contents: str) -> str:
+    """Returns a string representation of all code cells in a Jupyter Notebook"""
+    jobject = json.loads(file_contents)
+    code_lines = []
+    for cell in jobject['cells']:
+        if cell['cell_type'] == 'code':
+            for line in cell['source']:
+                code_lines.append(line)
+            code_lines.append('\n')
+    return "".join(code_lines)
 
 # ---- main program ----
 
@@ -654,7 +667,7 @@ if __name__ == "__main__":
     for name in args.file_or_folder:
         if os.path.isdir(name):
             check_folder(name, args.unit, check_method_calls)
-        elif name.endswith(".py"):
+        elif name.endswith("py") or name.endswith("ipynb"):
             unit = args.unit if args.unit else get_unit(name)
             check_file(name, get_constructs(unit), check_method_calls)
         else:
