@@ -559,11 +559,6 @@ def check_tree(tree: ast.AST, constructs: tuple, source: list) -> list:
             del errors[index]
     return errors
 
-def is_filetype_supported(filename: str) -> bool:
-    """Returns whether a filename has an extension that is supported for parsing."""
-    SUPPORTED_EXTENSIONS = [".py", ".ipynb"]
-    return os.path.splitext(filename)[1] in SUPPORTED_EXTENSIONS
-
 # ----- main functions -----
 
 
@@ -586,7 +581,7 @@ def check_file(filename: str, constructs: tuple) -> None:
     """Check that the file only uses the allowed constructs."""
     try:
         with open(filename) as file:
-            if file.name.endswith(".ipynb"):
+            if filename.endswith(".ipynb"):
                 source = read_jupyter_notebook(file.read())
             else:
                 source = file.read()
@@ -621,14 +616,13 @@ def check_file(filename: str, constructs: tuple) -> None:
 def read_jupyter_notebook(file_contents: str) -> str:
     """Returns a string representation of all code cells in a Jupyter Notebook"""
     jobject = json.loads(file_contents)
-    code_blocks = [x for x in jobject['cells'] if x['cell_type'] == 'code']
     code_lines = []
-    for block in code_blocks:
-        for line in block['source']:
-            code_lines.append(line)
-        code_lines.append('\n')
-    code = "".join(code_lines)
-    return code
+    for cell in jobject['cells']:
+        if cell['cell_type'] == 'code':
+            for line in cell['source']:
+                code_lines.append(line)
+            code_lines.append('\n')
+    return "".join(code_lines)
 
 # ---- main program ----
 
@@ -659,7 +653,7 @@ if __name__ == "__main__":
     for name in args.file_or_folder:
         if os.path.isdir(name):
             check_folder(name, args.unit)
-        elif is_filetype_supported(name):
+        elif name.endswith("py") or name.endswith("ipynb"):
             unit = args.unit if args.unit else get_unit(name)
             check_file(name, get_constructs(unit))
         else:
