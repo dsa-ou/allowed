@@ -13,13 +13,11 @@ if (3, 7) <= PYTHON_VERSION <= (3, 10):
         from pytype.tools.annotate_ast import annotate_ast
 
         PYTYPE_OPTIONS = pytype.config.Options.create(python_version=PYTHON_VERSION)
-        CHECK_METHOD_CALLS = True
+        METHOD_CHECK_ERROR = ""
     except ImportError:
-        print("warning: pytype not installed: won't check method calls")
-        CHECK_METHOD_CALLS = False
+        METHOD_CHECK_ERROR = "error: pytype not installed: method calls can not be checked"
 else:
-    print("warning: Python version not supported: won't check method calls")
-    CHECK_METHOD_CALLS = False
+    METHOD_CHECK_ERROR = "error: Python version not supported: method calls can not be checked"
 
 # ----- configuration -----
 
@@ -210,7 +208,7 @@ ABSTRACT = {
     "assert": ast.Assert,
     "del": ast.Delete,
     "pass": ast.Pass,
-    "import": ast.Import,   # allows `as`
+    "import": ast.Import,  # allows `as`
     "from import": ast.ImportFrom,  # allows `as`
     "class": ast.ClassDef,
     # function constructs
@@ -562,7 +560,7 @@ def check_tree(tree: ast.AST, constructs: tuple, source: list) -> list:
 # ----- main functions -----
 
 
-def check_folder(folder: str, last_unit: int) -> None:
+def check_folder(folder: str, last_unit: int, check_method_calls: bool) -> None:
     """Check all Python files in `folder` and its subfolders."""
     global_constructs = get_constructs(last_unit)
     for current_folder, subfolders, files in os.walk(folder):
@@ -574,15 +572,15 @@ def check_folder(folder: str, last_unit: int) -> None:
                 else:
                     constructs = global_constructs
                 fullname = os.path.join(current_folder, filename)
-                check_file(fullname, constructs)
+                check_file(fullname, constructs, check_method_calls)
 
 
-def check_file(filename: str, constructs: tuple) -> None:
+def check_file(filename: str, constructs: tuple, check_method_calls: bool) -> None:
     """Check that the file only uses the allowed constructs."""
     try:
         with open(filename) as file:
             source = file.read()
-        if CHECK_METHOD_CALLS and METHODS:
+        if check_method_calls and METHODS:
             tree = annotate_ast.annotate_source(source, ast, PYTYPE_OPTIONS)
         else:
             tree = ast.parse(source)
@@ -619,6 +617,12 @@ if __name__ == "__main__":
         "See allowed.py for how to specify the allowed constructs."
     )
     argparser.add_argument(
+        "-m",
+        "--methods",
+        action="store_true",
+        help="Enable method call checking",
+    )
+    argparser.add_argument(
         "-u",
         "--unit",
         type=int,
@@ -631,17 +635,30 @@ if __name__ == "__main__":
     args = argparser.parse_args()
 
     if args.unit < 0:
-        argparser.exit(1, "error: unit must be positive")
+        sys.exit("error: unit must be positive")
 
     if error := check_language() or (error := check_imports()):
-        argparser.exit(1, error)
+        sys.exit(error)
+
+    if args.methods:
+        if METHOD_CHECK_ERROR:
+            sys.exit(METHOD_CHECK_ERROR)
+        else:
+            check_method_calls = True
+        reminder = ""
+    else:
+        check_method_calls = False
+        reminder = "Method calls have NOT been checked. Use option -m or --methods to enable (pytype and Python version 3.7 to 3.10 required)"
 
     args.file_or_folder.sort()
     for name in args.file_or_folder:
         if os.path.isdir(name):
-            check_folder(name, args.unit)
+            check_folder(name, args.unit, check_method_calls)
         elif name.endswith(".py"):
             unit = args.unit if args.unit else get_unit(name)
-            check_file(name, get_constructs(unit))
+            check_file(name, get_constructs(unit), check_method_calls)
         else:
             print(f"{name}: not a folder nor a Python file")
+
+    if reminder:
+        print(reminder)
