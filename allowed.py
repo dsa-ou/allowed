@@ -47,6 +47,7 @@ LANGUAGE = {
         "return",
         "function call",
         "import",
+        "attribute",  # dot notation, e.g. math.pi
         "+",
         "-",
         "*",
@@ -60,8 +61,6 @@ LANGUAGE = {
         "max",
         "round",
         "print",
-        "int",
-        "float",
     ),
     3: (
         "if",
@@ -83,8 +82,10 @@ LANGUAGE = {
         "in",
         "index",
         "slice",
-        "attribute",  # dot notation, e.g. math.sqrt
         "keyword argument",  # e.g. print(..., end="")
+        "bool",
+        "float",
+        "int",
         "len",
         "sorted",
         "str",
@@ -571,7 +572,7 @@ def check_folder(folder: str, last_unit: int, check_method_calls: bool) -> None:
     for current_folder, subfolders, files in os.walk(folder):
         subfolders.sort()
         for filename in sorted(files):
-            if filename.endswith(".py"):
+            if filename.endswith(".py") or filename.endswith(".ipynb"):
                 if not last_unit and (file_unit := get_unit(filename)):
                     constructs = get_constructs(file_unit)
                 else:
@@ -632,6 +633,9 @@ def read_jupyter_notebook(file_contents: str) -> str:
 # ---- main program ----
 
 if __name__ == "__main__":
+    if PYTHON_VERSION < (3, 10):
+        sys.exit("error: Python 3.10 or higher required")
+
     argparser = argparse.ArgumentParser(
         description="Check that the code only uses certain constructs. "
         "See allowed.py for how to specify the allowed constructs."
@@ -649,9 +653,7 @@ if __name__ == "__main__":
         default=0,
         help="only use constructs from units 1 to UNIT (default: all units)",
     )
-    argparser.add_argument(
-        "file_or_folder", nargs="+", help="file or folder to check"
-    )
+    argparser.add_argument("file_or_folder", nargs="+", help="file or folder to check")
     args = argparser.parse_args()
 
     if args.unit < 0:
@@ -668,14 +670,14 @@ if __name__ == "__main__":
         reminder = ""
     else:
         check_method_calls = False
-        reminder = "Method calls have NOT been checked. Use option -m or --methods to enable (pytype and Python version 3.7 to 3.10 required)"
+        reminder = "Method calls were NOT checked. To do so, use option -m or --methods (pytype and Python 3.10 required)"
 
     args.file_or_folder.sort()
     for name in args.file_or_folder:
         if os.path.isdir(name):
             check_folder(name, args.unit, check_method_calls)
-            unit = args.unit if args.unit else get_unit(name)
         elif name.endswith(".py") or name.endswith(".ipynb"):
+            unit = args.unit if args.unit else get_unit(os.path.basename(name))
             check_file(name, get_constructs(unit), check_method_calls)
         else:
             print(f"{name}: not a folder, Python file or notebook")
