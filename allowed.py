@@ -2,10 +2,10 @@
 
 import argparse
 import ast
+import json
 import os
 import re
 import sys
-import json
 
 PYTHON_VERSION = sys.version_info[:2]
 if (3, 7) <= PYTHON_VERSION <= (3, 10):
@@ -16,9 +16,13 @@ if (3, 7) <= PYTHON_VERSION <= (3, 10):
         PYTYPE_OPTIONS = pytype.config.Options.create(python_version=PYTHON_VERSION)
         METHOD_CHECK_ERROR = ""
     except ImportError:
-        METHOD_CHECK_ERROR = "error: pytype not installed: method calls can not be checked"
+        METHOD_CHECK_ERROR = (
+            "error: pytype not installed: method calls can not be checked"
+        )
 else:
-    METHOD_CHECK_ERROR = "error: Python version not supported: method calls can not be checked"
+    METHOD_CHECK_ERROR = (
+        "error: Python version not supported: method calls can not be checked"
+    )
 
 # ----- configuration -----
 
@@ -557,6 +561,7 @@ def check_tree(tree: ast.AST, constructs: tuple, source: list) -> list:
             del errors[index]
     return errors
 
+
 # ----- main functions -----
 
 
@@ -611,16 +616,18 @@ def check_file(filename: str, constructs: tuple, check_method_calls: bool) -> No
         else:
             print(f"{filename}: can't parse: {message}")
 
+
 def read_jupyter_notebook(file_contents: str) -> str:
     """Returns a string representation of all code cells in a Jupyter Notebook"""
     jobject = json.loads(file_contents)
     code_lines = []
-    for cell in jobject['cells']:
-        if cell['cell_type'] == 'code':
-            for line in cell['source']:
+    for cell in jobject["cells"]:
+        if cell["cell_type"] == "code":
+            for line in cell["source"]:
                 code_lines.append(line)
-            code_lines.append('\n')
+            code_lines.append("\n")
     return "".join(code_lines)
+
 
 # ---- main program ----
 
@@ -643,7 +650,7 @@ if __name__ == "__main__":
         help="only use constructs from units 1 to UNIT (default: all units)",
     )
     argparser.add_argument(
-        "file_or_folder", nargs="+", help="Python file or folder to check"
+        "file_or_folder", nargs="+", help="file or folder to check"
     )
     args = argparser.parse_args()
 
@@ -667,11 +674,11 @@ if __name__ == "__main__":
     for name in args.file_or_folder:
         if os.path.isdir(name):
             check_folder(name, args.unit, check_method_calls)
-        elif name.endswith("py") or name.endswith("ipynb"):
             unit = args.unit if args.unit else get_unit(name)
+        elif name.endswith(".py") or name.endswith(".ipynb"):
             check_file(name, get_constructs(unit), check_method_calls)
         else:
-            print(f"{name}: not a folder nor a Python file")
+            print(f"{name}: not a folder, Python file or notebook")
 
     if reminder:
         print(reminder)
