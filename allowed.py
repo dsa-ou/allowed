@@ -1,4 +1,4 @@
-"""Check that Python files only use the allowed constructs."""
+"""Check that Python and notebook files only use the allowed constructs."""
 
 import argparse
 import ast
@@ -17,132 +17,19 @@ if (3, 7) <= PYTHON_VERSION <= (3, 10):
         METHOD_CHECK_ERROR = ""
     except ImportError:
         METHOD_CHECK_ERROR = (
-            "error: pytype not installed: method calls can not be checked"
+            "error: pytype not installed: method calls cannot be checked"
         )
 else:
     METHOD_CHECK_ERROR = (
-        "error: Python version not supported: method calls can not be checked"
+        "error: Python version not supported: method calls cannot be checked"
     )
 
-# ----- configuration -----
-
-# FILE_UNIT is a regexp that extracts the unit from the file's name.
-# If there's a match, the unit number must be the first group.
-# If there's no match, the user-given unit will be used.
-
-FILE_UNIT = r"^(\d+)"  # file name starts with the unit number
-# FILE_UNIT = r"(\d+).py$"  # file name ends with the unit number
-# FILE_UNIT = ""  # file names don't include a unit number
-
-# LANGUAGE[n] are Python's syntax and built-in functions introduced in unit n.
-# For the possible syntactical elements, see dictionary `SYNTAX` further below.
-# Use strings "for else" and "while else" to allow the `else` clause in loops.
-# For the possible built-in functions, see set `BUILTINS` further below.
-LANGUAGE = {
-    2: (
-        "=",
-        "name",
-        "constant",
-        "def",
-        "return",
-        "function call",
-        "import",
-        "attribute",  # dot notation, e.g. math.pi
-        "+",
-        "-",
-        "*",
-        "/",
-        "//",
-        "%",
-        "**",
-        "-x",  # unary minus
-        "help",
-        "min",
-        "max",
-        "round",
-        "print",
-    ),
-    3: (
-        "if",
-        "and",
-        "or",
-        "not",
-        "==",
-        "!=",
-        "<",
-        "<=",
-        ">",
-        ">=",
-    ),
-    4: (
-        "for",
-        "while",
-        "list literal",
-        "tuple literal",
-        "in",
-        "index",
-        "slice",
-        "keyword argument",  # e.g. print(..., end="")
-        "bool",
-        "float",
-        "int",
-        "len",
-        "sorted",
-        "str",
-        "range",
-        "list",
-        "tuple",
-    ),
-    6: ("pass", "class"),
-    7: ("from import",),
-    8: (
-        "dict literal",
-        "set literal",
-        "not in",
-        "|",
-        "&",
-        "dict",
-        "set",
-        "ord",
-        "hash",
-    ),
-    17: ("super",),
-    18: ("abs",),
-}
-
-# IMPORTS[n] is a dictionary of the modules and names introduced in unit n.
-IMPORTS = {
-    2: {"math": ["floor", "ceil", "trunc", "pi"]},
-    6: {"math": ["inf"]},
-    7: {"collections": ["deque"]},
-    8: {"collections": ["Counter"]},
-    11: {"math": ["sqrt", "factorial"], "itertools": ["permutations", "combinations"]},
-    14: {"random": ["shuffle"], "typing": ["Callable"]},
-    16: {"heapq": ["heappush", "heappop"]},
-    17: {"typing": ["Hashable"], "random": ["random"]},
-    27: {"inspect": ["getsource"]},
-}
-
-# METHODS[n] is a dictionary of the methods introduced in unit n: the keys are the types.
-# Other builtin types are 'str' and 'Tuple'.
-
-METHODS = {
-    4: {"List": ["insert", "append", "pop", "sort"]},
-    7: {"collections.deque": ["append", "appendleft", "pop", "popleft"]},
-    8: {
-        "Dict": ["items"],
-        "Set": ["add", "discard", "union", "intersection", "difference"],
-    },
-    11: {"Set": ["pop"]},
-}
-
-# ----- end of configuration -----
 
 # ----- Python's Abstract Syntax Tree (AST) -----
 
 # ABSTRACT maps strings (syntax descriptions) to the `ast` node classes
 # listed in https://docs.python.org/3.10/library/ast.html.
-# The strings can appear in the values of dictionary `LANGUAGE` above.
+# The strings can appear as values of dictionary "LANGUAGE" in the JSON file.
 # TODO: ABSTRACT doesn't cover all Python 3.10 syntax.
 ABSTRACT = {
     # literals
@@ -235,7 +122,7 @@ ABSTRACT = {
 # CONCRETE is the inverse map. Needed for error messages.
 CONCRETE = {ast_node: string for string, ast_node in ABSTRACT.items()}
 
-# optional constructs that can be separately allowed
+# optional constructs that can appear in dictionary "LANGUAGE"
 OPTIONS = {"for else", "while else"}
 
 IGNORE = (  # wrapper nodes that can be skipped
@@ -262,7 +149,7 @@ NO_LINE = (  # nodes without associated line numbers
     ast.comprehension,
 )
 
-# set of all built-in functions
+# set of all built-in functions that can appear in dictionary "LANGUAGE"
 BUILTINS = {
     "abs",
     "aiter",
@@ -653,11 +540,29 @@ if __name__ == "__main__":
         default=0,
         help="only use constructs from units 1 to UNIT (default: all units)",
     )
+    argparser.add_argument(
+        "-c",
+        "--config",
+        default="m269.json",
+        help="configuration file (default: m269.json)",
+    )
     argparser.add_argument("file_or_folder", nargs="+", help="file or folder to check")
     args = argparser.parse_args()
 
     if args.unit < 0:
         sys.exit("error: unit must be positive")
+
+    configuration = json.load(open(args.config))
+    FILE_UNIT = configuration.get("FILE_UNIT", "")
+    LANGUAGE = {}
+    for key, value in configuration["LANGUAGE"].items():
+        LANGUAGE[int(key)] = value
+    IMPORTS = {}
+    for key, value in configuration["IMPORTS"].items():
+        IMPORTS[int(key)] = value
+    METHODS = {}
+    for key, value in configuration["METHODS"].items():
+        METHODS[int(key)] = value
 
     if error := check_language() or (error := check_imports()):
         sys.exit(error)

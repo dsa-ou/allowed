@@ -1,0 +1,42 @@
+{
+  "FILE_UNIT": "^(\\d+)",
+  "LANGUAGE": {
+    "2": [
+        "=", "name", "constant", "def", "return", "function call",
+        "import", "attribute",
+        "+", "-", "*", "/", "//", "%", "**", "-x",
+        "help", "min", "max", "round", "print"
+    ],
+    "3": ["if", "and", "or", "not", "==", "!=", "<", "<=", ">", ">="],
+    "4": [
+        "for", "while", "list literal", "tuple literal",
+        "in", "index", "slice", "keyword argument", "bool", "float", "int",
+        "len", "sorted", "str", "range", "list", "tuple"
+    ],
+    "6": ["pass", "class"],
+    "7": ["from import"],
+    "8": [
+        "dict literal", "set literal", "not in", "|", "&",
+        "dict", "set", "ord", "hash"
+    ],
+    "17": ["super"],
+    "18": ["abs"]
+  },
+  "IMPORTS": {
+    "2": {"math": ["floor", "ceil", "trunc", "pi"]},
+    "6": {"math": ["inf"]},
+    "7": {"collections": ["deque"]},
+    "8": {"collections": ["Counter"]},
+    "11": {"math": ["sqrt", "factorial"], "itertools": ["permutations", "combinations"]},
+    "14": {"random": ["shuffle"], "typing": ["Callable"]},
+    "16": {"heapq": ["heappush", "heappop"]},
+    "17": {"typing": ["Hashable"], "random": ["random"]},
+    "27": {"inspect": ["getsource"]}
+  },
+  "METHODS": {
+    "4": {"List": ["insert", "append", "pop", "sort"]},
+    "7": {"collections.deque": ["append", "appendleft", "pop", "popleft"]},
+    "8": {"Dict": ["items"], "Set": ["add", "discard", "union", "intersection", "difference"]},
+    "11": {"Set": ["pop"]}
+  }
+}

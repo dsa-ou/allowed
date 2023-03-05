@@ -1,12 +1,11 @@
 This program checks if your Python code only uses certain constructs,
 which you can configure.
-The check is purely syntactic and therefore assumes that your code compiles.
 
 Like all static analysis tools, `allowed` isn't perfect and will never be.
 There will be false positives (code reported to be a violation, but isn't)
 and false negatives (code that uses disallowed constructs but isn't reported).
 
-This program requires Python 3.10 or later.
+This program requires Python 3.10 or later and that your code compiles.
 
 ## Installation
 
@@ -14,8 +13,8 @@ Click on the green 'Code' button and select the 'download zip' option.
 Unzip the downloaded file if your web browser hasn't done so.
 This creates an `allowed-main` folder within your downloads folder.
 
-The only file you need within that folder is `allowed.py`, which you may move
-to anywhere, e.g. to the folder with the code you want to check.
+The only files you need within that folder are `allowed.py` and `m269.json`,
+which you may move to anywhere, e.g. to the folder with the code you want to check.
 The files `sample.py` and `sample.ipynb` are example files with code to check.
 
 ## Usage
@@ -37,7 +36,7 @@ or with
 python allowed.py sample.ipynb allowed.py
 ```
 If you expect a long list of disallowed constructs, it may be better to
-check one file at a time and store the reports in a text file, e.g.
+check one file at a time and store the report in a text file, e.g.
 ```bash
 python allowed.py allowed.py > disallowed.txt
 ```
@@ -50,19 +49,17 @@ python allowed.py path/to/folder
 
 To check if the attribute access `variable.method` is allowed,
 the program needs to know the type of `variable`. For that purpose, it uses
-the [`pytype`](https://google.github.io/pytype) type checker,
-which only works with Python versions 3.7 to 3.10.
+the `pytype` type checker, which only works with Python versions 3.7 to 3.10.
 
-Installing `pytype` on Windows requires
-[WSL](https://learn.microsoft.com/en-us/windows/wsl/).
+For installation instructions, see [its website](https://google.github.io/pytype).
+On Windows, you must first install [WSL](https://learn.microsoft.com/en-us/windows/wsl/).
 
-By default `allowed` skips these checks because they slow down the process.
-You can enable method call checks with option `-m` or `--methods`, for example:
+By default, `allowed` skips method call checks because they slow down the process.
+You can enable these checks with option `-m` or `--methods`, for example
 ```bash
 python allowed.py -m sample.py
-python allowed.py --methods sample.ipynb
 ```
-This will print one further violation: method `list.count()` is used in line 52.
+will print one further violation: method `list.count()` is used in line 52.
 
 The methods call option can appear anywhere after `allowed.py` and in either form.
 For example, the following two commands are equivalent:
@@ -128,9 +125,9 @@ The latter checks all notebooks (but no `.py` files!)
 in that folder and its subfolders.
 
 Using `nbqa` overcomes the two limitations mentioned.
-First, any code cells with syntax errors or non-Python code are skipped,
-thus allowing `allowed` to check the remaining cells.
-Thus, with `nbqa` you will find more disallowed constructs than without.
+First, an error in one cell doesn't prevent `allowed` from checking the other cells.
+Thus, with `nbqa` you will find more disallowed constructs than without,
+but see [this issue](https://github.com/dsa-ou/allowed/issues/15).
 
 Second, `nbqa` reports the cell and line which uses a disallowed construct.
 For example, `path/to/notebook1.ipynb:cell_13:5: ...` means that the problem
@@ -146,31 +143,81 @@ nbqa allowed path/to/TMA02.ipynb -u 20
 ## Configuration
 
 The program is already configured for our course,
-[M269](https://www.open.ac.uk/courses/modules/m269), but you can change the configuration for your own purposes.
+[M269](https://www.open.ac.uk/courses/modules/m269),
+but you can create your own configuration by creating a JSON file of the form
+```json
+{
+   "FILE_UNIT": "...",
+   "LANGUAGE": { ... },
+   "IMPORTS": { ... },
+   "METHODS": { ... }
+}
+```
+File [`m269.json`](m269.json) is the default configuration.
+You can copy, rename and edit it to configure `allowed` for your course.
 
-You can define which language elements, built-in functions, modules and methods
-are introduced in which units by setting the constants
-`LANGUAGE`, `IMPORTS` and `METHODS` in `allowed.py`.
-See the file for details.
+You can have multiple configuration files and select one with
+option `-c` or `--config`, e.g.
+```bash
+python allowed.py assignment.py -c cs101.json
+```
+
+### FILE_UNIT
+This entry in the JSON file is
+a [regular expression](https://docs.python.org/3/howto/regex.html)
+that extracts the unit from the file name.
+If there's a match, the unit number must be in the first group of the regular expression.
+If there's no match, the unit given with option `-u` will be used.
+
+Note that in JSON you have to double each backspace used in the regular expression.
+For example, `"^(\\d+)"` extracts the unit number from the start of the file,
+while `"(\\d+).(py|ipynb)$"` extracts it from the end of the file.
+If the names of your files don't include a unit number,
+remove the `"FILE_UNIT"` entry or set it to the empty string.
+
+### LANGUAGE
+This entry is a dictionary that maps each unit number to
+a list of strings describing the syntax and built-in functions introduced in that unit. For example,
+```json
+"LANGUAGE": {
+   "2": ["name", "+", "help"]
+}
+```
+means that unit 2 introduces names (identifiers), the plus operator and the builtin `help` function.
+
+For the possible syntactical elements, see dictionary `SYNTAX` in `allowed.py`.
+For the possible built-in functions, see set `BUILTINS` in `allowed.py`.
 
 The various uses of a construct can't be individually allowed or disallowed.
 For example, you can't allow integer addition
 and disallow string concatenation (or vice versa): you either allow
 the `+` operator (and all its uses) or you don't.
 
-Adding `"for"` and `"while"` to `LANGUAGE` only allows the 'normal' loops.
+Adding `"for"` and `"while"` to `"LANGUAGE"` only allows the 'normal' loops.
 To also allow the `else` clause in loops, add `"for else"` and `"while else"`.
 
-You can set constant `FILE_UNIT` to the
-[regular expression](https://docs.python.org/3/howto/regex.html)
-that extracts the unit number from the file name. See `allowed.py` for details.
+### IMPORTS
+This entry is a dictionary that maps units to dictionaries of
+the modules and the list of exported objects introduced in those units. For example,
+```json
+"IMPORTS": {
+   "10": {"math": ["sqrt", "inf"]},
+   "11": {"math": ["abs"], "fractions": ["Fraction"]}
+}
+```
+allows function `math.sqrt(x)` and constant `math.inf` from unit 10 onwards, and
+allows function `math.abs(x)` and class `fractions.Fraction` from unit 11 on.
+
+Entry `"METHODS"` has the same structure as `"IMPORTS"`, but instead of listing
+which objects of which modules can be imported,
+it lists which methods of which classes can be called.
 
 ## Contributing
 
 Any help to improve `allowed` is welcome and appreciated.
 
 If you spot an error in the code or documentation, please check if it
-[has been reported](https://github.com/dsa-ou/allowed/issues)
+[has been reported](https://github.com/dsa-ou/allowed/issues),
 before creating a new issue.
 
 If you have an idea for a new feature, post it in the
@@ -184,8 +231,9 @@ make suggestions and ask questions in the M269 technical forum.
 If you want to contribute code to address an open issue:
 
 1. Install and activate the `dsa-ou` [virtual environment](https://github.com/dsa-ou/virtual-env).
-2. Fork this repository and clone it to your disk.
-3. Run `python allowed.py sample.py > sample.txt`.
+2. Fork this repository to your GitHub account and then clone it to your disk.
+3. Run `python allowed.py sample.py > sample.txt`
+   (optionally with option `-m` if you installed `pytype`).
 4. Run `python allowed.py path/to/M269/book/python > book.txt`.
 5. Choose an [open issue](https://github.com/dsa-ou/allowed/issues) and assign it to yourself.
 6. Create a branch in your repository to work on the issue.
@@ -194,7 +242,7 @@ If you want to contribute code to address an open issue:
    1. run `python allowed.py sample.py | diff -w - sample.txt`
    2. run `python allowed.py path/to/M269/book/python | diff -w - book.txt`
    3. neither run should show any differences
-9. Do any tests specific to the issue you're addressing.
+9.  Do any tests specific to the issue you're addressing.
 10. Make a pull request.
 
 ## Licences
