@@ -228,6 +228,7 @@ BUILTINS = {
     "zip",
 }
 
+
 # ----- check configuration -----
 
 
@@ -367,10 +368,19 @@ def get_constructs(last_unit: int) -> tuple:
     )
 
 
-def check_tree(tree: ast.AST, constructs: tuple, source: list) -> list:
+def check_tree(
+    tree: ast.AST,
+    constructs: tuple,
+    source: list,
+    from_ipynb: bool,
+    line_cell_map: dict,
+) -> list:
     """Check if tree only uses allowed constructs."""
     language, options, imports, functions, methods = constructs
     errors = []
+    get_line = (
+        lambda l: f"cell_{line_cell_map[l][0]}:{line_cell_map[l][1]}" if from_ipynb else l
+    )
     for node in ast.walk(tree):
         # if a node has no line number, handle it via its parent
         if isinstance(node, NO_LINE):
@@ -379,13 +389,13 @@ def check_tree(tree: ast.AST, constructs: tuple, source: list) -> list:
             if not isinstance(node.op, language):
                 line = node.lineno
                 message = CONCRETE.get(type(node.op), "unknown operator")
-                errors.append((line, message))
+                errors.append((get_line(line), message))
         elif isinstance(node, ast.Compare):
             for op in node.ops:
                 if not isinstance(op, language):
                     line = node.lineno
                     message = CONCRETE.get(type(op), "unknown operator")
-                    errors.append((line, message))
+                    errors.append((get_line(line), message))
         elif not isinstance(node, language):
             if hasattr(node, "lineno"):
                 line = node.lineno
@@ -394,31 +404,31 @@ def check_tree(tree: ast.AST, constructs: tuple, source: list) -> list:
                 # if a node has no line number, report it for inclusion in NO_LINE
                 line = 0
                 message = f"unknown construct {str(node)} at unknown line"
-            errors.append((line, message))
+            errors.append((get_line(line), message))
         elif isinstance(node, ast.Import):
             for alias in node.names:
                 if alias.name not in imports:
                     line = alias.lineno
                     message = f"import {alias.name}"
-                    errors.append((line, message))
+                    errors.append((get_line(line), message))
         elif isinstance(node, ast.ImportFrom):
             if node.module not in imports:
                 line = node.lineno
                 message = f"from {node.module} import ..."
-                errors.append((line, message))
+                errors.append((get_line(line), message))
             else:
                 for alias in node.names:
                     if alias.name not in imports[node.module]:
                         line = alias.lineno
                         message = f"from {node.module} import {alias.name}"
-                        errors.append((line, message))
+                        errors.append((get_line(line), message))
         elif isinstance(node, ast.Attribute) and isinstance(node.value, ast.Name):
             name = node.value
             attribute = node.attr
             if name.id in imports and attribute not in imports[name.id]:
                 line = node.lineno
                 message = f"{name.id}.{attribute}"
-                errors.append((line, message))
+                errors.append((get_line(line), message))
             elif hasattr(name, "resolved_annotation"):
                 type_name = re.match(r"[a-zA-Z.]*", name.resolved_annotation).group()
                 if type_name in methods and attribute not in methods[type_name]:
@@ -426,24 +436,27 @@ def check_tree(tree: ast.AST, constructs: tuple, source: list) -> list:
                     message = (
                         f"method {attribute} called on {type_name.lower()} {name.id}"
                     )
-                    errors.append((line, message))
+                    errors.append((get_line(line), message))
         elif isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
             function = node.func.id
             if function in BUILTINS and function not in functions:
                 line = node.lineno
                 message = f"built-in function {function}()"
-                errors.append((line, message))
+                errors.append((get_line(line), message))
         elif isinstance(node, ast.For) and node.orelse and "for else" not in options:
             line = node.orelse[0].lineno
             message = "else in for-loop"
-            errors.append((line, message))
+            errors.append((get_line(line), message))
         elif (
             isinstance(node, ast.While) and node.orelse and "while else" not in options
         ):
             line = node.orelse[0].lineno
             message = "else in while-loop"
-            errors.append((line, message))
-    errors.sort()
+            errors.append((get_line(line), message))
+    if from_ipynb:
+        errors.sort(key=lambda e: [int(n) for n in re.findall("\d+", e[0])])
+    else:
+        errors.sort()
     for index in range(len(errors) - 1, 0, -1):
         if errors[index] == errors[index - 1]:
             del errors[index]
@@ -473,14 +486,19 @@ def check_file(filename: str, constructs: tuple, check_method_calls: bool) -> No
     try:
         with open(filename) as file:
             if filename.endswith(".ipynb"):
-                source = read_jupyter_notebook(file.read())
+                source, line_cell_map = read_jupyter_notebook(file.read())
+                from_ipynb = True
             else:
                 source = file.read()
+                line_cell_map = {}
+                from_ipynb = False
         if check_method_calls and METHODS:
             tree = annotate_ast.annotate_source(source, ast, PYTYPE_OPTIONS)
         else:
             tree = ast.parse(source)
-        errors = check_tree(tree, constructs, source.splitlines())
+        errors = check_tree(
+            tree, constructs, source.splitlines(), from_ipynb, line_cell_map
+        )
         for line, message in errors:
             print(f"{filename}:{line}: {message}")
     except OSError as error:
@@ -505,16 +523,33 @@ def check_file(filename: str, constructs: tuple, check_method_calls: bool) -> No
             print(f"{filename}: can't parse: {message}")
 
 
-def read_jupyter_notebook(file_contents: str) -> str:
-    """Returns a string representation of all code cells in a Jupyter Notebook"""
+def read_jupyter_notebook(file_contents: str) -> tuple:
+    """Returns a tuple (x, y), where x is a string representation of the
+    code cells, and y is is a mapping of line numbers to cell and line numbers
+
+    Cells with syntax errors and magics will be skipped. Cell numbers
+    corrispond to code cells only.
+    """
+    cell_num, source_line_num = 1, 1
+    line_cell_map = {}
     jobject = json.loads(file_contents)
-    code_lines = []
+    source, cell_lines = [], []
     for cell in jobject["cells"]:
         if cell["cell_type"] == "code":
-            for line in cell["source"]:
-                code_lines.append(line)
-            code_lines.append("\n")
-    return "".join(code_lines)
+            for cell_line in cell["source"]:
+                cell_lines.append(cell_line)
+            cell_lines[-1] += "\n"
+            try:
+                ast.parse("".join(cell_lines))
+                for cell_line_num, cell_line in enumerate(cell_lines, start=1):
+                    source.append(cell_line)
+                    line_cell_map[source_line_num] = (cell_num, cell_line_num)
+                    source_line_num += 1
+            except:
+                pass
+            cell_lines = []
+            cell_num += 1
+    return "".join(source), line_cell_map
 
 
 # ---- main program ----
