@@ -107,13 +107,15 @@ anywhere after `allowed.py` and in either form.
 
 ### Checking notebooks
 
-While the program can check Jupyter notebooks, it has two limitations.
-First, if any code cell has a syntax error or non-Python code, like
-`%run`, `%timeit` and other IPython commands, then the whole notebook isn't checked.
-Second, the reported line numbers are relative to the whole notebook.
-So, if line 45 has a disallowed construct, to fix the problem
-it's easier to search for the reported construct in the notebook than
-to count 45 code lines from the start of the notebook.
+`allowed` can check Jupyter notebooks and will report the cell and line which
+uses any disallowed construct. For example, `path/to/notebook1.ipynb:cell_13:5:
+...` means that the problem is in line 5 of the 13th code cell.
+
+Any cells with syntax errors  will be skipped, this includes non-Python code
+such as Ipython magic commands (e.g `%timeit`, `%run` etc). However, it is
+important to note that this approach has a limitation: Ipython magic commands
+(magics) are often used in notebooks, and so skipping any cells containing them
+could exclude a substantial amount of code from the check.
 
 A more robust way to check notebooks is to first install
 [nbqa](https://http://nbqa.readthedocs.io) and then type one of the following.
@@ -124,14 +126,8 @@ nbqa allowed path/to/folder
 The latter checks all notebooks (but no `.py` files!)
 in that folder and its subfolders.
 
-Using `nbqa` overcomes the two limitations mentioned.
-First, an error in one cell doesn't prevent `allowed` from checking the other cells.
-Thus, with `nbqa` you will find more disallowed constructs than without,
-but see [this issue](https://github.com/dsa-ou/allowed/issues/15).
-
-Second, `nbqa` reports the cell and line which uses a disallowed construct.
-For example, `path/to/notebook1.ipynb:cell_13:5: ...` means that the problem
-is in line 5 of the 13th code cell.
+Using `nbqa` overcomes the limitation mentioned: any cells with magics will
+still be checked for dissallowed constructs.
 
 You can use options with `nbqa`, but they must be given at the end.
 For example, if you're an M269 student or tutor, you can check the

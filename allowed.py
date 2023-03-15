@@ -368,19 +368,25 @@ def get_constructs(last_unit: int) -> tuple:
     )
 
 
+def get_line(line: int, line_cell_map: dict) -> str:
+    """Return a string showing cell and line number if line_cell_map
+    is not empty (i.e. checking a ipynb file) otherwise return a string showing
+    line number only.
+    """
+    if line_cell_map:
+        return f"cell_{line_cell_map[line][0]}:{line_cell_map[line][1]}"
+    return str(line)
+
+
 def check_tree(
     tree: ast.AST,
     constructs: tuple,
     source: list,
-    from_ipynb: bool,
     line_cell_map: dict,
 ) -> list:
     """Check if tree only uses allowed constructs."""
     language, options, imports, functions, methods = constructs
     errors = []
-    get_line = (
-        lambda l: f"cell_{line_cell_map[l][0]}:{line_cell_map[l][1]}" if from_ipynb else l
-    )
     for node in ast.walk(tree):
         # if a node has no line number, handle it via its parent
         if isinstance(node, NO_LINE):
@@ -389,13 +395,13 @@ def check_tree(
             if not isinstance(node.op, language):
                 line = node.lineno
                 message = CONCRETE.get(type(node.op), "unknown operator")
-                errors.append((get_line(line), message))
+                errors.append((get_line(line, line_cell_map), message))
         elif isinstance(node, ast.Compare):
             for op in node.ops:
                 if not isinstance(op, language):
                     line = node.lineno
                     message = CONCRETE.get(type(op), "unknown operator")
-                    errors.append((get_line(line), message))
+                    errors.append((get_line(line, line_cell_map), message))
         elif not isinstance(node, language):
             if hasattr(node, "lineno"):
                 line = node.lineno
@@ -404,31 +410,31 @@ def check_tree(
                 # if a node has no line number, report it for inclusion in NO_LINE
                 line = 0
                 message = f"unknown construct {str(node)} at unknown line"
-            errors.append((get_line(line), message))
+            errors.append((get_line(line, line_cell_map), message))
         elif isinstance(node, ast.Import):
             for alias in node.names:
                 if alias.name not in imports:
                     line = alias.lineno
                     message = f"import {alias.name}"
-                    errors.append((get_line(line), message))
+                    errors.append((get_line(line, line_cell_map), message))
         elif isinstance(node, ast.ImportFrom):
             if node.module not in imports:
                 line = node.lineno
                 message = f"from {node.module} import ..."
-                errors.append((get_line(line), message))
+                errors.append((get_line(line, line_cell_map), message))
             else:
                 for alias in node.names:
                     if alias.name not in imports[node.module]:
                         line = alias.lineno
                         message = f"from {node.module} import {alias.name}"
-                        errors.append((get_line(line), message))
+                        errors.append((get_line(line, line_cell_map), message))
         elif isinstance(node, ast.Attribute) and isinstance(node.value, ast.Name):
             name = node.value
             attribute = node.attr
             if name.id in imports and attribute not in imports[name.id]:
                 line = node.lineno
                 message = f"{name.id}.{attribute}"
-                errors.append((get_line(line), message))
+                errors.append((get_line(line, line_cell_map), message))
             elif hasattr(name, "resolved_annotation"):
                 type_name = re.match(r"[a-zA-Z.]*", name.resolved_annotation).group()
                 if type_name in methods and attribute not in methods[type_name]:
@@ -436,27 +442,25 @@ def check_tree(
                     message = (
                         f"method {attribute} called on {type_name.lower()} {name.id}"
                     )
-                    errors.append((get_line(line), message))
+                    errors.append((get_line(line, line_cell_map), message))
         elif isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
             function = node.func.id
             if function in BUILTINS and function not in functions:
                 line = node.lineno
                 message = f"built-in function {function}()"
-                errors.append((get_line(line), message))
+                errors.append((get_line(line, line_cell_map), message))
         elif isinstance(node, ast.For) and node.orelse and "for else" not in options:
             line = node.orelse[0].lineno
             message = "else in for-loop"
-            errors.append((get_line(line), message))
+            errors.append((get_line(line, line_cell_map), message))
         elif (
             isinstance(node, ast.While) and node.orelse and "while else" not in options
         ):
             line = node.orelse[0].lineno
             message = "else in while-loop"
-            errors.append((get_line(line), message))
-    if from_ipynb:
-        errors.sort(key=lambda e: [int(n) for n in re.findall("\d+", e[0])])
-    else:
-        errors.sort()
+            errors.append((get_line(line, line_cell_map), message))
+    # numeric strings without padding are not sorted as we might expect e.g. "5" < "10" == False
+    errors.sort(key=lambda e: [int(n) for n in re.findall("\d+", e[0])])
     for index in range(len(errors) - 1, 0, -1):
         if errors[index] == errors[index - 1]:
             del errors[index]
@@ -487,18 +491,14 @@ def check_file(filename: str, constructs: tuple, check_method_calls: bool) -> No
         with open(filename) as file:
             if filename.endswith(".ipynb"):
                 source, line_cell_map = read_jupyter_notebook(file.read())
-                from_ipynb = True
             else:
                 source = file.read()
                 line_cell_map = {}
-                from_ipynb = False
         if check_method_calls and METHODS:
             tree = annotate_ast.annotate_source(source, ast, PYTYPE_OPTIONS)
         else:
             tree = ast.parse(source)
-        errors = check_tree(
-            tree, constructs, source.splitlines(), from_ipynb, line_cell_map
-        )
+        errors = check_tree(tree, constructs, source.splitlines(), line_cell_map)
         for line, message in errors:
             print(f"{filename}:{line}: {message}")
     except OSError as error:
