@@ -7,6 +7,9 @@ and false negatives (code that uses disallowed constructs but isn't reported).
 
 This program requires Python 3.10 or later and that your code compiles.
 
+If you use `allowed` in your course, we'd love to hear about your experience in the
+[show & tell forum](https://github.com/dsa-ou/allowed/discussions/categories/show-and-tell).
+
 ## Installation
 
 Click on the green 'Code' button and select the 'download zip' option.
@@ -15,7 +18,8 @@ This creates an `allowed-main` folder within your downloads folder.
 
 The only files you need within that folder are `allowed.py` and `m269.json`,
 which you may move to anywhere, e.g. to the folder with the code you want to check.
-The files `sample.py` and `sample.ipynb` are example files with code to check.
+The example files with code to check (`sample.py`, `sample.ipynb` and `magics.ipynb`)
+can be removed after going through the following explanations.
 
 ## Usage
 
@@ -25,7 +29,7 @@ You can check code files and Jupyter notebook files by typing
 python allowed.py path/to/file.py path/to/notebook.ipynb ...
 ```
 This will list all disallowed constructs in the given files.
-If the file has a syntax error, it can't be parsed and hence it's not checked.
+If a Python file has a syntax error, it can't be parsed and hence it's not checked.
 
 For example, you can check the sample file and `allowed`'s code with:
 ```bash
@@ -107,14 +111,13 @@ anywhere after `allowed.py` and in either form.
 
 ### Checking notebooks
 
-`allowed` can check Jupyter notebooks and will report the cell and line which
-uses any disallowed construct. For example, `path/to/notebook1.ipynb:cell_13:5:
-...` means that the problem is in line 5 of the 13th code cell.
+`allowed` does check Jupyter notebooks and reports the cells and lines with
+disallowed constructs. For example, `path/to/notebook.ipynb:cell_13:5: ...`
+means that the problem is in line 5 of the 13th code cell.
 
-Any cells with syntax errors  will be skipped, this includes non-Python code
-such as Ipython magic commands (e.g `%timeit`, `%run` etc). However, it is
-important to note that this approach has a limitation: Ipython magic commands
-(magics) are often used in notebooks, and so skipping any cells containing them
+Any code cells that aren't valid Python are skipped. This may be due to
+syntax errors or IPython 'magics' (commands like `%timeit` and `%run`).
+Such commands are often used in notebooks, so skipping any cells containing them
 could exclude a substantial amount of code from the check.
 
 A more robust way to check notebooks is to first install
@@ -127,7 +130,7 @@ The latter checks all notebooks (but no `.py` files!)
 in that folder and its subfolders.
 
 Using `nbqa` overcomes the limitation mentioned: any cells with magics will
-still be checked for dissallowed constructs.
+still be checked for disallowed constructs.
 
 You can use options with `nbqa`, but they must be given at the end.
 For example, if you're an M269 student or tutor, you can check the
