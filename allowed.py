@@ -7,6 +7,9 @@ import os
 import re
 import sys
 
+# warnings will be printed after the progam has run.
+warnings = {}
+
 PYTHON_VERSION = sys.version_info[:2]
 if (3, 7) <= PYTHON_VERSION <= (3, 10):
     try:
@@ -23,6 +26,16 @@ else:
     METHOD_CHECK_ERROR = (
         "error: Python version not supported: method calls cannot be checked"
     )
+
+try:
+    from IPython.core.inputtransformer2 import TransformerManager as Transformer
+
+    IPYTHON_INSTALLED = True
+except ImportError:
+    warnings["ipython"] = (
+         "WARNING: ipython not installed: cells containing magics will report syntax errors"
+    )
+    IPYTHON_INSTALLED = False
 
 
 # ----- Python's Abstract Syntax Tree (AST) -----
@@ -369,9 +382,11 @@ def get_constructs(last_unit: int) -> tuple:
 
 
 def get_line(line: int, line_cell_map: dict) -> str:
-    """Return a string showing cell and line number if line_cell_map
-    is not empty (i.e. checking a ipynb file) otherwise return a string showing
+    """Return a formatted string with cell and line number if line_cell_map
+    is not empty (i.e. checking a ipynb file) otherwise a string showing
     line number only.
+
+    Helper function for check_tree()
     """
     if line_cell_map:
         return f"cell_{line_cell_map[line][0]}:{line_cell_map[line][1]}"
@@ -459,6 +474,14 @@ def check_tree(
             line = node.orelse[0].lineno
             message = "else in while-loop"
             errors.append((get_line(line, line_cell_map), message))
+    for key in line_cell_map:
+        if key < 0:
+            errors.append(
+                (
+                    get_line(key, line_cell_map),
+                    "SYNTAX ERROR: this cell has not been checked",
+                )
+            )
     # numeric strings without padding are not sorted as we might expect e.g. "5" < "10" == False
     errors.sort(key=lambda e: [int(n) for n in re.findall("\d+", e[0])])
     for index in range(len(errors) - 1, 0, -1):
@@ -492,6 +515,8 @@ def check_file(filename: str, constructs: tuple, check_method_calls: bool) -> No
             if filename.endswith(".ipynb"):
                 source, line_cell_map = read_jupyter_notebook(file.read())
             else:
+                if "ipython" in warnings:
+                    del warnings["ipython"]
                 source = file.read()
                 line_cell_map = {}
         if check_method_calls and METHODS:
@@ -524,32 +549,43 @@ def check_file(filename: str, constructs: tuple, check_method_calls: bool) -> No
 
 
 def read_jupyter_notebook(file_contents: str) -> tuple:
-    """Returns a tuple (x, y), where x is a string representation of the
-    code cells, and y is is a mapping of line numbers to cell and line numbers
+    """Returns a tuple (x: str, y: dict), where x is the concatenated source
+    from the code cells and y is is a mapping of line numbers in x to the
+    corrisponding cell and line numbers from the notebook. Negative Keys in
+    y map to a cells with syntax errors.
 
-    Cells with syntax errors and magics will be skipped. Cell numbers
-    corrispond to code cells only.
+    Ipython magics are transformed into valid python if ipython is installed, otherwise
+    cells with magics are mapped for syntax error.
     """
     cell_num, source_line_num = 1, 1
+    syntax_error_num = -1
     line_cell_map = {}
+    source_list, cell_lines = [], []
     jobject = json.loads(file_contents)
-    source, cell_lines = [], []
     for cell in jobject["cells"]:
         if cell["cell_type"] == "code":
             for cell_line in cell["source"]:
                 cell_lines.append(cell_line)
             cell_lines[-1] += "\n"
             try:
-                ast.parse("".join(cell_lines))
+                if IPYTHON_INSTALLED:
+                    ast.parse(Transformer().transform_cell("".join(cell_lines)))
+                else:
+                    ast.parse("".join(cell_lines))
                 for cell_line_num, cell_line in enumerate(cell_lines, start=1):
-                    source.append(cell_line)
+                    source_list.append(cell_line)
                     line_cell_map[source_line_num] = (cell_num, cell_line_num)
                     source_line_num += 1
-            except:
-                pass
+            except SyntaxError:
+                line_cell_map[syntax_error_num] = (cell_num, 1)
+                syntax_error_num -= 1
             cell_lines = []
             cell_num += 1
-    return "".join(source), line_cell_map
+    if IPYTHON_INSTALLED:
+        source_str = Transformer().transform_cell("".join(source_list))
+    else:
+        source_str = "".join(source_list)
+    return source_str, line_cell_map
 
 
 # ---- main program ----
@@ -607,10 +643,11 @@ if __name__ == "__main__":
             sys.exit(METHOD_CHECK_ERROR)
         else:
             check_method_calls = True
-        reminder = ""
     else:
         check_method_calls = False
-        reminder = "Method calls were NOT checked. To do so, use option -m or --methods (pytype and Python 3.10 required)"
+        warnings["methods"] = (
+            "WARNING: Method calls were NOT checked. To do so, use option -m or --methods (pytype and Python 3.10 required)"
+        )
 
     args.file_or_folder.sort()
     for name in args.file_or_folder:
@@ -622,5 +659,5 @@ if __name__ == "__main__":
         else:
             print(f"{name}: not a folder, Python file or notebook")
 
-    if reminder:
-        print(reminder)
+    for warning in warnings.values():
+        print(warning)

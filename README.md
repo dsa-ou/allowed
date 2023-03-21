@@ -115,29 +115,16 @@ anywhere after `allowed.py` and in either form.
 disallowed constructs. For example, `path/to/notebook.ipynb:cell_13:5: ...`
 means that the problem is in line 5 of the 13th code cell.
 
-Any code cells that aren't valid Python are skipped. This may be due to
-syntax errors or IPython 'magics' (commands like `%timeit` and `%run`).
-Such commands are often used in notebooks, so skipping any cells containing them
-could exclude a substantial amount of code from the check.
+Any code cells that do not constitute valid Python will report a syntax error
+for the corrisponding cell and will not undergo the check. The use of Ipython
+magics such as `%timeit` and `%run` will trigger a syntax error in the
+absence of a `ipython` installation. Conversely, if `ipython` is installed,
+the 'magics' will be deemed valid Python, allowing those cells to be checked
+(other syntax errors not withstanding).
 
-A more robust way to check notebooks is to first install
-[nbqa](https://http://nbqa.readthedocs.io) and then type one of the following.
-```bash
-nbqa allowed path/to/notebook1.ipynb path/to/notebook2.ipynb ...
-nbqa allowed path/to/folder
-```
-The latter checks all notebooks (but no `.py` files!)
-in that folder and its subfolders.
-
-Using `nbqa` overcomes the limitation mentioned: any cells with magics will
-still be checked for disallowed constructs.
-
-You can use options with `nbqa`, but they must be given at the end.
-For example, if you're an M269 student or tutor, you can check the
-second assignment (on chapters 1–20) before you submit or mark it with
-```bash
-nbqa allowed path/to/TMA02.ipynb -u 20
-```
+Previous versions of `allowed` recomended
+[nbqa](https://http://nbqa.readthedocs.io) for handling Jupyter notebooks. You
+can checkout the project on Github [here](https://github.com/nbQA-dev/nbQA).
 
 ## Configuration
 
