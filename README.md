@@ -118,9 +118,10 @@ means that the problem is in line 5 of the 13th code cell.
 Any code cells that do not constitute valid Python will report a syntax error
 for the corrisponding cell and will not undergo the check. The use of Ipython
 magics such as `%timeit` and `%run` will trigger a syntax error in the
-absence of a `ipython` installation. Conversely, if `ipython` is installed,
-the 'magics' will be deemed valid Python, allowing those cells to be checked
-(other syntax errors not withstanding).
+absence of an `ipython` installation. Conversely, if `ipython` is installed,
+the magics will be deemed valid Python allowing those cells to be checked
+(other syntax errors not withstanding), but will only pass the check if 
+function calls and attributes are allowed. 
 
 Previous versions of `allowed` recomended
 [nbqa](https://http://nbqa.readthedocs.io) for handling Jupyter notebooks. You

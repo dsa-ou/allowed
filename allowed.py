@@ -8,7 +8,7 @@ import re
 import sys
 
 # warnings will be printed after the progam has run.
-warnings = {}
+warnings = []
 
 PYTHON_VERSION = sys.version_info[:2]
 if (3, 7) <= PYTHON_VERSION <= (3, 10):
@@ -32,9 +32,6 @@ try:
 
     IPYTHON_INSTALLED = True
 except ImportError:
-    warnings["ipython"] = (
-         "WARNING: ipython not installed: cells containing magics will report syntax errors"
-    )
     IPYTHON_INSTALLED = False
 
 
@@ -398,6 +395,7 @@ def check_tree(
     constructs: tuple,
     source: list,
     line_cell_map: dict,
+    syntax_error_cells: list,
 ) -> list:
     """Check if tree only uses allowed constructs."""
     language, options, imports, functions, methods = constructs
@@ -474,14 +472,10 @@ def check_tree(
             line = node.orelse[0].lineno
             message = "else in while-loop"
             errors.append((get_line(line, line_cell_map), message))
-    for key in line_cell_map:
-        if key < 0:
-            errors.append(
-                (
-                    get_line(key, line_cell_map),
-                    "SYNTAX ERROR: this cell has not been checked",
-                )
-            )
+    for cell_num in syntax_error_cells:
+        errors.append(
+            (f"cell_{cell_num}:1", "SYNTAX ERROR: this cell has not been checked")
+        )
     # numeric strings without padding are not sorted as we might expect e.g. "5" < "10" == False
     errors.sort(key=lambda e: [int(n) for n in re.findall("\d+", e[0])])
     for index in range(len(errors) - 1, 0, -1):
@@ -513,17 +507,24 @@ def check_file(filename: str, constructs: tuple, check_method_calls: bool) -> No
     try:
         with open(filename) as file:
             if filename.endswith(".ipynb"):
-                source, line_cell_map = read_jupyter_notebook(file.read())
+                if not IPYTHON_INSTALLED:
+                    warnings.append(
+                        "ipython not installed: cells containing magics have reported syntax errors"
+                    )
+                source, line_cell_map, syntax_error_cells = read_jupyter_notebook(
+                    file.read()
+                )
             else:
-                if "ipython" in warnings:
-                    del warnings["ipython"]
                 source = file.read()
                 line_cell_map = {}
+                syntax_error_cells = []
         if check_method_calls and METHODS:
             tree = annotate_ast.annotate_source(source, ast, PYTYPE_OPTIONS)
         else:
             tree = ast.parse(source)
-        errors = check_tree(tree, constructs, source.splitlines(), line_cell_map)
+        errors = check_tree(
+            tree, constructs, source.splitlines(), line_cell_map, syntax_error_cells
+        )
         for line, message in errors:
             print(f"{filename}:{line}: {message}")
     except OSError as error:
@@ -549,18 +550,17 @@ def check_file(filename: str, constructs: tuple, check_method_calls: bool) -> No
 
 
 def read_jupyter_notebook(file_contents: str) -> tuple:
-    """Returns a tuple (x: str, y: dict), where x is the concatenated source
-    from the code cells and y is is a mapping of line numbers in x to the
-    corrisponding cell and line numbers from the notebook. Negative Keys in
-    y map to a cells with syntax errors.
+    """Returns a triple (x: str, y: dict, z: list), where x is the concatenated
+    source from the code cells, y is is a mapping of line numbers in x to the
+    corrisponding cell and line numbers from the notebook and z is a list of
+    cell numbers with errors
 
-    Ipython magics are transformed into valid python if ipython is installed, otherwise
-    cells with magics are mapped for syntax error.
+    Ipython magics are transformed into valid Python if ipython is installed,
+    otherwise cells with magics are flagged with syntax errors
     """
     cell_num, source_line_num = 1, 1
-    syntax_error_num = -1
     line_cell_map = {}
-    source_list, cell_lines = [], []
+    source_list, cell_lines, syntax_error_cells = [], [], []
     jobject = json.loads(file_contents)
     for cell in jobject["cells"]:
         if cell["cell_type"] == "code":
@@ -577,15 +577,14 @@ def read_jupyter_notebook(file_contents: str) -> tuple:
                     line_cell_map[source_line_num] = (cell_num, cell_line_num)
                     source_line_num += 1
             except SyntaxError:
-                line_cell_map[syntax_error_num] = (cell_num, 1)
-                syntax_error_num -= 1
+                syntax_error_cells.append(cell_num)
             cell_lines = []
             cell_num += 1
     if IPYTHON_INSTALLED:
         source_str = Transformer().transform_cell("".join(source_list))
     else:
         source_str = "".join(source_list)
-    return source_str, line_cell_map
+    return source_str, line_cell_map, syntax_error_cells
 
 
 # ---- main program ----
@@ -645,8 +644,8 @@ if __name__ == "__main__":
             check_method_calls = True
     else:
         check_method_calls = False
-        warnings["methods"] = (
-            "WARNING: Method calls were NOT checked. To do so, use option -m or --methods (pytype and Python 3.10 required)"
+        warnings.append(
+            "Method calls were NOT checked. To do so, use option -m or --methods (pytype and Python 3.10 required)"
         )
 
     args.file_or_folder.sort()
@@ -659,5 +658,5 @@ if __name__ == "__main__":
         else:
             print(f"{name}: not a folder, Python file or notebook")
 
-    for warning in warnings.values():
-        print(warning)
+    for warning in warnings:
+        print("WARNING:", warning)
