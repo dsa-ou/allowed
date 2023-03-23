@@ -7,7 +7,7 @@ import os
 import re
 import sys
 
-# warnings will be printed after the progam has run.
+# warnings will be printed after the program has run.
 warnings = []
 
 PYTHON_VERSION = sys.version_info[:2]
@@ -379,11 +379,10 @@ def get_constructs(last_unit: int) -> tuple:
 
 
 def get_line(line: int, line_cell_map: dict) -> str:
-    """Return a formatted string with cell and line number if line_cell_map
-    is not empty (i.e. checking a ipynb file) otherwise a string showing
-    line number only.
-
-    Helper function for check_tree()
+    """If Line_cell_map is not empty, this function returns a string indicating
+    the lines relative position within its corresponding code cell in a Jupyter
+    notebook. If line_cell_map is empty, this indicates a Jupyter notebook has
+    not been read and the function returns the input line number as a string.
     """
     if line_cell_map:
         return f"cell_{line_cell_map[line][0]}:{line_cell_map[line][1]}"
@@ -472,9 +471,9 @@ def check_tree(
             line = node.orelse[0].lineno
             message = "else in while-loop"
             errors.append((get_line(line, line_cell_map), message))
-    for cell_num in syntax_error_cells:
+    for cell in syntax_error_cells:
         errors.append(
-            (f"cell_{cell_num}:1", "SYNTAX ERROR: this cell has not been checked")
+            (f"cell_{cell[0]}:{cell[1]}", "SYNTAX ERROR: this cell has not been checked")
         )
     # numeric strings without padding are not sorted as we might expect e.g. "5" < "10" == False
     errors.sort(key=lambda e: [int(n) for n in re.findall("\d+", e[0])])
@@ -553,10 +552,10 @@ def read_jupyter_notebook(file_contents: str) -> tuple:
     """Returns a triple (x: str, y: dict, z: list), where x is the concatenated
     source from the code cells, y is is a mapping of line numbers in x to the
     corrisponding cell and line numbers from the notebook and z is a list of
-    cell numbers with errors
+    the cell and line numbers with syntax errors
 
     Ipython magics are transformed into valid Python if ipython is installed,
-    otherwise cells with magics are flagged with syntax errors
+    otherwise cells with magics trigger a syntax error.
     """
     cell_num, source_line_num = 1, 1
     line_cell_map = {}
@@ -576,8 +575,8 @@ def read_jupyter_notebook(file_contents: str) -> tuple:
                     source_list.append(cell_line)
                     line_cell_map[source_line_num] = (cell_num, cell_line_num)
                     source_line_num += 1
-            except SyntaxError:
-                syntax_error_cells.append(cell_num)
+            except SyntaxError as error:
+                syntax_error_cells.append((cell_num, error.lineno))
             cell_lines = []
             cell_num += 1
     if IPYTHON_INSTALLED:
