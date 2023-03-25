@@ -1,0 +1,19 @@
+sample.ipynb:cell_1:2: SYNTAX ERROR: this cell has not been checked
+sample.ipynb:cell_2:4: import types
+sample.ipynb:cell_2:5: from random import choice
+sample.ipynb:cell_2:10: assert n > 0
+sample.ipynb:cell_2:16: break
+sample.ipynb:cell_2:19: break
+sample.ipynb:cell_2:21: else in for-loop
+sample.ipynb:cell_2:26: try:
+sample.ipynb:cell_2:27: print(n, "prime" if is_prime(n) else "not prime")
+sample.ipynb:cell_2:28: except AssertionError:
+sample.ipynb:cell_3:7: break
+sample.ipynb:cell_3:8: value += 1
+sample.ipynb:cell_3:12: continue
+sample.ipynb:cell_3:14: else in while-loop
+sample.ipynb:cell_4:6: print(f"first {FIRST} odd numbers: {odd}")
+sample.ipynb:cell_4:11: <<
+sample.ipynb:cell_4:12: math.e
+sample.ipynb:cell_4:13: built-in function type()
+WARNING: Method calls were NOT checked. To do so, use option -m or --methods (pytype and Python 3.10 required)

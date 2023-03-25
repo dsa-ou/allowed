@@ -18,7 +18,7 @@ This creates an `allowed-main` folder within your downloads folder.
 
 The only files you need within that folder are `allowed.py` and `m269.json`,
 which you may move to anywhere, e.g. to the folder with the code you want to check.
-The example files with code to check (`sample.py`, `sample.ipynb` and `magics.ipynb`)
+The example files with code to check (`sample.py` and `sample.ipynb`)
 can be removed after going through the following explanations.
 
 ## Usage
@@ -120,10 +120,10 @@ for the corrisponding cell and will not undergo the check. The use of Ipython
 magics such as `%timeit` and `%run` will trigger a syntax error in the
 absence of an `ipython` installation. Conversely, if `ipython` is installed,
 the magics will be deemed valid Python, allowing those cells to be checked
-(other syntax errors not withstanding), but will only pass the check if 
-function calls and attributes are allowed. 
+(other syntax errors not withstanding), but will only pass the check if
+function calls and attributes are allowed.
 
-Previous versions of `allowed` recomended
+Previous versions of `allowed` recommended
 [nbqa](https://http://nbqa.readthedocs.io) for handling Jupyter notebooks. You
 can checkout the project on Github [here](https://github.com/nbQA-dev/nbQA).
 

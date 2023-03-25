@@ -1,6 +1,8 @@
-*.txt
+tests/nbqa*.txt
+tests/py*.txt
 extra.py
 *.pyc
 .ipynb_checkpoints
 env
 launch.json
+my_*
