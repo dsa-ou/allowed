@@ -15,4 +15,4 @@ sample.py:51: print(f"first {FIRST} odd numbers: {odd}")
 sample.py:56: <<
 sample.py:57: math.e
 sample.py:58: built-in function type()
-WARNING: Method calls were NOT checked. To do so, use option -m or --methods (pytype and Python 3.10 required)
+warning: didn't check method calls (use option -m)

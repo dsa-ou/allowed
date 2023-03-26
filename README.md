@@ -1,4 +1,4 @@
-This program checks if your Python code only uses certain constructs,
+This program checks if your Python files and notebooks only use certain constructs,
 which you can configure.
 
 Like all static analysis tools, `allowed` isn't perfect and will never be.
@@ -21,15 +21,27 @@ which you may move to anywhere, e.g. to the folder with the code you want to che
 The example files with code to check (`sample.py` and `sample.ipynb`)
 can be removed after going through the following explanations.
 
+`allowed` can check Python files and notebooks 'out of the box',
+but more checks are possible with extra software.
+
+If you want to check method calls (see below), you must use Python 3.10
+and install the [pytype](https://google.github.io/pytype) type checker.
+On Windows, you must first install [WSL](https://learn.microsoft.com/en-us/windows/wsl).
+
+If you want to check notebook cells that have IPython commands like `%timeit` (see below),
+you must install [IPython](https://ipython.readthedocs.io/en/latest/install/index.html).
+(Previous versions of `allowed` required `nbqa` instead.)
+If you have installed the Jupyter software, you already have IPython.
+
 ## Usage
 
-Open a terminal. Change to the folder where you have put `allowed.py`.
+Open a terminal. Change to the folder where you have put `allowed.py` and `m269.json`.
 You can check code files and Jupyter notebook files by typing
 ```bash
 python allowed.py path/to/file.py path/to/notebook.ipynb ...
 ```
 This will list all disallowed constructs in the given files.
-If a Python file has a syntax error, it can't be parsed and hence it's not checked.
+If a Python file (or code cell) has a syntax error, it can't be parsed and hence it's not checked.
 
 For example, you can check the sample file and `allowed`'s code with:
 ```bash
@@ -52,11 +64,8 @@ python allowed.py path/to/folder
 ### Extra checks
 
 To check if the attribute access `variable.method` is allowed,
-the program needs to know the type of `variable`. For that purpose, it uses
-the `pytype` type checker, which only works with Python versions 3.7 to 3.10.
-
-For installation instructions, see [its website](https://google.github.io/pytype).
-On Windows, you must first install [WSL](https://learn.microsoft.com/en-us/windows/wsl/).
+`allowed` needs to know the type of `variable`. For that purpose, it uses
+the `pytype` type checker, if it's installed and the Python version is 3.10.
 
 By default, `allowed` skips method call checks because they slow down the process.
 You can enable these checks with option `-m` or `--methods`, for example
@@ -79,7 +88,7 @@ python allowed.py file1.py --methods file2.py
 a Python construct introduced in a unit can be used in any subsequent unit.
 
 By default, `allowed` uses all units, i.e. checks against all the material introduced.
-Option `-u N` or `--unit N` will check the file(s) against
+Option `-u N` or `--unit N` will check code against
 the Python constructs introduced up to unit `N` (inclusive).
 For example, checking a submission to an assessment that covers units 1 to 5
 can be done with:
@@ -115,17 +124,13 @@ anywhere after `allowed.py` and in either form.
 disallowed constructs. For example, `path/to/notebook.ipynb:cell_13:5: ...`
 means that the problem is in line 5 of the 13th code cell.
 
-Any code cells that do not constitute valid Python will report a syntax error
-for the corrisponding cell and will not undergo the check. The use of Ipython
-magics such as `%timeit` and `%run` will trigger a syntax error in the
-absence of an `ipython` installation. Conversely, if `ipython` is installed,
-the magics will be deemed valid Python, allowing those cells to be checked
-(other syntax errors not withstanding), but will only pass the check if
-function calls and attributes are allowed.
-
-Previous versions of `allowed` recommended
-[nbqa](https://http://nbqa.readthedocs.io) for handling Jupyter notebooks. You
-can checkout the project on Github [here](https://github.com/nbQA-dev/nbQA).
+If a code cell has invalid Python, `allowed` reports a syntax error and
+skips the cell. Using IPython magics such as `%timeit` and `%run`
+triggers a syntax error if IPython isn't installed. If it is,
+the magics are transformed into Python code and the cell is checked,
+if it hasn't other syntax errors.
+The transformed magics use function calls and attributes, so
+the cell will only pass the check if those constructs are allowed.
 
 ## Configuration
 
@@ -195,7 +200,8 @@ the modules and the list of exported objects introduced in those units. For exam
 allows function `math.sqrt(x)` and constant `math.inf` from unit 10 onwards, and
 allows function `math.abs(x)` and class `fractions.Fraction` from unit 11 on.
 
-Entry `"METHODS"` has the same structure as `"IMPORTS"`, but instead of listing
+### METHODS
+This entry has the same structure as `"IMPORTS"`, but instead of listing
 which objects of which modules can be imported,
 it lists which methods of which classes can be called.
 

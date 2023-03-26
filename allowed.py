@@ -7,9 +7,6 @@ import os
 import re
 import sys
 
-# warnings will be printed after the program has run.
-warnings = []
-
 PYTHON_VERSION = sys.version_info[:2]
 if (3, 7) <= PYTHON_VERSION <= (3, 10):
     try:
@@ -17,16 +14,11 @@ if (3, 7) <= PYTHON_VERSION <= (3, 10):
         from pytype.tools.annotate_ast import annotate_ast
 
         PYTYPE_OPTIONS = pytype.config.Options.create(python_version=PYTHON_VERSION)
-        METHOD_CHECK_ERROR = ""
+        PYTYPE_INSTALLED = True
     except ImportError:
-        METHOD_CHECK_ERROR = (
-            "error: pytype not installed: method calls cannot be checked"
-        )
+        PYTYPE_INSTALLED = False
 else:
-    METHOD_CHECK_ERROR = (
-        "error: Python version not supported: method calls cannot be checked"
-    )
-
+    PYTYPE_INSTALLED = False
 try:
     from IPython.core.inputtransformer2 import TransformerManager as Transformer
 
@@ -242,14 +234,12 @@ BUILTINS = {
 # ----- check configuration -----
 
 
-def check_language() -> str:
-    """Return non-empty message if some constructs in LANGUAGE are unknown."""
+def check_language() -> set:
+    """Return the unknown constructs in LANGUAGE."""
     allowed = set()
     for constructs in LANGUAGE.values():
         allowed.update(set(constructs))
-    if unknown := allowed - ABSTRACT.keys() - BUILTINS - OPTIONS:
-        return f"error: unknown constructs: {', '.join(unknown)}"
-    return ""
+    return allowed - ABSTRACT.keys() - BUILTINS - OPTIONS
 
 
 def check_imports() -> str:
@@ -378,112 +368,95 @@ def get_constructs(last_unit: int) -> tuple:
     )
 
 
-def get_line(line: int, line_cell_map: dict) -> str:
-    """If Line_cell_map is not empty, this function returns a string indicating
-    the lines relative position within its corresponding code cell in a Jupyter
-    notebook. If line_cell_map is empty, this indicates a Jupyter notebook has
-    not been read and the function returns the input line number as a string.
-    """
-    if line_cell_map:
-        return f"cell_{line_cell_map[line][0]}:{line_cell_map[line][1]}"
-    return str(line)
+def location(line: int, line_cell_map: list) -> tuple[int, int]:
+    """Return (0, line) if not a notebook, otherwise (cell, relative line)."""
+    return line_cell_map[line] if line_cell_map else (0, line)
+
+
+# ----- main functions -----
 
 
 def check_tree(
     tree: ast.AST,
     constructs: tuple,
     source: list,
-    line_cell_map: dict,
-    syntax_error_cells: list,
-) -> list:
-    """Check if tree only uses allowed constructs."""
+    line_cell_map: list,
+    errors: list,
+) -> None:
+    """Check if tree only uses allowed constructs. Add violations to errors."""
     language, options, imports, functions, methods = constructs
-    errors = []
     for node in ast.walk(tree):
         # if a node has no line number, handle it via its parent
         if isinstance(node, NO_LINE):
             pass
         elif isinstance(node, (ast.BinOp, ast.UnaryOp, ast.BoolOp)):
             if not isinstance(node.op, language):
-                line = node.lineno
+                cell, line = location(node.lineno, line_cell_map)
                 message = CONCRETE.get(type(node.op), "unknown operator")
-                errors.append((get_line(line, line_cell_map), message))
+                errors.append((cell, line, message))
         elif isinstance(node, ast.Compare):
             for op in node.ops:
                 if not isinstance(op, language):
-                    line = node.lineno
+                    cell, line = location(node.lineno, line_cell_map)
                     message = CONCRETE.get(type(op), "unknown operator")
-                    errors.append((get_line(line, line_cell_map), message))
+                    errors.append((cell, line, message))
         elif not isinstance(node, language):
             if hasattr(node, "lineno"):
-                line = node.lineno
-                message = source[line - 1].strip()
+                cell, line = location(node.lineno, line_cell_map)
+                message = source[node.lineno - 1].strip()
             else:
                 # if a node has no line number, report it for inclusion in NO_LINE
-                line = 0
+                cell, line = 0, 0
                 message = f"unknown construct {str(node)} at unknown line"
-            errors.append((get_line(line, line_cell_map), message))
+            errors.append((cell, line, message))
         elif isinstance(node, ast.Import):
             for alias in node.names:
                 if alias.name not in imports:
-                    line = alias.lineno
+                    cell, line = location(alias.lineno, line_cell_map)
                     message = f"import {alias.name}"
-                    errors.append((get_line(line, line_cell_map), message))
+                    errors.append((cell, line, message))
         elif isinstance(node, ast.ImportFrom):
             if node.module not in imports:
-                line = node.lineno
+                cell, line = location(node.lineno, line_cell_map)
                 message = f"from {node.module} import ..."
-                errors.append((get_line(line, line_cell_map), message))
+                errors.append((cell, line, message))
             else:
                 for alias in node.names:
                     if alias.name not in imports[node.module]:
-                        line = alias.lineno
+                        cell, line = location(alias.lineno, line_cell_map)
                         message = f"from {node.module} import {alias.name}"
-                        errors.append((get_line(line, line_cell_map), message))
+                        errors.append((cell, line, message))
         elif isinstance(node, ast.Attribute) and isinstance(node.value, ast.Name):
             name = node.value
             attribute = node.attr
             if name.id in imports and attribute not in imports[name.id]:
-                line = node.lineno
+                cell, line = location(node.lineno, line_cell_map)
                 message = f"{name.id}.{attribute}"
-                errors.append((get_line(line, line_cell_map), message))
+                errors.append((cell, line, message))
             elif hasattr(name, "resolved_annotation"):
                 type_name = re.match(r"[a-zA-Z.]*", name.resolved_annotation).group()
                 if type_name in methods and attribute not in methods[type_name]:
-                    line = name.lineno
+                    cell, line = location(name.lineno, line_cell_map)
                     message = (
                         f"method {attribute} called on {type_name.lower()} {name.id}"
                     )
-                    errors.append((get_line(line, line_cell_map), message))
+                    errors.append((cell, line, message))
         elif isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
             function = node.func.id
             if function in BUILTINS and function not in functions:
-                line = node.lineno
+                cell, line = location(node.lineno, line_cell_map)
                 message = f"built-in function {function}()"
-                errors.append((get_line(line, line_cell_map), message))
+                errors.append((cell, line, message))
         elif isinstance(node, ast.For) and node.orelse and "for else" not in options:
-            line = node.orelse[0].lineno
+            cell, line = location(node.orelse[0].lineno, line_cell_map)
             message = "else in for-loop"
-            errors.append((get_line(line, line_cell_map), message))
+            errors.append((cell, line, message))
         elif (
             isinstance(node, ast.While) and node.orelse and "while else" not in options
         ):
-            line = node.orelse[0].lineno
+            cell, line = location(node.orelse[0].lineno, line_cell_map)
             message = "else in while-loop"
-            errors.append((get_line(line, line_cell_map), message))
-    for cell in syntax_error_cells:
-        errors.append(
-            (f"cell_{cell[0]}:{cell[1]}", "SYNTAX ERROR: this cell has not been checked")
-        )
-    # numeric strings without padding are not sorted as we might expect e.g. "5" < "10" == False
-    errors.sort(key=lambda e: [int(n) for n in re.findall("\d+", e[0])])
-    for index in range(len(errors) - 1, 0, -1):
-        if errors[index] == errors[index - 1]:
-            del errors[index]
-    return errors
-
-
-# ----- main functions -----
+            errors.append((cell, line, message))
 
 
 def check_folder(folder: str, last_unit: int, check_method_calls: bool) -> None:
@@ -506,26 +479,26 @@ def check_file(filename: str, constructs: tuple, check_method_calls: bool) -> No
     try:
         with open(filename) as file:
             if filename.endswith(".ipynb"):
-                if not IPYTHON_INSTALLED:
-                    warnings.append(
-                        "ipython not installed: cells containing magics have reported syntax errors"
-                    )
-                source, line_cell_map, syntax_error_cells = read_jupyter_notebook(
-                    file.read()
-                )
+                source, line_cell_map, errors = read_notebook(file.read())
             else:
                 source = file.read()
-                line_cell_map = {}
-                syntax_error_cells = []
+                line_cell_map = []
+                errors = []
         if check_method_calls and METHODS:
             tree = annotate_ast.annotate_source(source, ast, PYTYPE_OPTIONS)
         else:
             tree = ast.parse(source)
-        errors = check_tree(
-            tree, constructs, source.splitlines(), line_cell_map, syntax_error_cells
-        )
-        for line, message in errors:
-            print(f"{filename}:{line}: {message}")
+        check_tree(tree, constructs, source.splitlines(), line_cell_map, errors)
+        errors.sort()
+        last_error = None
+        for error in errors:
+            if error != last_error:
+                cell, line, message = error
+                if cell:
+                    print(f"{filename}:cell_{cell}:{line}: {message}")
+                else:
+                    print(f"{filename}:{line}: {message}")
+            last_error = error
     except OSError as error:
         print(error)
     except SyntaxError as error:
@@ -548,59 +521,60 @@ def check_file(filename: str, constructs: tuple, check_method_calls: bool) -> No
             print(f"{filename}: can't parse: {message}")
 
 
-def read_jupyter_notebook(file_contents: str) -> tuple:
-    """Returns a triple (x: str, y: dict, z: list), where x is the concatenated
-    source from the code cells, y is is a mapping of line numbers in x to the
-    corrisponding cell and line numbers from the notebook and z is a list of
-    the cell and line numbers with syntax errors
+SYNTAX_MSG = "SYNTAX ERROR: this cell has not been checked"
 
-    Ipython magics are transformed into valid Python if ipython is installed,
-    otherwise cells with magics trigger a syntax error.
+
+def read_notebook(file_contents: str) -> tuple[str, list, list]:
+    """Return a triple (source, map, errors).
+
+    source: the concatenated lines of the code cells without syntax errors
+    map: an array mapping absolute lines 1, 2, ... to (cell, relative line) pairs
+    errors: (cell, line, message) triples indicating where syntax errors occurred
+
+    If IPython isn't installed, cells with magics trigger syntax errors.
     """
-    cell_num, source_line_num = 1, 1
-    line_cell_map = {}
-    source_list, cell_lines, syntax_error_cells = [], [], []
-    jobject = json.loads(file_contents)
-    for cell in jobject["cells"]:
+    cell_num = 0
+    line_cell_map = [(0, 0)]  # line_cell_map[0] is never used
+    source_list, errors = [], []
+    notebook = json.loads(file_contents)
+    for cell in notebook["cells"]:
         if cell["cell_type"] == "code":
-            for cell_line in cell["source"]:
-                cell_lines.append(cell_line)
+            cell_num += 1
+            cell_lines = cell["source"]
             cell_lines[-1] += "\n"
+            cell_source = "".join(cell_lines)
             try:
                 if IPYTHON_INSTALLED:
-                    ast.parse(Transformer().transform_cell("".join(cell_lines)))
+                    ast.parse(Transformer().transform_cell(cell_source))
                 else:
-                    ast.parse("".join(cell_lines))
-                for cell_line_num, cell_line in enumerate(cell_lines, start=1):
-                    source_list.append(cell_line)
-                    line_cell_map[source_line_num] = (cell_num, cell_line_num)
-                    source_line_num += 1
+                    ast.parse(cell_source)
+                source_list.append(cell_source)
+                for cell_line_num in range(1, len(cell_lines) + 1):
+                    line_cell_map.append((cell_num, cell_line_num))
             except SyntaxError as error:
-                syntax_error_cells.append((cell_num, error.lineno))
-            cell_lines = []
-            cell_num += 1
+                errors.append((cell_num, error.lineno, SYNTAX_MSG))
     if IPYTHON_INSTALLED:
         source_str = Transformer().transform_cell("".join(source_list))
     else:
         source_str = "".join(source_list)
-    return source_str, line_cell_map, syntax_error_cells
+    return source_str, line_cell_map, errors
 
 
 # ---- main program ----
 
 if __name__ == "__main__":
     if PYTHON_VERSION < (3, 10):
-        sys.exit("error: Python 3.10 or higher required")
+        sys.exit("error: can't check files (need Python 3.10 or higher)")
 
     argparser = argparse.ArgumentParser(
         description="Check that the code only uses certain constructs. "
-        "See allowed.py for how to specify the allowed constructs."
+        "See http://github.com/dsa-ou/allowed for how to specify the constructs."
     )
     argparser.add_argument(
         "-m",
         "--methods",
         action="store_true",
-        help="Enable method call checking",
+        help="enable method call checking",
     )
     argparser.add_argument(
         "-u",
@@ -618,6 +592,8 @@ if __name__ == "__main__":
     argparser.add_argument("file_or_folder", nargs="+", help="file or folder to check")
     args = argparser.parse_args()
 
+    if args.methods and not PYTYPE_INSTALLED:
+        sys.exit("error: can't check method calls (need pytype)")
     if args.unit < 0:
         sys.exit("error: unit must be positive")
 
@@ -632,30 +608,21 @@ if __name__ == "__main__":
     METHODS = {}
     for key, value in configuration["METHODS"].items():
         METHODS[int(key)] = value
-
-    if error := check_language() or (error := check_imports()):
+    if unknown := check_language():
+        sys.exit(f"error: unknown constructs: {', '.join(unknown)}")
+    if error := check_imports():
         sys.exit(error)
 
-    if args.methods:
-        if METHOD_CHECK_ERROR:
-            sys.exit(METHOD_CHECK_ERROR)
-        else:
-            check_method_calls = True
-    else:
-        check_method_calls = False
-        warnings.append(
-            "Method calls were NOT checked. To do so, use option -m or --methods (pytype and Python 3.10 required)"
-        )
-
-    args.file_or_folder.sort()
     for name in args.file_or_folder:
         if os.path.isdir(name):
-            check_folder(name, args.unit, check_method_calls)
+            check_folder(name, args.unit, args.methods)
         elif name.endswith(".py") or name.endswith(".ipynb"):
             unit = args.unit if args.unit else get_unit(os.path.basename(name))
-            check_file(name, get_constructs(unit), check_method_calls)
+            check_file(name, get_constructs(unit), args.methods)
         else:
             print(f"{name}: not a folder, Python file or notebook")
 
-    for warning in warnings:
-        print("WARNING:", warning)
+    if not args.methods:
+        print("warning: didn't check method calls (use option -m)")
+    if not IPYTHON_INSTALLED:
+        print("warning: didn't check notebook cells with magics (need IPython)")
