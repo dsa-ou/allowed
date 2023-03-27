@@ -96,6 +96,9 @@ greet("John", greeting="Hi")
 boolean_value = True
 float_value = 3.14
 integer_value = 42
+boolean_value = bool(integer_value)
+float_value = float(boolean_value)
+integer_value = int(float_value)
 
 # Len, sorted, str, range, list, tuple
 list_length = len(list_literal)
@@ -114,6 +117,7 @@ my_list.sort()
 
 # Unit 6
 # pass, class
+# math: inf
 
 # Pass
 def do_nothing():
@@ -122,6 +126,9 @@ def do_nothing():
 # Class
 class MyClass:
     pass
+
+# math.inf
+inf = math.inf
 
 # Unit 7
 # from import
@@ -146,13 +153,18 @@ set_literal = {1, 2, 3}
 
 # Not in, ord, hash
 element_not_in_set = 4 not in set_literal
+ascii_value = ord("a")
+dash = hash("dash")
+
+# dict, 
+my_dict = dict()
 
 # dict methods - items
 for item in dict_literal.items():
     print(item)
 
 # Set methods - add, discard, |, &, -, union, intersection, difference
-my_set = {1, 2, 3}
+my_set = set([1, 2, 3])
 my_set.add(4)
 my_set.discard(2)
 
@@ -166,13 +178,12 @@ difference_set = difference_set.difference(intersection_set)
 
 # collections.Counter (Unit 8)
 from collections import Counter
-word_count = Counter("hello world")
+word_count = Counter("dlrow olleh")
 
 # Unit 11
 # permutations, combinations, sqrt, factorial
 
 import itertools
-import math
 
 # Permutations and combinations from itertools
 permutations = list(itertools.permutations([1, 2, 3]))
@@ -189,6 +200,7 @@ my_set.pop()
 # shuffle, Callable
 
 import random
+import typing
 from typing import Callable
 
 # Shuffle from random
