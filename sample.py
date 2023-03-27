@@ -1,9 +1,252 @@
-"""Sample code to test the checker."""
+# This is a test file for the allowed checker.
 
+# Unit 2
+# =, name, constant, def, return, function call, import, attribute,
+# +, -, *, /, //, %, **, -x, help, min, max, round, print,
+# math: floor, ceil, trunc, pi
+
+# Constant
+CONSTANT = 42
+
+# Name
+name = "example"
+
+# Function definition, return, and function call
+def square(x):
+    return x ** 2
+
+result = square(CONSTANT)
+
+# Import and attribute
 import math
+pi = math.pi
+
+# Arithmetic operations
+addition = 1 + 2
+subtraction = 5 - 3
+multiplication = 2 * 3
+division = 10 / 2
+floor_division = 9 // 2
+modulo = 10 % 3
+exponentiation = 2 ** 3
+negation = -CONSTANT
+
+# Help, min, max, round, print
+help(math.sqrt)
+minimum = min(1, 2, 3)
+maximum = max(1, 2, 3)
+rounded = round(3.14)
+print("Hello, world!")
+
+# floor, ceil, trunc, and pi from math
+floor_result = math.floor(3.14)
+ceil_result = math.ceil(3.14)
+trunc_result = math.trunc(3.14)
+pi_value = math.pi
+
+# Unit 3
+# if, and, or, not, ==, !=, <, <=, >, >=
+
+x = 5
+y = 10
+
+# If, and, or, not
+if x < y and not x == y or x != y:
+    print("x is less than y")
+
+# Comparison operators
+equal = x == y
+not_equal = x != y
+less_than = x < y
+less_than_or_equal = x <= y
+greater_than = x > y
+greater_than_or_equal = x >= y
+
+# Unit 4
+# for, while, list literal, tuple literal, in, index, slice,
+# keyword argument, bool, float, int, len, sorted, str, range, list, tuple,
+# List: insert, append, pop, sort
+
+# For loop
+for i in range(5):
+    print(i)
+
+# While loop
+count = 0
+while count < 5:
+    print(count)
+    count = count + 1
+
+# List and tuple literals
+list_literal = [1, 2, 3]
+tuple_literal = (1, 2, 3)
+
+# In, index, slice
+element_in_list = 1 in list_literal
+index_value = list_literal[0]
+sliced_list = list_literal[1:3]
+
+# Keyword argument
+def greet(person, greeting="Hello"):
+    print(greeting, person)
+
+greet("John", greeting="Hi")
+
+# Bool, float, int
+boolean_value = True
+float_value = 3.14
+integer_value = 42
+
+# Len, sorted, str, range, list, tuple
+list_length = len(list_literal)
+sorted_list = sorted(list_literal, reverse=True)
+string_value = str(integer_value)
+range_value = range(5)
+list_value = list(tuple_literal)
+tuple_value = tuple(list_literal)
+
+# List methods - insert, append, pop, sort
+my_list = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5]
+my_list.insert(2, 7)
+my_list.append(3)
+my_list.pop(4)
+my_list.sort()
+
+# Unit 6
+# pass, class
+
+# Pass
+def do_nothing():
+    pass
+
+# Class
+class MyClass:
+    pass
+
+# Unit 7
+# from import
+# deque
+
+from collections import deque
+
+# deque methods - append, appendleft, pop, popleft
+dq = deque()
+for n in range(5):
+    dq.append(n)
+dq.appendleft(dq.pop())
+dq.popleft()
+
+# Unit 8
+# dict literal, set literal, not in, |, &, dict, set, ord, hash
+# collections.Counter
+
+# Dict and set literals
+dict_literal = {"a": 1, "b": 2, "c": 3}
+set_literal = {1, 2, 3}
+
+# Not in, ord, hash
+element_not_in_set = 4 not in set_literal
+
+# dict methods - items
+for item in dict_literal.items():
+    print(item)
+
+# Set methods - add, discard, |, &, -, union, intersection, difference
+my_set = {1, 2, 3}
+my_set.add(4)
+my_set.discard(2)
+
+union_set = {1, 2, 3} | {3, 4, 5}
+intersection_set = {1, 2, 3} & {3, 4, 5}
+difference_set = {1, 2, 3} - {3, 4, 5}
+
+union_set = union_set.union(intersection_set)
+intersection_set = intersection_set.intersection(union_set)
+difference_set = difference_set.difference(intersection_set)
+
+# collections.Counter (Unit 8)
+from collections import Counter
+word_count = Counter("hello world")
+
+# Unit 11
+# permutations, combinations, sqrt, factorial
+
+import itertools
+import math
+
+# Permutations and combinations from itertools
+permutations = list(itertools.permutations([1, 2, 3]))
+combinations = list(itertools.combinations([1, 2, 3], 2))
+
+# Sqrt and factorial from math
+square_root = math.sqrt(16)
+factorial = math.factorial(5)
+
+# Set methods - pop
+my_set.pop()
+
+# Unit 14
+# shuffle, Callable
+
+import random
+from typing import Callable
+
+# Shuffle from random
+my_list = [1, 2, 3, 4, 5]
+random.shuffle(my_list)
+
+# Callable from typing
+def call_me(callable_obj: Callable):
+    callable_obj()
+
+def my_func():
+    print("Hello, world!")
+
+call_me(my_func)
+
+# Unit 16
+# heapq: heappush, heappop
+
+import heapq
+from heapq import heappush, heappop
+
+# Unit 17
+# Hashable, random, super
+
+import random
+from typing import Hashable
+
+# Random
+random_value = random.random()
+
+# Super
+class Parent:
+    def __init__(self, x):
+        self.x = x
+
+class Child(Parent):
+    def __init__(self, x, y):
+        super().__init__(x)
+        self.y = y
+
+# Unit 18
+# abs
+
+# Absolute value
+abs_value = abs(-42)
+
+# Unit 27
+# getsource
+
+import inspect
+
+# Get source
+source = inspect.getsource(greet)
+
+# Random python with some dissallowed constructs
+
 import types
 from random import choice, shuffle
-
 
 def is_prime(n: int) -> bool:
     """Check if a positive integer is prime."""
