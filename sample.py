@@ -218,14 +218,13 @@ call_me(my_func)
 
 # Unit 16
 # heapq: heappush, heappop
-import heapq
 from heapq import heappush, heappop
 
 my_list = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5]
-heapq = []
+pq = []
 for num in my_list:
-    heapq.heappush(headpq, item)
-min_heap_value = heapq.heappop(heapq) 
+    heappush(pq, item)
+min_heap_value = heappop(pq) 
 
 # Unit 17
 # Hashable, random, super
