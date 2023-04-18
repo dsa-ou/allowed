@@ -540,23 +540,19 @@ def read_notebook(file_contents: str) -> tuple[str, list, list]:
     for cell in notebook["cells"]:
         if cell["cell_type"] == "code":
             cell_num += 1
-            cell_lines = cell["source"]
-            cell_lines[-1] += "\n"
-            cell_source = "".join(cell_lines)
+            cell_source = "".join(cell["source"])
             try:
                 if IPYTHON_INSTALLED:
-                    ast.parse(Transformer().transform_cell(cell_source))
+                    cell_source = Transformer().transform_cell(cell_source)
+                    ast.parse(cell_source)
                 else:
                     ast.parse(cell_source)
                 source_list.append(cell_source)
-                for cell_line_num in range(1, len(cell_lines) + 1):
+                for cell_line_num in range(1, len(cell["source"]) + 1):
                     line_cell_map.append((cell_num, cell_line_num))
             except SyntaxError as error:
                 errors.append((cell_num, error.lineno, SYNTAX_MSG))
-    if IPYTHON_INSTALLED:
-        source_str = Transformer().transform_cell("".join(source_list))
-    else:
-        source_str = "".join(source_list)
+    source_str = "\n".join(source_list)
     return source_str, line_cell_map, errors
 
 
