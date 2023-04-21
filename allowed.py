@@ -546,7 +546,7 @@ def read_notebook(file_contents: str) -> tuple[str, list, list]:
                     cell_source = Transformer().transform_cell(cell_source)
                 ast.parse(cell_source)
                 source_list.append(cell_source)
-                for cell_line_num in range(1, len(cell_source.split("\n")) + 1):
+                for cell_line_num in range(1, cell_source.count("\n") + 2):
                     line_cell_map.append((cell_num, cell_line_num))
             except SyntaxError as error:
                 errors.append((cell_num, error.lineno, SYNTAX_MSG))
