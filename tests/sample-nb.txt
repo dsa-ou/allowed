@@ -8,12 +8,12 @@ sample.ipynb:cell_2:21: else in for-loop
 sample.ipynb:cell_2:26: try:
 sample.ipynb:cell_2:27: print(n, "prime" if is_prime(n) else "not prime")
 sample.ipynb:cell_2:28: except AssertionError:
-sample.ipynb:cell_3:7: break
-sample.ipynb:cell_3:8: value += 1
-sample.ipynb:cell_3:12: continue
-sample.ipynb:cell_3:14: else in while-loop
-sample.ipynb:cell_4:6: print(f"first {FIRST} odd numbers: {odd}")
-sample.ipynb:cell_4:11: <<
-sample.ipynb:cell_4:12: math.e
-sample.ipynb:cell_4:13: built-in function type()
+sample.ipynb:cell_5:7: break
+sample.ipynb:cell_5:8: value += 1
+sample.ipynb:cell_5:12: continue
+sample.ipynb:cell_5:14: else in while-loop
+sample.ipynb:cell_6:4: print(f"first {FIRST} odd numbers: {odd}")
+sample.ipynb:cell_6:9: <<
+sample.ipynb:cell_6:10: math.e
+sample.ipynb:cell_6:11: built-in function type()
 warning: didn't check method calls (use option -m)
