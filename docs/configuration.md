@@ -71,4 +71,4 @@ This entry has the same structure as `"IMPORTS"`, but instead of listing
 which objects of which modules can be imported,
 it lists which methods of which classes can be called.
 
-⇦ [Usage](usage.md) | [Contributing](contribution.md) ⇨
+⇦ [Usage](usage.md) | ⇧ [Start](../README.md)

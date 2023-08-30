@@ -19,4 +19,4 @@ If you want to check notebook cells that have IPython commands like `%timeit` (s
 you must install [IPython](https://ipython.readthedocs.io/en/latest/install/index.html).
 If you have installed the Jupyter software, you already have IPython.
 
-⇦ [Start](../README.md) | [Usage](usage.md) ⇨
+⇧ [Start](../README.md) | [Usage](usage.md) ⇨

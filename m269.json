@@ -5,12 +5,12 @@
         "=", "name", "constant", "def", "return", "function call",
         "import", "attribute",
         "+", "-", "*", "/", "//", "%", "**", "-x",
-        "help", "min", "max", "round", "print"
+        "help", "min", "max", "print"
     ],
     "3": ["if", "and", "or", "not", "==", "!=", "<", "<=", ">", ">="],
     "4": [
         "for", "while", "list literal", "tuple literal",
-        "in", "not in", "index", "slice", "keyword argument", "bool", "float", "int",
+        "in", "not in", "index", "slice", "keyword argument",
         "len", "sorted", "str", "range", "list", "tuple"
     ],
     "6": ["pass", "class"],
@@ -23,7 +23,7 @@
     "18": ["abs"]
   },
   "IMPORTS": {
-    "2": {"math": ["floor", "ceil", "trunc", "pi"]},
+    "2": {"math": ["floor", "pi"]},
     "6": {"math": ["inf"]},
     "7": {"collections": ["deque"]},
     "8": {"collections": ["Counter"]},

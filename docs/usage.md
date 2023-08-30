@@ -97,4 +97,4 @@ if it hasn't other syntax errors.
 The transformed magics use function calls and attributes, so
 the cell will only pass the check if those constructs are allowed.
 
-⇦ [Installation](installation.md) | [Configuration](configuration.md) ⇨
+⇦ [Installation](installation.md) | ⇧ [Start](../README.md) | [Configuration](configuration.md) ⇨

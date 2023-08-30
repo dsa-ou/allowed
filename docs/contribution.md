@@ -1,21 +1,6 @@
 ## Contributing
 
-Any help to improve `allowed` is welcome and appreciated.
-
-If you spot an error in the code or documentation, please check if it
-[has been reported](https://github.com/dsa-ou/allowed/issues),
-before creating a new issue.
-
-If you have an idea for a new feature, post it in the
-[ideas discussion forum](https://github.com/dsa-ou/allowed/discussions/categories/ideas).
-If you have a query about using `allowed`, post it in the
-[Q & A discussion forum](https://github.com/dsa-ou/allowed/discussions/categories/q-a).
-
-If you are an M269 student or tutor, you can alternatively report errors,
-make suggestions and ask questions in the M269 technical forum.
-
-If you use `allowed` in your course, we'd love to hear about your experience in the
-[show & tell forum](https://github.com/dsa-ou/allowed/discussions/categories/show-and-tell).
+_The following may be out of date:_
 
 If you want to contribute code to address an open issue:
 
