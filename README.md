@@ -1,8 +1,16 @@
 Courses often use a restricted subset of a programming language and its library,
-for various reasons: reduce cognitive load, focus on concepts, simplify marking, etc.
+to reduce cognitive load, focus on concepts, simplify marking, etc.
 
-This program checks if your Python files and notebooks only use certain constructs,
-which you can configure.
+`allowed` is a program that checks if your code files and Jupyter notebooks only
+use the Python constructs that were taught.
+
+`allowed` enables instructors to check in advance their examples, exercises and assessment
+for inadvertent use of constructs that weren't taught. It also allows students
+and instructors to check submitted code against the taught constructs.
+To do its job, `allowed` requires a short file that lists which constructs were
+introduced in which 'unit' of the course. That file can be used as a reference
+document to onboard new tutors and to discuss the design of the course, e.g.
+to check if important constructs are missing or if some units are overloaded.
 
 Like all static analysis tools, `allowed` isn't perfect and will never be.
 There may be false positives (code reported to be a violation, but isn't)
@@ -20,13 +28,9 @@ If you're an M269 student or tutor, follow the
 [M269 software](https://dsa-ou.github.io/m269-installer) installation instructions,
 and use the M269 technical forum or the tutor forum to report issues and ask questions.
 
-For everyone else:
-
-- [Installation](docs/installation.md)
-- [Usage](docs/usage.md)
-- [Configuration](docs/configuration.md)
-
-If you need help in installing, configuring or using `allowed`, post your query in the
+Otherwise, follow the [instructions](docs/installation.md)
+on how to install, use and configure `allowed`.
+If you need help, post your query in the
 [Q & A discussion forum](https://github.com/dsa-ou/allowed/discussions/categories/q-a).
 
 ## Contributing

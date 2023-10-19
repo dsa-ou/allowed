@@ -1,25 +1,25 @@
 ## Usage
 
-Open a terminal. Change to the folder where you have put `allowed.py` and `m269.json`.
+Open a terminal or a PowerShell console. Use the `cd` command to go to the folder
+where you have put `allowed.py` and the other three files.
 You can check code files and Jupyter notebook files by typing
 ```bash
 python allowed.py path/to/file.py path/to/notebook.ipynb ...
 ```
-This will list all disallowed constructs in the given files.
-If a Python file (or code cell) has a syntax error, it can't be parsed and hence it's not checked.
+For example, you can check the two sample files with:
+```bash
+python allowed.py sample.py sample.ipynb
+```
+This will list the lines with disallowed constructs, which are by default
+those not taught in our algorithms and data structures course,
+but you can change that, as explained in the [Configuration](configuration.md) section.
+If a Python file (or a code cell) has a syntax error,
+then it can't be parsed and hence it's not checked.
 
-For example, you can check the sample file and `allowed`'s code with:
-```bash
-python allowed.py sample.py allowed.py
-```
-or with
-```bash
-python allowed.py sample.ipynb allowed.py
-```
 If you expect a long list of disallowed constructs, it may be better to
 check one file at a time and store the report in a text file, e.g.
 ```bash
-python allowed.py allowed.py > disallowed.txt
+python allowed.py sample.py > disallowed.txt
 ```
 To check all `.py` and `.ipynb` files in a folder and its subfolders, type:
 ```bash
@@ -28,12 +28,12 @@ python allowed.py path/to/folder
 
 ### Extra checks
 
-To check if the attribute access `variable.method` is allowed,
-`allowed` needs to know the type of `variable`. For that purpose, it uses
+To check method calls of the form `variable.method(...)`,
+we must know the type of `variable`. For that purpose, `allowed` uses
 the `pytype` type checker, if it's installed and the Python version is 3.10.
 
-By default, `allowed` skips method call checks because they slow down the process.
-You can enable these checks with option `-m` or `--methods`, for example
+By default, `allowed` does _not_ check method calls because it slows down the process.
+You can enable these checks with option `-m` or `--methods`. For example,
 ```bash
 python allowed.py -m sample.py
 ```
@@ -45,12 +45,14 @@ For example, the following two commands are equivalent:
 python allowed.py -m file1.py file2.py
 python allowed.py file1.py --methods file2.py
 ```
+Note that the second command also checks the method calls in _both_ files,
+not just in the second file.
 
 ### Organising by units
 
-`allowed` assumes that your course or textbook is organised in 'units'
-(lessons, weeks, chapters, whatever you want) and that they are cumulative:
-a Python construct introduced in a unit can be used in any subsequent unit.
+`allowed` assumes that your course is organised in 'units'
+(lessons, weeks, textbook chapters, whatever you want) and that they are cumulative:
+a Python construct taught in a unit can be used in any subsequent unit.
 
 By default, `allowed` uses all units, i.e. checks against all the material introduced.
 Option `-u N` or `--unit N` will check code against
@@ -65,7 +67,7 @@ To see the weekly difference in the allowed constructs, type for example:
 python allowed.py -u 2 sample.py
 python allowed.py -u 4 sample.py
 ```
-The second command will report fewer violations because units 3 and 4 of
+The second command reports fewer violations because units 3 and 4 of
 the default configuration introduce Booleans, lists, strings and tuples.
 
 If the file name starts with the unit number and there's no unit option,
@@ -78,16 +80,16 @@ However, if the file name starts with a number that isn't the intended unit,
 you must provide it,
 e.g. if the file name starts with the number of the assignment, not of the unit:
 ```bash
-python allowed.py 01_submission.py -u 5
+python allowed.py 01_submission.py --unit 5
 ```
-Like the methods call option, the unit option can appear
+As the previous example shows, the unit option can appear
 anywhere after `allowed.py` and in either form.
 
 ### Checking notebooks
 
 `allowed` does check Jupyter notebooks and reports the cells and lines with
 disallowed constructs. For example, `path/to/notebook.ipynb:cell_13:5: ...`
-means that the problem is in line 5 of the 13th code cell.
+means that line 5 of the 13th code cell uses a construct that wasn't taught.
 
 If a code cell has invalid Python, `allowed` reports a syntax error and
 skips the cell. Using IPython magics such as `%timeit` and `%run`

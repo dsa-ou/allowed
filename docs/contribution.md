@@ -1,6 +1,6 @@
 ## Contributing
 
-_The following may be out of date:_
+_The following is out of date:_
 
 If you want to contribute code to address an open issue:
 
