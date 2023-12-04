@@ -19,4 +19,4 @@ lint:
 	poetry run bandit -q -r allowed.py
 
 test:
-	./tests.sh run
+	poetry run ./tests.sh run
