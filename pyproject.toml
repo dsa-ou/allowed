@@ -2,12 +2,13 @@
 name = "allowed"
 version = "1.1.0"
 description = "Check if a program only uses a subset of the Python language."
-authors = ["Michel Wermelinger <something@example.com>"]
+authors = ["Michel Wermelinger]
 readme = "README.md"
 license = "BSD 3-Clause License"
+repository = "https://github.com/dsa-ou/allowed"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "~3.10"
 ipython = "^8.18.1"
 pytype = "^2023.11.29"
 
@@ -17,7 +18,6 @@ black = "^22.10.0"
 mypy = "^0.991"
 isort = "^5.10.1"
 pylint = "^2.15.7"
-freezegun = "^1.2.2"
 pytest-cov = "^4.0.0"
 flake8 = "^6.0.0"
 bandit = "^1.7.4"
