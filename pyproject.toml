@@ -2,7 +2,7 @@
 name = "allowed"
 version = "1.1.0"
 description = "Check if a program only uses a subset of the Python language."
-authors = ["Michel Wermelinger]
+authors = ["Michel Wermelinger"]
 readme = "README.md"
 license = "BSD 3-Clause License"
 repository = "https://github.com/dsa-ou/allowed"
