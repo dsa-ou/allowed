@@ -1,0 +1,24 @@
+{
+  "FILE_UNIT": "",
+  "LANGUAGE": {
+    "1": [
+      "constant", "function call", "from import", "if", "for", "range",
+      "=", "name",
+      "list literal", "index", "len",
+      "+", "-", "*", "/", "//", "%", "round",
+      "and", "or", "not", "==", "!=", "<", "<=", ">", ">=",
+      "while",
+      "print"
+    ],
+    "2": ["def", "return", "import", "attribute", "assert", "id", "type"],
+    "3": ["dict literal", "input"]
+  },
+  "IMPORTS": {
+    "1": {"turtle": ["*"]},
+    "2": {"csv": ["reader"]},
+    "3": {"random": ["*"]}
+  },
+  "METHODS": {
+    "2": {"List": ["append"]}
+  }
+}
