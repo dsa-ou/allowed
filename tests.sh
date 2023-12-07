@@ -1,3 +1,6 @@
+#!/bin/bash
+
+
 if [ $# -eq 0 ]; then
     echo "Usage: ./tests.sh [run|create]"
 elif [ $1 = "run" ]; then
