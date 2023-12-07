@@ -131,7 +131,7 @@ git add .
 ```
 > :bulb: This command stages all changes in the current directory and its subdirectories. You can see which files have been staged by running `git status`.
 
-Next, commit your changes with the following command:
+Next, commit your changes:
 ```bash
 git commit -m "Your descriptive commit message"
 ```
@@ -175,6 +175,8 @@ When working with the `allowed` environment, you can make use of the following `
 
 ## Thank You
 
-If this all feels a bit too overwhelming, don't worry! There is more to a project than just code. You can still contribute by reporting bugs, suggesting new features, or helping to improve the documentation. You can do this by opening an issue on the project's [issue tracker](https://github.com/dsa-ou/allowed/issues).
+If this all feels a bit too overwhelming, don't worry! There is more to a project than just code. You can still contribute by reporting bugs, suggesting new features, or helping to improve the documentation. You can do this by opening or commenting on an issue via the project's [issue tracker](https://github.com/dsa-ou/allowed/issues).
 
-Remember, every contribution is valuable, no matter how small. Feel free to reach out on the project's [discussion forum](https://github.com/dsa-ou/allowed/discussions) if you have any questions or need help getting started. M269 students may prefer to use the module's 'Technical Forum' for further guidance.
+Feel free to reach out on the project's [discussion forum](https://github.com/dsa-ou/allowed/discussions) if you have any questions or need help getting started. M269 students may prefer to post to the module's 'Technical Forum' for further guidance.
+
+Thank you for your interest in contributing to `allowed`! :heart:
