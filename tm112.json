@@ -5,18 +5,18 @@
       "constant", "function call", "from import", "if", "for", "range",
       "=", "name",
       "list literal", "index", "len",
-      "+", "-", "*", "/", "//", "%", "round",
+      "+", "-", "-x", "*", "/", "//", "%", "round",
       "and", "or", "not", "==", "!=", "<", "<=", ">", ">=",
       "while",
       "print"
     ],
     "2": ["def", "return", "import", "attribute", "assert", "id", "type"],
-    "3": ["dict literal", "input"]
+    "3": ["dict literal", "input", "list"]
   },
   "IMPORTS": {
-    "1": {"turtle": ["*"]},
+    "1": {"turtle": ["left", "right", "forward", "penup", "pendown", "goto"]},
     "2": {"csv": ["reader"]},
-    "3": {"random": ["*"]}
+    "3": {"random": ["choice"]}
   },
   "METHODS": {
     "2": {"List": ["append"]}
