@@ -4,7 +4,7 @@ install:
 update:
 	poetry update
 
-fmt:
+format:
 	poetry run autoflake \
 		--in-place \
 		--remove-all-unused-imports \

@@ -1,6 +1,6 @@
-# Contributing to `allowed`
+# Code contributions
 
-This guide will walk you through the process of setting up your development environment and making contributions to the `allowed` project. If you prefer not to use the command line, you can also use [GitHub Desktop](https://desktop.github.com/) to perform many of the steps described below.
+This guide will walk you through the process of setting up your development environment and contributing code to the `allowed` project. If you prefer not to use the command line, you can also use [GitHub Desktop](https://desktop.github.com/) to perform many of the steps described below.
 
 If you're new to `Git`, `GitHub` or version control in general, consider reading some of the introductory materials listed under [Additional Resources](#additional-resources) at the bottom of this guide. Mastering these tools will put you at a great advantage when applying for jobs in the software industry, or when working on your own projects.
 
@@ -12,8 +12,8 @@ If you're using Windows, you'll need to install the [Windows Subsystem for Linux
 
 ### 1. Fork the Repository
 
-> :bulb: A "fork" is a copy of a repository that allows you to freely experiment with changes without affecting the original project. 
-To create a fork, you'll need a [GitHub account](https://docs.github.com/en/get-started/quickstart/creating-an-account-on-github).
+> :bulb: A "fork" is a copy of a repository that allows you to freely experiment with changes without affecting the original project.
+> To create a fork, you'll need a [GitHub account](https://docs.github.com/en/get-started/quickstart/creating-an-account-on-github).
 
 On the GitHub page for the `allowed` repository, click on the "Fork" button at the top right. This creates a personal copy of the project under your GitHub account. You'll be able to make changes to this copy and propose them to the original project using a "pull request" (we'll get to that later).
 
@@ -35,15 +35,15 @@ cd allowed
 
 ### 1. Install Python
 
-To contribute to `allowed`, you'll need Python version 3.10 or above. If you're not sure which version of Python you have, you can check by opening a terminal and running the following command:
+To contribute to `allowed`, you'll need Python version 3.10. If you're not sure which version of Python you have, you can check by opening a terminal and running the following command:
 
 ```bash
 python3 --version
 ```
 
-This command should print the version of Python that's currently installed. If you see a version number that's 3.10 or above, you're good to go! If not, or if you see an error message saying that `python3` is not recognized as a command, you'll need to install Python.
+This command should print the version of Python that's currently installed. If it's 3.10, you're good to go! If not, or if you see an error message saying that `python3` is not recognized as a command, you'll need to install Python.
 
-> :bulb: You can download Python from the [official Python website](https://www.python.org/downloads/). Make sure to download Python 3.10 or above.
+> :bulb: You can download Python from the [official Python website](https://www.python.org/downloads/). Make sure to download Python 3.10.
 
 ### 2. Install Poetry
 
@@ -55,10 +55,17 @@ The recommended way to install Poetry is with the [official installer](https://p
 curl -sSL https://install.python-poetry.org | python3 -
 ```
 
+If you get an error message about an invalid certificate, you need to run the
+'Install Certificates' command in the Python folder.
+
+Finally, you need to add `export PATH="$HOME/.local/bin:$PATH"` to your shell
+startup file, which is in your home directory and is called `.zshrc`, `.bashrc` or similar.
+Type `echo $0` in the terminal to find out which shell you're using.
+
 ### 3. Install Dependencies
 > :bulb: "Dependencies" are other Python libraries that `allowed` uses to provide its features.
 
-Now that you have Python and Poetry installed, you can install the dependencies for the `allowed` project. 
+Now that you have Python and Poetry installed, you can install the dependencies for the `allowed` project.
 
 Navigate to the `allowed` project directory in your terminal (you should already be there if you followed the previous steps) and run the following command:
 
@@ -68,7 +75,7 @@ make install
 
 > :bulb: This command tells Poetry to install the dependencies listed in [`pyproject.toml`](https://python-poetry.org/docs/pyproject/). This is a file that describes the project and the additional libraries it relies on.
 
-That's it! You're all set up! :tada: 
+That's it! You're all set up! :tada:
 
 Have a cup of tea and a biscuit, you've earned it! :cookie: :tea:
 
@@ -95,7 +102,7 @@ git checkout -b feature-or-fix-branch
 ```
 > :bulb: Replace `feature-or-fix-branch` with a descriptive name for your branch. This name should briefly describe the feature you're adding or the issue you're fixing.
 
-Now you're ready to start making changes to the code! 
+Now you're ready to start making changes to the code!
 
 > :bulb: It's a good idea to make small, incremental changes and commit them often. This will make it easier to review your changes and revert them if necessary.
 
@@ -104,7 +111,7 @@ Now you're ready to start making changes to the code!
 Before sharing your new features or fixes, it's important to check that you haven't broken anything! Your environment provides a few short commands that will help you to check your work and ensure you're following the project's style conventions.
 
 ```bash
-make fmt
+make format
 ```
 > This command formats your code in accordance with the project's style conventions.
 
@@ -123,7 +130,7 @@ Be sure to resolve any errors that arise before moving on to the next step.
 ### 4. Stage and Commit Your Changes
 > :bulb: "Staging" is the process of selecting specific changes that you want to commit. A "commit" is like a snapshot of your code at a specific point in time. It allows you to save your changes and add a descriptive message that explains what you've done.
 
-Once you've made your changes, you'll need to stage and commit them.  
+Once you've made your changes, you'll need to stage and commit them.
 
 To stage all your changes, use the following command:
 ```bash
@@ -141,7 +148,7 @@ git commit -m "Your descriptive commit message"
 
 > :bulb: "Pushing" is the process of uploading your local commits to a remote repository (in this case, your fork on GitHub).
 
-Now that your changes are committed, you can push them to your fork on GitHub. 
+Now that your changes are committed, you can push them to your fork on GitHub.
 
 To push your changes, use the following command:
 ```bash
@@ -175,7 +182,8 @@ When working with the `allowed` environment, you can make use of the following `
 
 ## Thank You
 
-If this all feels a bit too overwhelming, don't worry! There is more to a project than just code. You can still contribute by reporting bugs, suggesting new features, or helping to improve the documentation. You can do this by opening or commenting on an issue via the project's [issue tracker](https://github.com/dsa-ou/allowed/issues).
+If this all feels a bit too overwhelming, don't worry! There is more to a project than just code.
+You can contribute in [other ways](../README.md).
 
 Feel free to reach out on the project's [discussion forum](https://github.com/dsa-ou/allowed/discussions) if you have any questions or need help getting started. M269 students may prefer to post to the module's 'Technical Forum' for further guidance.
 

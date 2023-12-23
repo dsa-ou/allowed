@@ -43,6 +43,10 @@ Any help to improve `allowed` is welcome and appreciated.
   [ideas discussion forum](https://github.com/dsa-ou/allowed/discussions/categories/ideas).
 - If you spot an error in the code or documentation, please check if it
   [has been reported](https://github.com/dsa-ou/allowed/issues), before creating a new issue.
+- If you want to contribute code or documentation that addresses
+  an [open issue](https://github.com/dsa-ou/allowed/issues),
+  please read first our [code contribution guide](docs/contribution.md).
+  Your contribution will become available under the terms below.
 
 ## Licences
 
