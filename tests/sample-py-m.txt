@@ -1,14 +1,12 @@
 sample.py:8: types
 sample.py:9: choice
 sample.py:15: <<
-sample.py:17: float.is_integer()
 sample.py:22: if expression
 sample.py:29: f-string
 sample.py:30: str.upper()
-sample.py:44: tuple.index()
-sample.py:45: list.count()
+sample.py:33: list comprehension
 sample.py:48: ^
-sample.py:61: try
+sample.py:48: set comprehension
 sample.py:67: break
 sample.py:70: while-else
 sample.py:71: continue

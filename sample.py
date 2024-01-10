@@ -14,7 +14,7 @@ from random import choice, shuffle
 f = 9e5 + 8.3e-2 - 7_000 * 6 / -5 // 4 % 3**2
 1 << 3
 abs(min(1, max(2, 3)))
-f.is_integer()
+f.is_integer()  # allowed
 
 # Booleans
 True and False or not True
@@ -30,7 +30,7 @@ f"{x}3" in s
 s.upper()
 
 # Lists
-l = [] + list("abc")
+l = [] + list("abc") + [letter for letter in "abc"]
 l.sort(reverse=True)
 l.append(1)
 l.pop()
@@ -41,11 +41,11 @@ t = () + (1,) + tuple("abc")
 
 # Operations common to all sequences
 t[2] not in l[:3:-1] * 2
-t.index("a")
-l.count(None)
+# The following allows all constructs on the same line.
+l.count(t.index(1))  # allowed
 
 # Sets
-items = set() | {1, 2, 3} & {2, 3} ^ {3, 4} - {4, 5}
+items = set() | {1, 2, 3} & {2, 3} ^ {3, 4} - {i for i in range(1, 10, 2)}
 items.add(items.pop())
 items.discard(9)
 items.union(l)
@@ -58,7 +58,7 @@ for key, value in d.items():
     print(key, value)
 
 # Control flow statements
-try:
+try:  # allowed
     for i in range(1, 5):
         while i < 6:
             if i == 0:

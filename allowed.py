@@ -376,6 +376,13 @@ def location(line: int, line_cell_map: list) -> tuple[int, int]:
     return line_cell_map[line] if line_cell_map else (0, line)
 
 
+def ignore(node: ast.AST, source: list[str]) -> bool:
+    """Return True if node is on a line to be ignored."""
+    return hasattr(node, "lineno") and source[node.lineno - 1].rstrip().endswith(
+        "# allowed"
+    )
+
+
 # ----- main functions -----
 
 
@@ -389,8 +396,10 @@ def check_tree(
     """Check if tree only uses allowed constructs. Add violations to errors."""
     language, options, imports, functions, methods = constructs
     for node in ast.walk(tree):
-        # if a node has no line number, handle it via its parent
+        # If a node has no line number, handle it via its parent.
         if isinstance(node, NO_LINE):
+            pass
+        elif ignore(node, source):
             pass
         elif isinstance(node, (ast.BinOp, ast.UnaryOp, ast.BoolOp)):
             if not isinstance(node.op, language):
@@ -408,7 +417,7 @@ def check_tree(
                 cell, line = location(node.lineno, line_cell_map)
                 message = CONCRETE.get(type(node), "unknown construct")
             else:
-                # if a node has no line number, report it for inclusion in NO_LINE
+                # If a node has no line number, report it for inclusion in NO_LINE.
                 cell, line = 0, 0
                 message = f"unknown construct {str(node)} at unknown line"
             errors.append((cell, line, message))
