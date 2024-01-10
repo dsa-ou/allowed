@@ -500,25 +500,24 @@ def check_file(filename: str, constructs: tuple, check_method_calls: bool) -> No
                     print(f"{filename}:{line}: {message}")
             last_error = error
     except OSError as error:
-        print(error)
+        print(f"{filename}: OS ERROR: {error.strerror}")
     except SyntaxError as error:
-        #  write 'file:n: error' instead of 'file: error (..., line n)'
-        message = str(error)
-        if match := re.search(r"\(.*, line (\d+)\)", message):
-            line = int(match.group(1))
-            message = message[: match.start()] + message[match.end() :]
-            print(f"{filename}:{line}: can't parse: {message}")
-        else:
-            print(f"{filename}: can't parse: {message}")
+        print(f"{filename}:{error.lineno}: SYNTAX ERROR: {error.msg}")
+    except UnicodeError as error:
+        print(f"{filename}: UNICODE ERROR: {error}")
+    except json.decoder.JSONDecodeError as error:
+        print(f"{filename}:{error.lineno}: FORMAT ERROR: {error.msg}")
+    except ValueError as error:
+        print(f"{filename}: VALUE ERROR: {error}")
     except annotate_ast.PytypeError as error:
         #  write 'file:n: error' instead of 'Error reading file ... at line n: error'
         message = str(error)
         if match := re.match(r"Error .* at line (\d+): (.*)", message):
             line = int(match.group(1))
             message = match.group(2)
-            print(f"{filename}:{line}: can't parse: {message}")
+            print(f"{filename}:{line}: PYTYPE ERROR: {message}")
         else:
-            print(f"{filename}: can't parse: {message}")
+            print(f"{filename}: PYTYPE ERROR: {message}")
 
 
 SYNTAX_MSG = "SYNTAX ERROR: this cell has not been checked"

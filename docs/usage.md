@@ -10,20 +10,30 @@ For example, you can check the two sample files with:
 ```bash
 python allowed.py sample.py sample.ipynb
 ```
-This will list the lines with disallowed constructs, which are by default
-those not taught in our algorithms and data structures course,
+To check all `.py` and `.ipynb` files in a folder and its subfolders, type:
+```bash
+python allowed.py path/to/folder
+```
+As `allowed` checks the files, it shows the line (and for notebooks the cell)
+where each disallowed construct occurs. For example:
+```
+file.py:3: break
+notebook.ipynb:cell_2:4: built-in function type()
+```
+By default, the allowed constructs are those taught in our algorithms and data structures course,
 but you can change that, as explained in the [Configuration](configuration.md) section.
-If a Python file (or a code cell) has a syntax error,
-then it can't be parsed and hence it's not checked.
+
+If a message contains the string `ERROR`, then the file was _not_ checked, for these reasons:
+- `FORMAT ERROR`: the internal notebook format has been corrupted
+- `OS ERROR`: an operating system error, e.g. the file doesn't exist or can't be read
+- `SYNTAX ERROR`: the file has invalid Python
+- `UNICODE ERROR`: the file has some strange characters and couldn't be read
+- `VALUE ERROR`: some other cause; please report it to us.
 
 If you expect a long list of disallowed constructs, it may be better to
 check one file at a time and store the report in a text file, e.g.
 ```bash
 python allowed.py sample.py > disallowed.txt
-```
-To check all `.py` and `.ipynb` files in a folder and its subfolders, type:
-```bash
-python allowed.py path/to/folder
 ```
 
 ### Extra checks

@@ -169,7 +169,7 @@ When working with the `allowed` environment, you can make use of the following `
 
 - `make install`: Installs project dependencies.
 - `make update`: Updates project dependencies to their latest compatible versions.
-- `make fmt`: Formats your code in accordance with the project's style conventions.
+- `make format`: Formats your code in accordance with the project's style conventions.
 - `make lint`: Checks your code for errors.
 - `make test`: Runs all the project's tests.
 
