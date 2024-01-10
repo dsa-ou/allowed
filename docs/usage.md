@@ -14,8 +14,14 @@ To check all `.py` and `.ipynb` files in a folder and its subfolders, type:
 ```bash
 python allowed.py path/to/folder
 ```
+If you expect a long list of disallowed constructs, it may be better to
+check one file at a time and store the report in a text file, e.g.
+```bash
+python allowed.py sample.py > disallowed.txt
+```
+
 As `allowed` checks the files, it shows the line (and for notebooks the cell)
-where each disallowed construct occurs. For example:
+where each disallowed construct occurs, like so:
 ```
 file.py:3: break
 notebook.ipynb:cell_2:4: built-in function type()
@@ -23,18 +29,14 @@ notebook.ipynb:cell_2:4: built-in function type()
 By default, the allowed constructs are those taught in our algorithms and data structures course,
 but you can change that, as explained in the [Configuration](configuration.md) section.
 
-If a message contains the string `ERROR`, then the file was _not_ checked, for these reasons:
+If a message contains the string `ERROR`, then the indicated file or cell
+was _not_ checked, for these reasons:
 - `FORMAT ERROR`: the internal notebook format has been corrupted
 - `OS ERROR`: an operating system error, e.g. the file doesn't exist or can't be read
+- `PYTYPE ERROR`: an error that blocked the type checker, usually a syntax error
 - `SYNTAX ERROR`: the file has invalid Python
 - `UNICODE ERROR`: the file has some strange characters and couldn't be read
 - `VALUE ERROR`: some other cause; please report it to us.
-
-If you expect a long list of disallowed constructs, it may be better to
-check one file at a time and store the report in a text file, e.g.
-```bash
-python allowed.py sample.py > disallowed.txt
-```
 
 ### Extra checks
 
@@ -97,12 +99,13 @@ anywhere after `allowed.py` and in either form.
 
 ### Checking notebooks
 
-`allowed` does check Jupyter notebooks and reports the cells and lines with
-disallowed constructs. For example, `path/to/notebook.ipynb:cell_13:5: ...`
+As mentioned earlier, `allowed` does check Jupyter notebooks and
+reports the cells and lines with disallowed constructs: `notebook.ipynb:cell_13:5: ...`
 means that line 5 of the 13th code cell uses a construct that wasn't taught.
 
 If a code cell has invalid Python, `allowed` reports a syntax error and
-skips the cell. Using IPython magics such as `%timeit` and `%run`
+skips the cell, but continues checking the rest of the notebook.
+Using IPython magics such as `%timeit` and `%run`
 triggers a syntax error if IPython isn't installed. If it is,
 the magics are transformed into Python code and the cell is checked,
 if it hasn't other syntax errors.

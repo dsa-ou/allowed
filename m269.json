@@ -4,7 +4,7 @@
     "2": [
         "=", "name", "constant", "def", "return", "function call",
         "import", "attribute",
-        "+", "-", "*", "/", "//", "%", "**", "-x",
+        "+", "-", "*", "/", "//", "%", "**", "-x", "+=",
         "help", "min", "max", "print"
     ],
     "3": ["if", "and", "or", "not", "==", "!=", "<", "<=", ">", ">="],
@@ -34,6 +34,7 @@
     "27": {"inspect": ["getsource"]}
   },
   "METHODS": {
+    "2": {"int": [], "float": [], "str": [], "Tuple": []},
     "4": {"List": ["insert", "append", "pop", "sort"]},
     "7": {"collections.deque": ["append", "appendleft", "pop", "popleft"]},
     "8": {"Dict": ["items", "pop"], "Set": ["add", "discard", "union", "intersection", "difference"]},

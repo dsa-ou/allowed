@@ -1,63 +1,85 @@
-"""Sample code to test the checker."""
+"""Meaningless code just to test the checker.
+
+The code in this file MUST be executable, without syntax errors.
+This file is NOT meant to cover all Python constructs.
+"""
 
 import math
 import types
 from random import choice, shuffle
 
+# Atomic types: literals, operators, functions
 
-def is_prime(n: int) -> bool:
-    """Check if a positive integer is prime."""
-    assert n > 0
-    if n == 1:
-        return False
-    for factor in range(2, n):
-        if n % factor == 0:
-            decision = False
-            break
-        elif factor > math.sqrt(n):
-            decision = True
-            break
-    else:  # no break
-        decision = True
-    return decision
+# Numbers
+f = 9e5 + 8.3e-2 - 7_000 * 6 / -5 // 4 % 3**2
+1 << 3
+abs(min(1, max(2, 3)))
+f.is_integer()
 
+# Booleans
+True and False or not True
+5 < 3 > 2 == 1 != 0 <= 5 >= -4
+True if 1 > 0 else False
 
-for n in range(10):
-    try:
-        print(n, "prime" if is_prime(n) else "not prime")
-    except AssertionError:
-        print(n, "not positive")
+# Built-in collections: literals, operators, functions, methods
 
+# Strings
+s = "hello" + str(123)
+x = 2
+f"{x}3" in s
+s.upper()
 
-def odd_numbers(n: int) -> list[int]:
-    """Return a list of the first n odd numbers."""
-    result = []
-    value = 0
-    while True:
-        if len(result) == n:
-            break
-        value += 1
-        if value % 2 == 1:
-            result.append(value)
+# Lists
+l = [] + list("abc")
+l.sort(reverse=True)
+l.append(1)
+l.pop()
+l.insert(0, 2)
+
+# Tuples
+t = () + (1,) + tuple("abc")
+
+# Operations common to all sequences
+t[2] not in l[:3:-1] * 2
+t.index("a")
+l.count(None)
+
+# Sets
+items = set() | {1, 2, 3} & {2, 3} ^ {3, 4} - {4, 5}
+items.add(items.pop())
+items.discard(9)
+items.union(l)
+
+# Dictionaries
+d = {"a": 1, "b": 2}
+d["c"] = 3
+d.pop("a")
+for key, value in d.items():
+    print(key, value)
+
+# Control flow statements
+try:
+    for i in range(1, 5):
+        while i < 6:
+            if i == 0:
+                i = 6
+            elif i > 3:
+                break
+            else:
+                i *= 2
         else:
             continue
-    else:  # no break
-        pass  # infinite loop finished
-    return result
+    else:
+        assert False, "unreachable"
+except AssertionError as error:
+    pass
 
 
-FIRST = 5
-odd = odd_numbers(FIRST)
-print(f"first {FIRST} odd numbers: {odd}")
-if odd.count(2) == 1:
-    print("2 is considered odd: that's odd!")
-print("last odd generated:", odd.pop())
-
-print("2^6 =", 1 << 6)
-print("Euler number e =", math.e)
-if type(odd_numbers) == types.FunctionType:
-    print("odd_numbers is a function")
+# Functions
+def whatever(values: list[int]) -> bool:
+    """Pointless function."""
+    return True
 
 
-x = 5
-x = "five"
+# Imported methods
+math.sqrt(math.e)

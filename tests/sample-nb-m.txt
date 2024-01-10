@@ -9,7 +9,6 @@ sample.ipynb:cell_2:26: try:
 sample.ipynb:cell_2:27: print(n, "prime" if is_prime(n) else "not prime")
 sample.ipynb:cell_2:28: except AssertionError:
 sample.ipynb:cell_5:7: break
-sample.ipynb:cell_5:8: value += 1
 sample.ipynb:cell_5:12: continue
 sample.ipynb:cell_5:14: else in while-loop
 sample.ipynb:cell_6:4: print(f"first {FIRST} odd numbers: {odd}")

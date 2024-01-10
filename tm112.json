@@ -19,6 +19,8 @@
     "3": {"random": ["choice"]}
   },
   "METHODS": {
-    "2": {"List": ["append"]}
+    "1": {"int": [], "float": [], "str": [], "Tuple": [], "List": []},
+    "2": {"List": ["append"]},
+    "3": {"Dict": []}
   }
 }

@@ -100,6 +100,7 @@ ABSTRACT = {
     "with": ast.With,
     # other statements
     "=": ast.Assign,
+    "+=": ast.AugAssign,  # allows `-=`, `*=`, etc.
     "assert": ast.Assert,
     "del": ast.Delete,
     "pass": ast.Pass,
@@ -429,10 +430,11 @@ def check_tree(
         elif isinstance(node, ast.Attribute) and isinstance(node.value, ast.Name):
             name = node.value
             attribute = node.attr
-            if name.id in imports and attribute not in imports[name.id]:
-                cell, line = location(node.lineno, line_cell_map)
-                message = f"{name.id}.{attribute}"
-                errors.append((cell, line, message))
+            if name.id in imports:
+                if attribute not in imports[name.id]:
+                    cell, line = location(node.lineno, line_cell_map)
+                    message = f"{name.id}.{attribute}"
+                    errors.append((cell, line, message))
             elif hasattr(name, "resolved_annotation"):
                 type_name = re.match(r"[a-zA-Z.]*", name.resolved_annotation).group()
                 if type_name in methods and attribute not in methods[type_name]:

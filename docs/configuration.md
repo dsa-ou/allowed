@@ -1,8 +1,7 @@
 ## Configuration
 
-The program is already configured for our course,
-[M269](https://www.open.ac.uk/courses/modules/m269),
-but you can create your own configuration by creating a JSON file of the form
+The program is already configured for our algorithms and data structures course,
+M269, but you can create your own configuration by writing a JSON file of the form
 ```json
 {
    "FILE_UNIT": "...",
@@ -11,7 +10,7 @@ but you can create your own configuration by creating a JSON file of the form
    "METHODS": { ... }
 }
 ```
-File [`m269.json`](m269.json) is the default configuration.
+File `m269.json` is the default configuration.
 You can copy, rename and edit it to configure `allowed` for your course.
 
 Students and instructors often study and teach multiple courses at the same time.
@@ -21,9 +20,11 @@ option `-c` or `--config`, e.g.
 python allowed.py sample.py -c cs101.json
 ```
 While you can test your configuration with our `sample.py` and `sample.ipynb` files,
-as shown in the example,
+as shown in the above example,
 you will probably want to use Python and notebook files from your course.
 You may thus wish to delete the two `sample` files, as they're no longer needed.
+
+The rest of this document explains the various parts of the JSON file.
 
 ### FILE_UNIT
 This entry in the JSON file is
@@ -59,6 +60,8 @@ the `+` operator (and all its uses) or you don't.
 Adding `"for"` and `"while"` to `"LANGUAGE"` only allows the 'normal' loops.
 To also allow the `else` clause in loops, add `"for else"` and `"while else"`.
 
+To allow _all_ possible augmented assignments (`+=`, `*=`, `//=`, etc.), add `"+="` to `"LANGUAGE"`.
+
 ### IMPORTS
 This entry is a dictionary that maps units to dictionaries of
 the modules and the list of exported objects introduced in those units. For example,
@@ -75,5 +78,30 @@ allows function `math.abs(x)` and class `fractions.Fraction` from unit 11 on.
 This entry has the same structure as `"IMPORTS"`, but instead of listing
 which objects of which modules can be imported,
 it lists which methods of which classes can be called.
+
+Note that some of the built-in classes are written in lowercase and
+others in uppercase (see `m269.json`, the default configuration).
+
+If a unit introduces literals of some type in the `"LANGUAGE"` section,
+then there should be an entry for the same unit and type in the `"METHODS"` section.
+If no methods are allowed, this must be explicitly indicated with with an empty list.
+
+In the following example, unit 2 allows any immutable value
+(numbers, Booleans, `None`, strings, tuples), so it must also state
+which methods are allowed for strings (none in the example) and tuples (only `index`).
+```
+{
+   "FILE_UNIT": "...",
+   "LANGUAGE": {
+      "2": [ "constant", ...],
+      ...
+   },
+   "IMPORTS": { ... },
+   "METHODS": {
+      "2": {"Tuple": ["index"], "str": []},
+      ...
+   }
+}
+```
 
 ⇦ [Usage](usage.md) | ⇧ [Start](../README.md)

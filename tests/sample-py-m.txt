@@ -1,18 +1,18 @@
-sample.py:4: import types
-sample.py:5: from random import choice
-sample.py:10: assert n > 0
-sample.py:16: break
-sample.py:19: break
-sample.py:21: else in for-loop
-sample.py:26: try:
-sample.py:27: print(n, "prime" if is_prime(n) else "not prime")
-sample.py:28: except AssertionError:
-sample.py:38: break
-sample.py:39: value += 1
-sample.py:43: continue
-sample.py:45: else in while-loop
-sample.py:51: print(f"first {FIRST} odd numbers: {odd}")
-sample.py:52: method count called on list odd
-sample.py:56: <<
-sample.py:57: math.e
-sample.py:58: built-in function type()
+sample.py:8: import types
+sample.py:9: from random import choice
+sample.py:15: <<
+sample.py:17: method is_integer called on float f
+sample.py:22: True if 1 > 0 else False
+sample.py:29: f"{x}3" in s
+sample.py:30: method upper called on str s
+sample.py:44: method index called on tuple t
+sample.py:45: method count called on list l
+sample.py:48: ^
+sample.py:61: try:
+sample.py:67: break
+sample.py:71: continue
+sample.py:71: else in while-loop
+sample.py:73: assert False, "unreachable"
+sample.py:73: else in for-loop
+sample.py:74: except AssertionError as error:
+sample.py:85: math.e
