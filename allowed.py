@@ -95,8 +95,7 @@ ABSTRACT = {
     "break": ast.Break,
     "continue": ast.Continue,
     "raise": ast.Raise,
-    "try": ast.Try,  # allows `else` and `finally`
-    "except": ast.ExceptHandler,
+    "try": ast.Try,  # allows `except`, `else` and `finally`
     "with": ast.With,
     # other statements
     "=": ast.Assign,
@@ -128,9 +127,10 @@ CONCRETE = {ast_node: string for string, ast_node in ABSTRACT.items()}
 # optional constructs that can appear in dictionary "LANGUAGE"
 OPTIONS = {"for else", "while else"}
 
-IGNORE = (  # wrapper nodes that can be skipped
+# these 'wrapper' nodes must not be flagged as unknown constructs
+IGNORE = (
     ast.Module,
-    ast.alias,
+    ast.alias,  # part of an `import`` statement
     ast.arguments,
     ast.arg,
     ast.withitem,
@@ -142,6 +142,8 @@ IGNORE = (  # wrapper nodes that can be skipped
     ast.UnaryOp,
     ast.BoolOp,
     ast.Compare,
+    ast.ExceptHandler,  # part of a `try`` statement
+    ast.FormattedValue,  # part of an f-string
 )
 
 NO_LINE = (  # nodes without associated line numbers
@@ -254,21 +256,21 @@ def check_imports() -> str:
 
     if first_module and not first_import:
         return (
-            "error: modules are allowed but import statements aren't\n"
+            "CONFIGURATION ERROR: modules are allowed but import statements aren't\n"
             "fix 1: make IMPORTS empty\n"
             "fix 2: add 'import' and/or 'from import' to LANGUAGE"
         )
     if first_import and not first_module:
         return (
-            "error: import statement is allowed but no modules are introduced\n"
+            "CONFIGURATION ERROR: import statement is allowed but no modules are introduced\n"
             "fix 1: add modules to IMPORTS\n"
             "fix 2: remove 'import' and 'from import' from LANGUAGE"
         )
     if first_module < first_import:
         return (
-            "error: modules are introduced before import statement\n"
-            "fix 1: in IMPORTS, move modules to unit {first_import} or later\n"
-            "fix 2: in LANGUAGE, move import statements to unit {first_module} or earlier"
+            "CONFIGURATION ERROR: modules are introduced before import statement\n"
+            f"fix 1: in IMPORTS, move modules to unit {first_import} or later\n"
+            f"fix 2: in LANGUAGE, move import statements to unit {first_module} or earlier"
         )
     return ""
 
@@ -404,7 +406,7 @@ def check_tree(
         elif not isinstance(node, language):
             if hasattr(node, "lineno"):
                 cell, line = location(node.lineno, line_cell_map)
-                message = source[node.lineno - 1].strip()
+                message = CONCRETE.get(type(node), "unknown construct")
             else:
                 # if a node has no line number, report it for inclusion in NO_LINE
                 cell, line = 0, 0
@@ -414,18 +416,18 @@ def check_tree(
             for alias in node.names:
                 if alias.name not in imports:
                     cell, line = location(alias.lineno, line_cell_map)
-                    message = f"import {alias.name}"
+                    message = f"{alias.name}"
                     errors.append((cell, line, message))
         elif isinstance(node, ast.ImportFrom):
             if node.module not in imports:
                 cell, line = location(node.lineno, line_cell_map)
-                message = f"from {node.module} import ..."
+                message = f"{node.module}"
                 errors.append((cell, line, message))
             else:
                 for alias in node.names:
                     if alias.name not in imports[node.module]:
                         cell, line = location(alias.lineno, line_cell_map)
-                        message = f"from {node.module} import {alias.name}"
+                        message = f"{alias.name}"
                         errors.append((cell, line, message))
         elif isinstance(node, ast.Attribute) and isinstance(node.value, ast.Name):
             name = node.value
@@ -439,25 +441,24 @@ def check_tree(
                 type_name = re.match(r"[a-zA-Z.]*", name.resolved_annotation).group()
                 if type_name in methods and attribute not in methods[type_name]:
                     cell, line = location(name.lineno, line_cell_map)
-                    message = (
-                        f"method {attribute} called on {type_name.lower()} {name.id}"
-                    )
+                    message = f"{type_name.lower()}.{attribute}()"
                     errors.append((cell, line, message))
         elif isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
             function = node.func.id
             if function in BUILTINS and function not in functions:
                 cell, line = location(node.lineno, line_cell_map)
-                message = f"built-in function {function}()"
+                message = f"{function}()"
                 errors.append((cell, line, message))
         elif isinstance(node, ast.For) and node.orelse and "for else" not in options:
-            cell, line = location(node.orelse[0].lineno, line_cell_map)
-            message = "else in for-loop"
+            # we assume `else:` is in the line before the first statement in that block
+            cell, line = location(node.orelse[0].lineno - 1, line_cell_map)
+            message = "for-else"
             errors.append((cell, line, message))
         elif (
             isinstance(node, ast.While) and node.orelse and "while else" not in options
         ):
-            cell, line = location(node.orelse[0].lineno, line_cell_map)
-            message = "else in while-loop"
+            cell, line = location(node.orelse[0].lineno - 1, line_cell_map)
+            message = "while-else"
             errors.append((cell, line, message))
 
 
@@ -563,7 +564,7 @@ if __name__ == "__main__":
 
     argparser = argparse.ArgumentParser(
         description="Check that the code only uses certain constructs. "
-        "See http://github.com/dsa-ou/allowed for how to specify the constructs."
+        "See http://dsa-ou.github.io/allowed for how to specify the constructs."
     )
     argparser.add_argument(
         "-m",
@@ -604,7 +605,7 @@ if __name__ == "__main__":
     for key, value in configuration["METHODS"].items():
         METHODS[int(key)] = value
     if unknown := check_language():
-        sys.exit(f"error: unknown constructs: {', '.join(unknown)}")
+        sys.exit(f"CONFIGURATION ERROR: unknown constructs:\n{', '.join(unknown)}")
     if error := check_imports():
         sys.exit(error)
 
@@ -618,6 +619,6 @@ if __name__ == "__main__":
             print(f"{name}: not a folder, Python file or notebook")
 
     if not args.methods:
-        print("warning: didn't check method calls (use option -m)")
+        print("WARNING: didn't check method calls (use option -m)")
     if not IPYTHON_INSTALLED:
-        print("warning: didn't check notebook cells with magics (need IPython)")
+        print("WARNING: didn't check notebook cells with magics (need IPython)")

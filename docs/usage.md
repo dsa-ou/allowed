@@ -24,13 +24,31 @@ As `allowed` checks the files, it shows the line (and for notebooks the cell)
 where each disallowed construct occurs, like so:
 ```
 file.py:3: break
-notebook.ipynb:cell_2:4: built-in function type()
+notebook.ipynb:cell_2:4: type()
 ```
+The message only shows the statement, operator, function, method that isn't allowed.
+For example, if the line of code is `from random import choice`,
+then the possible flagged constructs are:
+- `from import`: the `from ... import ...` statement isn't allowed
+- `random`: importing the `random` module isn't allowed
+- `choice`: importing the `random.choice()` function isn't allowed.
+
+For some constructs, `allowed` reports the type of the construct instead of
+the actual occurrence in the code line. For example:
+- `attribute`: dot notation, as in `a_list.sort()`, isn't allowed
+- `constant`: immutable values like `None`, `True`, `(1, 2, 3)` and `"Hi!"` aren't allowed
+- `if expression`: expressions of the form `... if ... else ...` aren't allowed
+- `for-else` and `while-else`: the `else` branch of a for- or while-loop isn't allowed
+- `name`: variable, function and other names aren't allowed.
+
+It's unlikely for `constant` and `name` to be flagged, as Python programs need them.
+
 By default, the allowed constructs are those taught in our algorithms and data structures course,
 but you can change that, as explained in the [Configuration](configuration.md) section.
 
 If a message contains the string `ERROR`, then the indicated file or cell
 was _not_ checked, for these reasons:
+- `CONFIGURATION ERROR`: the allowed constructs are not well defined in the JSON configuration file
 - `FORMAT ERROR`: the internal notebook format has been corrupted
 - `OS ERROR`: an operating system error, e.g. the file doesn't exist or can't be read
 - `PYTYPE ERROR`: an error that blocked the type checker, usually a syntax error
