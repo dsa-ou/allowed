@@ -28,7 +28,7 @@ notebook.ipynb:cell_2:4: type()
 ```
 The message only shows the statement, operator, function, method that isn't allowed.
 For example, if the line of code is `from random import choice`,
-then the possible flagged constructs are:
+then the message may be:
 - `from import`: the `from ... import ...` statement isn't allowed
 - `random`: importing the `random` module isn't allowed
 - `choice`: importing the `random.choice()` function isn't allowed.
@@ -75,8 +75,14 @@ For example, the following two commands are equivalent:
 python allowed.py -m file1.py file2.py
 python allowed.py file1.py --methods file2.py
 ```
-Note that the second command also checks the method calls in _both_ files,
+Note that the second command checks the method calls in _both_ files,
 not just in the second file.
+
+### Ignoring specific lines
+
+If a code line ends with the comment `# allowed`, then no violations are flagged for that line.
+This is useful for assessment or examples that exceptionally use constructs not taught.
+This feature should of course be used sparingly, as it bypasses the checks by `allowed`.
 
 ### Organising by units
 
