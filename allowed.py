@@ -6,6 +6,7 @@ import json
 import os
 import re
 import sys
+from pathlib import Path
 
 PYTHON_VERSION = sys.version_info[:2]
 if (3, 7) <= PYTHON_VERSION <= (3, 10):
@@ -262,7 +263,7 @@ def check_imports() -> str:
         )
     if first_import and not first_module:
         return (
-            "CONFIGURATION ERROR: import statement is allowed but no modules are introduced\n"
+            "CONFIGURATION ERROR: no modules to import\n"
             "fix 1: add modules to IMPORTS\n"
             "fix 2: remove 'import' and 'from import' from LANGUAGE"
         )
@@ -270,7 +271,7 @@ def check_imports() -> str:
         return (
             "CONFIGURATION ERROR: modules are introduced before import statement\n"
             f"fix 1: in IMPORTS, move modules to unit {first_import} or later\n"
-            f"fix 2: in LANGUAGE, move import statements to unit {first_module} or earlier"
+            f"fix 2: in LANGUAGE, move import statements to unit {first_module} or earlier"  # noqa: E501
         )
     return ""
 
@@ -282,8 +283,7 @@ def get_unit(filename: str) -> int:
     """Return the file's unit or zero (consider all units)."""
     if FILE_UNIT and (match := re.match(FILE_UNIT, filename)):
         return int(match.group(1))
-    else:
-        return 0
+    return 0
 
 
 def get_language(last_unit: int) -> tuple[type[ast.AST], ...]:
@@ -296,7 +296,7 @@ def get_language(last_unit: int) -> tuple[type[ast.AST], ...]:
         if not last_unit or unit <= last_unit:
             for construct in constructs:
                 if ast_class := ABSTRACT.get(construct, None):
-                    allowed.append(ast_class)
+                    allowed.append(ast_class)  # noqa: PERF401
     return tuple(allowed)
 
 
@@ -310,7 +310,7 @@ def get_options(last_unit: int) -> list[str]:
         if not last_unit or unit <= last_unit:
             for construct in constructs:
                 if construct in OPTIONS:
-                    allowed.append(construct)
+                    allowed.append(construct)  # noqa: PERF401
     return allowed
 
 
@@ -352,11 +352,11 @@ def get_methods(last_unit: int) -> dict[str, list[str]]:
     allowed: dict[str, list[str]] = {}
     for unit, methods in METHODS.items():
         if not last_unit or unit <= last_unit:
-            for type, names in methods.items():
-                if type in allowed:
-                    allowed[type].extend(names)
+            for datatype, names in methods.items():
+                if datatype in allowed:
+                    allowed[datatype].extend(names)
                 else:
-                    allowed[type] = names
+                    allowed[datatype] = names
     return allowed
 
 
@@ -397,9 +397,7 @@ def check_tree(
     language, options, imports, functions, methods = constructs
     for node in ast.walk(tree):
         # If a node has no line number, handle it via its parent.
-        if isinstance(node, NO_LINE):
-            pass
-        elif ignore(node, source):
+        if isinstance(node, NO_LINE) or ignore(node, source):
             pass
         elif isinstance(node, (ast.BinOp, ast.UnaryOp, ast.BoolOp)):
             if not isinstance(node.op, language):
@@ -419,7 +417,7 @@ def check_tree(
             else:
                 # If a node has no line number, report it for inclusion in NO_LINE.
                 cell, line = 0, 0
-                message = f"unknown construct {str(node)} at unknown line"
+                message = f"unknown construct {node} at unknown line"
             errors.append((cell, line, message))
         elif isinstance(node, ast.Import):
             for alias in node.names:
@@ -446,7 +444,7 @@ def check_tree(
                     cell, line = location(node.lineno, line_cell_map)
                     message = f"{name.id}.{attribute}"
                     errors.append((cell, line, message))
-            elif hasattr(name, "resolved_annotation"):
+            elif hasattr(name, "resolved_annotation"):  # noqa: SIM102
                 if matched := re.match(r"[a-zA-Z.]*", name.resolved_annotation):
                     type_name = matched.group()
                     if type_name in methods and attribute not in methods[type_name]:
@@ -472,25 +470,29 @@ def check_tree(
             errors.append((cell, line, message))
 
 
-def check_folder(folder: str, last_unit: int, check_method_calls: bool) -> None:
+def check_folder(
+    folder: str, last_unit: int, check_method_calls: bool  # noqa: FBT001
+) -> None:
     """Check all Python files in `folder` and its subfolders."""
     global_constructs = get_constructs(last_unit)
     for current_folder, subfolders, files in os.walk(folder):
         subfolders.sort()
         for filename in sorted(files):
-            if filename.endswith(".py") or filename.endswith(".ipynb"):
+            if filename.endswith((".py", ".ipynb")):
                 if not last_unit and (file_unit := get_unit(filename)):
                     constructs = get_constructs(file_unit)
                 else:
                     constructs = global_constructs
-                fullname = os.path.join(current_folder, filename)
+                fullname = Path(current_folder) / filename
                 check_file(fullname, constructs, check_method_calls)
 
 
-def check_file(filename: str, constructs: tuple, check_method_calls: bool) -> None:
+def check_file(
+    filename: str, constructs: tuple, check_method_calls: bool  # noqa: FBT001
+) -> None:
     """Check that the file only uses the allowed constructs."""
     try:
-        with open(filename) as file:
+        with Path(filename).open() as file:
             if filename.endswith(".ipynb"):
                 source, line_cell_map, errors = read_notebook(file.read())
             else:
@@ -559,7 +561,7 @@ def read_notebook(file_contents: str) -> tuple[str, list, list]:
                 ast.parse(cell_source)
                 source_list.append(cell_source)
                 for cell_line_num in range(1, cell_source.count("\n") + 2):
-                    line_cell_map.append((cell_num, cell_line_num))
+                    line_cell_map.append((cell_num, cell_line_num))  # noqa: PERF401
             except SyntaxError as error:
                 errors.append((cell_num, error.lineno, SYNTAX_MSG))
     source_str = "\n".join(source_list)
@@ -603,7 +605,8 @@ if __name__ == "__main__":
     if args.unit < 0:
         sys.exit("error: unit must be positive")
 
-    configuration = json.load(open(args.config))
+    with Path(args.config).open() as file:
+        configuration = json.load(file)
     FILE_UNIT = configuration.get("FILE_UNIT", "")
     LANGUAGE = {}
     for key, value in configuration["LANGUAGE"].items():
@@ -620,10 +623,10 @@ if __name__ == "__main__":
         sys.exit(error)
 
     for name in args.file_or_folder:
-        if os.path.isdir(name):
+        if Path(name).is_dir():
             check_folder(name, args.unit, args.methods)
-        elif name.endswith(".py") or name.endswith(".ipynb"):
-            unit = args.unit if args.unit else get_unit(os.path.basename(name))
+        elif name.endswith((".py", ".ipynb")):
+            unit = args.unit if args.unit else get_unit(Path(name).name)
             check_file(name, get_constructs(unit), args.methods)
         else:
             print(f"{name}: not a folder, Python file or notebook")

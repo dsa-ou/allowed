@@ -36,7 +36,9 @@ ignore = [              # ignore these rules:
     "ANN101",           # provide the type of `self`
     "ANN401",           # don't use `Any`
     "SIM110",           # simplify for-loops with all() or any()
+    "T201",             # don't use `print`
     "ISC001", "COM812", # these rules may conflict with the formatter
+    "UP038",            # this rule leads to slower code
     ]
 
 [tool.ruff.lint.pydocstyle]
