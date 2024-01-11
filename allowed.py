@@ -286,7 +286,7 @@ def get_unit(filename: str) -> int:
         return 0
 
 
-def get_language(last_unit: int) -> tuple[ast.AST]:
+def get_language(last_unit: int) -> tuple[type[ast.AST], ...]:
     """Return the allowed language elements up to the given unit.
 
     If `last_unit` is zero, return the elements in all units.
@@ -319,7 +319,7 @@ def get_imports(last_unit: int) -> dict[str, list[str]]:
 
     If `last_unit` is zero, return the imports in all units.
     """
-    allowed = {}
+    allowed: dict[str, list[str]] = {}
     for unit, imports in IMPORTS.items():
         if not last_unit or unit <= last_unit:
             for module, names in imports.items():
@@ -349,7 +349,7 @@ def get_methods(last_unit: int) -> dict[str, list[str]]:
 
     If `last_unit` is zero, return the methods in all units.
     """
-    allowed = {}
+    allowed: dict[str, list[str]] = {}
     for unit, methods in METHODS.items():
         if not last_unit or unit <= last_unit:
             for type, names in methods.items():
@@ -447,11 +447,12 @@ def check_tree(
                     message = f"{name.id}.{attribute}"
                     errors.append((cell, line, message))
             elif hasattr(name, "resolved_annotation"):
-                type_name = re.match(r"[a-zA-Z.]*", name.resolved_annotation).group()
-                if type_name in methods and attribute not in methods[type_name]:
-                    cell, line = location(name.lineno, line_cell_map)
-                    message = f"{type_name.lower()}.{attribute}()"
-                    errors.append((cell, line, message))
+                if matched := re.match(r"[a-zA-Z.]*", name.resolved_annotation):
+                    type_name = matched.group()
+                    if type_name in methods and attribute not in methods[type_name]:
+                        cell, line = location(name.lineno, line_cell_map)
+                        message = f"{type_name.lower()}.{attribute}()"
+                        errors.append((cell, line, message))
         elif isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
             function = node.func.id
             if function in BUILTINS and function not in functions:
