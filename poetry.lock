@@ -4,7 +4,7 @@
 name = "appnope"
 version = "0.1.3"
 description = "Disable App Nap on macOS >= 10.9"
-optional = false
+optional = true
 python-versions = "*"
 files = [
     {file = "appnope-0.1.3-py2.py3-none-any.whl", hash = "sha256:265a455292d0bd8a72453494fa24df5a11eb18373a60c7c0430889f22548605e"},
@@ -15,7 +15,7 @@ files = [
 name = "asttokens"
 version = "2.4.1"
 description = "Annotate AST trees with source code positions"
-optional = false
+optional = true
 python-versions = "*"
 files = [
     {file = "asttokens-2.4.1-py2.py3-none-any.whl", hash = "sha256:051ed49c3dcae8913ea7cd08e46a606dba30b79993209636c4875bc1d637bc24"},
@@ -33,7 +33,7 @@ test = ["astroid (>=1,<2)", "astroid (>=2,<4)", "pytest"]
 name = "attrs"
 version = "23.2.0"
 description = "Classes Without Boilerplate"
-optional = false
+optional = true
 python-versions = ">=3.7"
 files = [
     {file = "attrs-23.2.0-py3-none-any.whl", hash = "sha256:99b87a485a5820b23b879f04c2305b44b951b502fd64be915879d77a7e8fc6f1"},
@@ -52,7 +52,7 @@ tests-no-zope = ["attrs[tests-mypy]", "cloudpickle", "hypothesis", "pympler", "p
 name = "backcall"
 version = "0.2.0"
 description = "Specifications for callback functions passed in to an API"
-optional = false
+optional = true
 python-versions = "*"
 files = [
     {file = "backcall-0.2.0-py2.py3-none-any.whl", hash = "sha256:fbbce6a29f263178a1f7915c1940bde0ec2b2a967566fe1c65c1dfb7422bd255"},
@@ -97,7 +97,7 @@ files = [
 name = "decorator"
 version = "5.1.1"
 description = "Decorators for Humans"
-optional = false
+optional = true
 python-versions = ">=3.5"
 files = [
     {file = "decorator-5.1.1-py3-none-any.whl", hash = "sha256:b8c3f85900b9dc423225913c5aace94729fe1fa9763b38939a95226f02d37186"},
@@ -108,7 +108,7 @@ files = [
 name = "executing"
 version = "2.0.1"
 description = "Get the currently executing AST node of a frame, and other information"
-optional = false
+optional = true
 python-versions = ">=3.5"
 files = [
     {file = "executing-2.0.1-py2.py3-none-any.whl", hash = "sha256:eac49ca94516ccc753f9fb5ce82603156e590b27525a8bc32cce8ae302eb61bc"},
@@ -153,7 +153,7 @@ test = ["black", "coverage[toml]", "ddt (>=1.1.1,!=1.4.3)", "mock", "mypy", "pre
 name = "importlab"
 version = "0.8.1"
 description = "A library to calculate python dependency graphs."
-optional = false
+optional = true
 python-versions = ">=3.6.0"
 files = [
     {file = "importlab-0.8.1-py2.py3-none-any.whl", hash = "sha256:124cfa00e8a34fefe8aac1a5e94f56c781b178c9eb61a1d3f60f7e03b77338d3"},
@@ -167,7 +167,7 @@ networkx = ">=2"
 name = "ipython"
 version = "8.13.1"
 description = "IPython: Productive Interactive Computing"
-optional = false
+optional = true
 python-versions = ">=3.9"
 files = [
     {file = "ipython-8.13.1-py3-none-any.whl", hash = "sha256:1c80d08f04144a1994cda25569eab07fbdc4989bd8d8793e3a4ff643065ccb51"},
@@ -205,7 +205,7 @@ test-extra = ["curio", "matplotlib (!=3.2.0)", "nbformat", "numpy (>=1.21)", "pa
 name = "jedi"
 version = "0.19.1"
 description = "An autocompletion tool for Python that can be used for text editors."
-optional = false
+optional = true
 python-versions = ">=3.6"
 files = [
     {file = "jedi-0.19.1-py2.py3-none-any.whl", hash = "sha256:e983c654fe5c02867aef4cdfce5a2fbb4a50adc0af145f70504238f18ef5e7e0"},
@@ -222,13 +222,13 @@ testing = ["Django", "attrs", "colorama", "docopt", "pytest (<7.0.0)"]
 
 [[package]]
 name = "jinja2"
-version = "3.1.2"
+version = "3.1.3"
 description = "A very fast and expressive template engine."
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "Jinja2-3.1.2-py3-none-any.whl", hash = "sha256:6088930bfe239f0e6710546ab9c19c9ef35e29792895fed6e6e31a023a182a61"},
-    {file = "Jinja2-3.1.2.tar.gz", hash = "sha256:31351a702a408a9e7595a8fc6150fc3f43bb6bf7e319770cbc0db9df9437e852"},
+    {file = "Jinja2-3.1.3-py3-none-any.whl", hash = "sha256:7d6d50dd97d52cbc355597bd845fabfbac3f551e1f99619e39a35ce8c370b5fa"},
+    {file = "Jinja2-3.1.3.tar.gz", hash = "sha256:ac8bd6544d4bb2c9792bf3a159e80bba8fda7f07e81bc3aed565432d5925ba90"},
 ]
 
 [package.dependencies]
@@ -241,7 +241,7 @@ i18n = ["Babel (>=2.7)"]
 name = "libcst"
 version = "1.1.0"
 description = "A concrete syntax tree with AST-like properties for Python 3.5, 3.6, 3.7, 3.8, 3.9, and 3.10 programs."
-optional = false
+optional = true
 python-versions = ">=3.8"
 files = [
     {file = "libcst-1.1.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:63f75656fd733dc20354c46253fde3cf155613e37643c3eaf6f8818e95b7a3d1"},
@@ -382,7 +382,7 @@ files = [
 name = "matplotlib-inline"
 version = "0.1.6"
 description = "Inline Matplotlib backend for Jupyter"
-optional = false
+optional = true
 python-versions = ">=3.5"
 files = [
     {file = "matplotlib-inline-0.1.6.tar.gz", hash = "sha256:f887e5f10ba98e8d2b150ddcf4702c1e5f8b3a20005eb0f74bfdbd360ee6f304"},
@@ -465,7 +465,7 @@ files = [
 name = "networkx"
 version = "3.1"
 description = "Python package for creating and manipulating graphs and networks"
-optional = false
+optional = true
 python-versions = ">=3.8"
 files = [
     {file = "networkx-3.1-py3-none-any.whl", hash = "sha256:4f33f68cb2afcf86f28a45f43efc27a9386b535d567d2127f8f61d51dec58d36"},
@@ -483,7 +483,7 @@ test = ["codecov (>=2.1)", "pytest (>=7.2)", "pytest-cov (>=4.0)"]
 name = "ninja"
 version = "1.11.1.1"
 description = "Ninja is a small build system with a focus on speed"
-optional = false
+optional = true
 python-versions = "*"
 files = [
     {file = "ninja-1.11.1.1-py2.py3-none-macosx_10_9_universal2.macosx_10_9_x86_64.macosx_11_0_arm64.macosx_11_0_universal2.whl", hash = "sha256:376889c76d87b95b5719fdd61dd7db193aa7fd4432e5d52d2e44e4c497bdbbee"},
@@ -510,7 +510,7 @@ test = ["codecov (>=2.0.5)", "coverage (>=4.2)", "flake8 (>=3.0.4)", "pytest (>=
 name = "parso"
 version = "0.8.3"
 description = "A Python Parser"
-optional = false
+optional = true
 python-versions = ">=3.6"
 files = [
     {file = "parso-0.8.3-py2.py3-none-any.whl", hash = "sha256:c001d4636cd3aecdaf33cbb40aebb59b094be2a74c556778ef5576c175e19e75"},
@@ -536,7 +536,7 @@ files = [
 name = "pexpect"
 version = "4.9.0"
 description = "Pexpect allows easy control of interactive console applications."
-optional = false
+optional = true
 python-versions = "*"
 files = [
     {file = "pexpect-4.9.0-py2.py3-none-any.whl", hash = "sha256:7236d1e080e4936be2dc3e326cec0af72acf9212a7e1d060210e70a47e253523"},
@@ -550,7 +550,7 @@ ptyprocess = ">=0.5"
 name = "pickleshare"
 version = "0.7.5"
 description = "Tiny 'shelve'-like database with concurrency support"
-optional = false
+optional = true
 python-versions = "*"
 files = [
     {file = "pickleshare-0.7.5-py2.py3-none-any.whl", hash = "sha256:9649af414d74d4df115d5d718f82acb59c9d418196b7b4290ed47a12ce62df56"},
@@ -561,7 +561,7 @@ files = [
 name = "prompt-toolkit"
 version = "3.0.43"
 description = "Library for building powerful interactive command lines in Python"
-optional = false
+optional = true
 python-versions = ">=3.7.0"
 files = [
     {file = "prompt_toolkit-3.0.43-py3-none-any.whl", hash = "sha256:a11a29cb3bf0a28a387fe5122cdb649816a957cd9261dcedf8c9f1fef33eacf6"},
@@ -575,7 +575,7 @@ wcwidth = "*"
 name = "ptyprocess"
 version = "0.7.0"
 description = "Run a subprocess in a pseudo terminal"
-optional = false
+optional = true
 python-versions = "*"
 files = [
     {file = "ptyprocess-0.7.0-py2.py3-none-any.whl", hash = "sha256:4b41f3967fce3af57cc7e94b888626c18bf37a083e3651ca8feeb66d492fef35"},
@@ -586,7 +586,7 @@ files = [
 name = "pure-eval"
 version = "0.2.2"
 description = "Safely evaluate AST nodes without side effects"
-optional = false
+optional = true
 python-versions = "*"
 files = [
     {file = "pure_eval-0.2.2-py3-none-any.whl", hash = "sha256:01eaab343580944bc56080ebe0a674b39ec44a945e6d09ba7db3cb8cec289350"},
@@ -600,7 +600,7 @@ tests = ["pytest"]
 name = "pydot"
 version = "2.0.0"
 description = "Python interface to Graphviz's Dot"
-optional = false
+optional = true
 python-versions = ">=3.7"
 files = [
     {file = "pydot-2.0.0-py3-none-any.whl", hash = "sha256:408a47913ea7bd5d2d34b274144880c1310c4aee901f353cf21fe2e526a4ea28"},
@@ -634,7 +634,7 @@ windows-terminal = ["colorama (>=0.4.6)"]
 name = "pyparsing"
 version = "3.1.1"
 description = "pyparsing module - Classes and methods to define and execute parsing grammars"
-optional = false
+optional = true
 python-versions = ">=3.6.8"
 files = [
     {file = "pyparsing-3.1.1-py3-none-any.whl", hash = "sha256:32c7c0b711493c72ff18a981d24f28aaf9c1fb7ed5e9667c9e84e3db623bdbfb"},
@@ -648,7 +648,7 @@ diagrams = ["jinja2", "railroad-diagrams"]
 name = "pytype"
 version = "2023.4.27"
 description = "Python type inferencer"
-optional = false
+optional = true
 python-versions = "<3.11,>=3.7"
 files = [
     {file = "pytype-2023.4.27-cp310-cp310-macosx_11_0_x86_64.whl", hash = "sha256:eba824e6b77e7871852c76d9dcfb2b257de9af0ad4f325fd8daed8bf6972917f"},
@@ -785,7 +785,7 @@ files = [
 name = "six"
 version = "1.16.0"
 description = "Python 2 and 3 compatibility utilities"
-optional = false
+optional = true
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 files = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
@@ -807,7 +807,7 @@ files = [
 name = "stack-data"
 version = "0.6.3"
 description = "Extract data from python stack frames and tracebacks for informative displays"
-optional = false
+optional = true
 python-versions = "*"
 files = [
     {file = "stack_data-0.6.3-py3-none-any.whl", hash = "sha256:d5558e0c25a4cb0853cddad3d77da9891a08cb85dd9f9f91b9f8cd66e511e695"},
@@ -840,7 +840,7 @@ pbr = ">=2.0.0,<2.1.0 || >2.1.0"
 name = "tabulate"
 version = "0.9.0"
 description = "Pretty-print tabular data"
-optional = false
+optional = true
 python-versions = ">=3.7"
 files = [
     {file = "tabulate-0.9.0-py3-none-any.whl", hash = "sha256:024ca478df22e9340661486f85298cff5f6dcdba14f3813e8830015b9ed1948f"},
@@ -854,7 +854,7 @@ widechars = ["wcwidth"]
 name = "toml"
 version = "0.10.2"
 description = "Python Library for Tom's Obvious, Minimal Language"
-optional = false
+optional = true
 python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
 files = [
     {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
@@ -876,7 +876,7 @@ files = [
 name = "traitlets"
 version = "5.14.1"
 description = "Traitlets Python configuration system"
-optional = false
+optional = true
 python-versions = ">=3.8"
 files = [
     {file = "traitlets-5.14.1-py3-none-any.whl", hash = "sha256:2e5a030e6eff91737c643231bfcf04a65b0132078dad75e4936700b213652e74"},
@@ -902,7 +902,7 @@ files = [
 name = "typing-inspect"
 version = "0.9.0"
 description = "Runtime inspection utilities for typing module."
-optional = false
+optional = true
 python-versions = "*"
 files = [
     {file = "typing_inspect-0.9.0-py3-none-any.whl", hash = "sha256:9ee6fc59062311ef8547596ab6b955e1b8aa46242d854bfc78f4f6b0eff35f9f"},
@@ -917,7 +917,7 @@ typing-extensions = ">=3.7.4"
 name = "wcwidth"
 version = "0.2.13"
 description = "Measures the displayed width of unicode strings in a terminal"
-optional = false
+optional = true
 python-versions = "*"
 files = [
     {file = "wcwidth-0.2.13-py2.py3-none-any.whl", hash = "sha256:3da69048e4540d84af32131829ff948f1e022c1c6bdb8d6102117aac784f6859"},
@@ -927,4 +927,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.10"
-content-hash = "1a2c663301e5533ae01a830f2d45646a70e9bea1f4e44b0e66ff708d17bda660"
+content-hash = "e3ec8b18f43b8e519678fe16320ba98b5fd2e4423c3538d8419dc91b498cafd5"
