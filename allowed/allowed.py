@@ -570,7 +570,10 @@ def read_notebook(file_contents: str) -> tuple[str, list, list]:
 
 # ---- main program ----
 
-if __name__ == "__main__":
+def main():
+    """Main entry point for the CLI."""
+    global FILE_UNIT, LANGUAGE, IMPORTS, METHODS
+
     if PYTHON_VERSION < (3, 10):
         sys.exit("error: can't check files (need Python 3.10 or higher)")
 
@@ -635,3 +638,6 @@ if __name__ == "__main__":
         print("WARNING: didn't check method calls (use option -m)")
     if not IPYTHON_INSTALLED:
         print("WARNING: didn't check notebook cells with magics (need IPython)")
+
+if __name__ == "__main__":
+    main()
