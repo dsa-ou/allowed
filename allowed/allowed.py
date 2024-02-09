@@ -608,8 +608,13 @@ def main():
     if args.unit < 0:
         sys.exit("error: unit must be positive")
 
-    with Path(args.config).open() as file:
-        configuration = json.load(file)
+    for file in (Path(args.config), Path(__file__).parent / args.config):
+        if file.exists():
+            with file.open() as config_file:
+                configuration = json.load(config_file)
+            break
+    else:
+        sys.exit(f"error: configuration file {args.config} not found")
     FILE_UNIT = configuration.get("FILE_UNIT", "")
     LANGUAGE = {}
     for key, value in configuration["LANGUAGE"].items():
