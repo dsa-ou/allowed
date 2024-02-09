@@ -19,8 +19,13 @@ classifiers = [
 [tool.poetry.dependencies]
 # use same versions as m269-installer
 python = "~3.10"
-ipython = { version = "8.13.1", optional = true}
-pytype = {version = "2023.04.27", optional = true}
+ipython = {version = "8.13.1", optional = true}
+pytype = {version = "2023.04.27", optional = true, markers = "platform_system != 'Windows'"}
+
+[tool.poetry.extras]
+pytype = ["pytype"]
+ipython = ["ipython"]
+all = ["ipython", "pytype"]
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.1.11"
