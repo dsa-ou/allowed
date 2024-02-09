@@ -6,3 +6,4 @@ extra.py
 env
 launch.json
 my_*
+dist/
