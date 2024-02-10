@@ -237,6 +237,11 @@ BUILTINS = {
 
 # ----- check configuration -----
 
+# the configuration will be read in main()
+FILE_UNIT : str                             # regex of unit within file name
+LANGUAGE : dict[int, list[str]]             # unit -> list of constructs
+IMPORTS : dict[int, dict[str, list[str]]]   # unit -> module -> list of names
+METHODS : dict[int, dict[str, list[str]]]   # unit -> datatype -> list of methods
 
 def check_language() -> set:
     """Return the unknown constructs in LANGUAGE."""
@@ -483,7 +488,7 @@ def check_folder(
                     constructs = get_constructs(file_unit)
                 else:
                     constructs = global_constructs
-                fullname = Path(current_folder) / filename
+                fullname = (Path(current_folder) / filename).name
                 check_file(fullname, constructs, check_method_calls)
 
 
@@ -570,14 +575,15 @@ def read_notebook(file_contents: str) -> tuple[str, list, list]:
 
 # ---- main program ----
 
-def main():
-    """Main entry point for the CLI."""
+def main() -> None:
+    """Implement the CLI."""
     global FILE_UNIT, LANGUAGE, IMPORTS, METHODS
 
     if PYTHON_VERSION < (3, 10):
         sys.exit("error: can't check files (need Python 3.10 or higher)")
 
     argparser = argparse.ArgumentParser(
+        prog="allowed",
         description="Check that the code only uses certain constructs. "
         "See http://dsa-ou.github.io/allowed for how to specify the constructs."
     )
