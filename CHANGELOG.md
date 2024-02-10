@@ -21,6 +21,7 @@ These changes are in the GitHub repository but not on [PyPI](https://pypi.org/pr
 - this change log
 
 ### Fixed
+- locale encoding on Windows can't read UTF-8: use UTF-8 and replace characters that lead to errors
 - annotated assignment is unknown construct: ignore type annotation
 
 ## [1.2.1](https://github.com/dsa-ou/allowed/compare/v1.2b1...v1.2.1) - 2024-02-10
