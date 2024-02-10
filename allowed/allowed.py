@@ -1,6 +1,6 @@
 """Check that Python and notebook files only use the allowed constructs."""
 
-__version__ = "1.3dev1"   # same as in pyproject.toml
+__version__ = "1.3dev2"   # same as in pyproject.toml
 
 import argparse
 import ast
@@ -499,7 +499,7 @@ def check_file(
 ) -> None:
     """Check that the file only uses the allowed constructs."""
     try:
-        with Path(filename).open() as file:
+        with Path(filename).open(encoding="utf-8", errors='surrogateescape') as file:
             if filename.endswith(".ipynb"):
                 source, line_cell_map, errors = read_notebook(file.read())
             else:
