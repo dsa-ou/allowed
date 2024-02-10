@@ -133,7 +133,8 @@ OPTIONS = {"for else", "while else"}
 # these 'wrapper' nodes must not be flagged as unknown constructs
 IGNORE = (
     ast.Module,
-    ast.alias,  # part of an `import`` statement
+    ast.alias,  # part of an `import` statement
+    ast.AnnAssign,  # wraps an assignment with a type hint
     ast.arguments,
     ast.arg,
     ast.withitem,
@@ -145,7 +146,7 @@ IGNORE = (
     ast.UnaryOp,
     ast.BoolOp,
     ast.Compare,
-    ast.ExceptHandler,  # part of a `try`` statement
+    ast.ExceptHandler,  # part of a `try` statement
     ast.FormattedValue,  # part of an f-string
 )
 

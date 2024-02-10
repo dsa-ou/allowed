@@ -6,6 +6,7 @@ sample.py:29: f-string
 sample.py:33: list comprehension
 sample.py:48: ^
 sample.py:48: set comprehension
+sample.py:55: int()
 sample.py:67: break
 sample.py:70: while-else
 sample.py:71: continue
