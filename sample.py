@@ -25,8 +25,8 @@ True if 1 > 0 else False
 
 # Strings
 s = "hello" + str(123)
-x = 2
-f"{x}3" in s
+f : float
+f"{f}3" in s
 s.upper()
 
 # Lists
@@ -51,8 +51,8 @@ items.discard(9)
 items.union(l)
 
 # Dictionaries
-d = {"a": 1, "b": 2}
-d["c"] = 3
+d : dict[str, int] = {"a": 1, "b": 2}
+d["c"] : int = int(f)
 d.pop("a")
 for key, value in d.items():
     print(key, value)

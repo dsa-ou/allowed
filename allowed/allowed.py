@@ -1,6 +1,6 @@
 """Check that Python and notebook files only use the allowed constructs."""
 
-__version__ = "1.3dev2"   # same as in pyproject.toml
+__version__ = "1.3dev3"   # same as in pyproject.toml
 
 import argparse
 import ast
@@ -133,7 +133,8 @@ OPTIONS = {"for else", "while else"}
 # these 'wrapper' nodes must not be flagged as unknown constructs
 IGNORE = (
     ast.Module,
-    ast.alias,  # part of an `import`` statement
+    ast.alias,  # part of an `import` statement
+    ast.AnnAssign,  # wraps an assignment with a type hint
     ast.arguments,
     ast.arg,
     ast.withitem,
@@ -145,7 +146,7 @@ IGNORE = (
     ast.UnaryOp,
     ast.BoolOp,
     ast.Compare,
-    ast.ExceptHandler,  # part of a `try`` statement
+    ast.ExceptHandler,  # part of a `try` statement
     ast.FormattedValue,  # part of an f-string
 )
 
