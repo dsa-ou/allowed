@@ -1,7 +1,21 @@
 ## Configuration
 
-The program is already configured for our algorithms and data structures course,
-M269, but you can create your own configuration by writing a JSON file of the form
+Students and instructors often study and teach multiple courses at the same time.
+You can have multiple configuration files and select one with
+option `-c` or `--config`, e.g.
+```bash
+allowed path/to/file.py -c path/to/configuration.json
+```
+The program comes with two configuration files,
+one for our algorithms and data structures course M269,
+and one for our introductory Computing course TM112.
+If no configuration file is given, `allowed` will use the one for M269.
+
+For example, `allowed program.py` will check the given program against the constructs
+taught in M269, while `allowed program.py -c tm112.json` will check it against those
+taught in TM112.
+
+You can create your own configuration by writing a JSON file of the form
 ```json
 {
    "FILE_UNIT": "...",
@@ -10,19 +24,10 @@ M269, but you can create your own configuration by writing a JSON file of the fo
    "METHODS": { ... }
 }
 ```
-File `m269.json` is the default configuration.
-You can copy, rename and edit it to configure `allowed` for your course.
-
-Students and instructors often study and teach multiple courses at the same time.
-You can have multiple configuration files and select one with
-option `-c` or `--config`, e.g.
-```bash
-python allowed.py sample.py -c cs101.json
-```
-While you can test your configuration with our `sample.py` and `sample.ipynb` files,
-as shown in the above example,
-you will probably want to use Python and notebook files from your course.
-You may thus wish to delete the two `sample` files, as they're no longer needed.
+The easiest approach is to download and rename
+[`m269.json`](https://raw.githubusercontent.com/dsa-ou/allowed/main/allowed/m269.json) or
+[`tm112.json`](https://raw.githubusercontent.com/dsa-ou/allowed/main/allowed/tm112.json)
+and edit it to suit your course.
 
 The rest of this document explains the various parts of the JSON file.
 
@@ -49,8 +54,9 @@ a list of strings describing the syntax and built-in functions introduced in tha
 ```
 means that unit 2 introduces names (identifiers), the plus operator and the builtin `help` function.
 
-For the possible syntactical elements, see dictionary `SYNTAX` in `allowed.py`.
-For the possible built-in functions, see set `BUILTINS` in `allowed.py`.
+For the possible syntactical elements, see dictionary `SYNTAX` in
+[`allowed.py`](https://github.com/dsa-ou/allowed/blob/main/allowed/allowed.py).
+For the possible built-in functions, see set `BUILTINS` in the same file.
 
 The various uses of a construct can't be individually allowed or disallowed.
 For example, you can't allow integer addition
@@ -72,7 +78,7 @@ the modules and the list of exported objects introduced in those units. For exam
 }
 ```
 allows function `math.sqrt(x)` and constant `math.inf` from unit 10 onwards, and
-allows function `math.abs(x)` and class `fractions.Fraction` from unit 11 on.
+allows function `math.abs(x)` and class `fractions.Fraction` from unit 11 onwards.
 
 ### METHODS
 This entry has the same structure as `"IMPORTS"`, but instead of listing
@@ -82,9 +88,9 @@ it lists which methods of which classes can be called.
 Note that some of the built-in classes are written in lowercase and
 others in uppercase (see `m269.json`, the default configuration).
 
-If a unit introduces literals of some type in the `"LANGUAGE"` section,
+If a unit introduces literals of some type (e.g. lists) in the `"LANGUAGE"` section,
 then there should be an entry for the same unit and type in the `"METHODS"` section.
-If no methods are allowed, this must be explicitly indicated with with an empty list.
+If no methods are allowed, this must be explicitly indicated with an empty list.
 
 In the following example, unit 2 allows any immutable value
 (numbers, Booleans, `None`, strings, tuples), so it must also state

@@ -28,7 +28,7 @@ If you're an M269 student or tutor, follow the
 [M269 software](https://dsa-ou.github.io/m269-installer) installation instructions,
 and use the M269 technical forum or the tutor forum to report issues and ask questions.
 
-Otherwise, follow the [instructions](docs/installation.md)
+Otherwise, follow the [instructions](https://dsa-ou.github.io/allowed/docs/installation.html)
 on how to install, use and configure `allowed`.
 If you need help, post your query in the
 [Q & A discussion forum](https://github.com/dsa-ou/allowed/discussions/categories/q-a).
@@ -45,13 +45,13 @@ Any help to improve `allowed` is welcome and appreciated.
   [has been reported](https://github.com/dsa-ou/allowed/issues), before creating a new issue.
 - If you want to contribute code or documentation that addresses
   an [open issue](https://github.com/dsa-ou/allowed/issues),
-  please read first our [code contribution guide](docs/contribution.md).
+  please read first our [code contribution guide](https://dsa-ou.github.io/allowed/docs/contribution.html).
   Your contribution will become available under the terms below.
 
 ## Licences
 
 The code and text in this repository are
 Copyright © 2023 by The Open University, UK.
-The code is licensed under a [BSD-3-clause licence](LICENCE.MD).
+The code is licensed under a [BSD 3-clause licence](https://github.com/dsa-ou/allowed/blob/main/LICENCE.MD).
 The text is licensed under a
 [Creative Commons Attribution 4.0 International Licence](http://creativecommons.org/licenses/by/4.0).

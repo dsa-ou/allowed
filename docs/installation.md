@@ -1,24 +1,27 @@
 ## Installation
 
-Download the [latest release](https://github.com/dsa-ou/allowed/releases/latest)
-of `allowed`. You may download the archive in zip or compressed tar format.
-Expand the downloaded archive, if your web browser hasn't done so.
-This creates a subfolder named `allowed-...` within your downloads folder.
+`allowed` requires Python 3.10. Type `python3.10 -V` in a terminal to check if you have it.
+If you haven't it, [install it](https://www.python.org/downloads/release/python-31011/).
 
-The only files you need from the `allowed-...` folder are:
-`allowed.py`, `m269.json`, `sample.py` and `sample.ipynb`.
-Move those four files to anywhere, e.g. to the folder with the code you want to check.
-You can then remove the downloaded archive and subfolder, as they're no longer needed.
+Like any other Python package, `allowed` can be installed in your default global environment,
+but should preferably be installed in a new or existing
+[virtual environment](https://realpython.com/python-virtual-environments-a-primer/)
+created with Python 3.10.
+Once the virtual environment is activated, type _one_ of the following:
+1. `pip install allowed` if you only need to
+   check Python files and Jupyter notebooks with Python code
+2. `pip install 'allowed[pytype]'` if you also want to
+   check method calls (as explained in the next section)
+3. `pip install 'allowed[ipython]'` if you want to
+   check notebook cells that have IPython commands like `%timeit`
+4. `pip install 'allowed[all]'` if you want to
+   check method calls and notebook cells with IPython commands
 
-`allowed` can check Python files and notebooks 'out of the box',
-but more checks are possible with extra software:
+If you're using Jupyter notebooks, then you will likely already have IPython installed.
+Type `pip show ipython` to check if you have it.
 
-- If you want to check method calls (as explained in the next section), you must
-use Python 3.10 and install the [pytype](https://google.github.io/pytype) type checker.
-On Windows, you must install [WSL](https://learn.microsoft.com/en-us/windows/wsl) before `pytype`.
-
-- If you want to check notebook cells that have IPython commands like `%timeit`,
-you must install [IPython](https://ipython.readthedocs.io/en/latest/install/index.html).
-If you have installed the Jupyter software, you already have IPython.
+On Windows, you must install [WSL](https://learn.microsoft.com/en-us/windows/wsl)
+in order to be able to choose option 2 or 4, as the
+[pytype](https://google.github.io/pytype) type checker isn't available for Windows.
 
 ⇧ [Start](../README.md) | [Usage](usage.md) ⇨

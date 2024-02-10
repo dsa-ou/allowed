@@ -237,6 +237,11 @@ BUILTINS = {
 
 # ----- check configuration -----
 
+# the configuration will be read in main()
+FILE_UNIT : str                             # regex of unit within file name
+LANGUAGE : dict[int, list[str]]             # unit -> list of constructs
+IMPORTS : dict[int, dict[str, list[str]]]   # unit -> module -> list of names
+METHODS : dict[int, dict[str, list[str]]]   # unit -> datatype -> list of methods
 
 def check_language() -> set:
     """Return the unknown constructs in LANGUAGE."""
@@ -483,7 +488,7 @@ def check_folder(
                     constructs = get_constructs(file_unit)
                 else:
                     constructs = global_constructs
-                fullname = Path(current_folder) / filename
+                fullname = (Path(current_folder) / filename).name
                 check_file(fullname, constructs, check_method_calls)
 
 
@@ -570,11 +575,15 @@ def read_notebook(file_contents: str) -> tuple[str, list, list]:
 
 # ---- main program ----
 
-if __name__ == "__main__":
+def main() -> None:
+    """Implement the CLI."""
+    global FILE_UNIT, LANGUAGE, IMPORTS, METHODS
+
     if PYTHON_VERSION < (3, 10):
         sys.exit("error: can't check files (need Python 3.10 or higher)")
 
     argparser = argparse.ArgumentParser(
+        prog="allowed",
         description="Check that the code only uses certain constructs. "
         "See http://dsa-ou.github.io/allowed for how to specify the constructs."
     )
@@ -605,8 +614,13 @@ if __name__ == "__main__":
     if args.unit < 0:
         sys.exit("error: unit must be positive")
 
-    with Path(args.config).open() as file:
-        configuration = json.load(file)
+    for file in (Path(args.config), Path(__file__).parent / args.config):
+        if file.exists():
+            with file.open() as config_file:
+                configuration = json.load(config_file)
+            break
+    else:
+        sys.exit(f"error: configuration file {args.config} not found")
     FILE_UNIT = configuration.get("FILE_UNIT", "")
     LANGUAGE = {}
     for key, value in configuration["LANGUAGE"].items():
@@ -635,3 +649,6 @@ if __name__ == "__main__":
         print("WARNING: didn't check method calls (use option -m)")
     if not IPYTHON_INSTALLED:
         print("WARNING: didn't check notebook cells with magics (need IPython)")
+
+if __name__ == "__main__":
+    main()
