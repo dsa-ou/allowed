@@ -500,7 +500,7 @@ def check_file(
 ) -> None:
     """Check that the file only uses the allowed constructs."""
     try:
-        with Path(filename).open(encoding="utf-8", errors='surrogateescape') as file:
+        with Path(filename).open(encoding="utf-8", errors="surrogateescape") as file:
             if filename.endswith(".ipynb"):
                 source, line_cell_map, errors = read_notebook(file.read())
             else:
@@ -556,7 +556,7 @@ def read_notebook(file_contents: str) -> tuple[str, list, list]:
     If IPython isn't installed, cells with magics trigger syntax errors.
     """
     cell_num = 0
-    line_cell_map = [(0, 0)]  # line_cell_map[0] is never used
+    line_cell_map : list[tuple[int, int]] = [(0, 0)]  # line_cell_map[0] is never used
     source_list, errors = [], []
     notebook = json.loads(file_contents)
     for cell in notebook["cells"]:
