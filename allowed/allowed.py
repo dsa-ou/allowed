@@ -1,5 +1,7 @@
 """Check that Python and notebook files only use the allowed constructs."""
 
+__version__ = "1.3dev1"   # same as in pyproject.toml
+
 import argparse
 import ast
 import json
@@ -586,6 +588,12 @@ def main() -> None:
         prog="allowed",
         description="Check that the code only uses certain constructs. "
         "See http://dsa-ou.github.io/allowed for how to specify the constructs."
+    )
+    argparser.add_argument(
+        "-V",
+        "--version",
+        action="version",
+        version=f"%(prog)s {__version__}",
     )
     argparser.add_argument(
         "-m",

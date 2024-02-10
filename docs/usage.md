@@ -1,6 +1,12 @@
 ## Usage
 
-You can check code files and Jupyter notebook files by typing
+`allowed` is a command-line tool, to be used in a Linux/macOS terminal,
+a Windows Command Prompt or a Windows Powershell.
+
+For a summary of the command line options, type `allowed -h` or `allowed --help`.
+
+### Checking code
+You can check Python code in `.py` and `.ipynb` (Jupyter notebook) files by typing
 ```bash
 allowed path/to/file.py path/to/notebook.ipynb ...
 ```
@@ -13,7 +19,6 @@ check one file at a time and store the report in a text file, e.g.
 ```bash
 allowed path/to/file.py > disallowed.txt
 ```
-
 As `allowed` checks the files, it shows the line (and for notebooks the cell)
 where each disallowed construct occurs, like so:
 ```
@@ -35,7 +40,7 @@ the actual occurrence in the code line. For example:
 - `for-else` and `while-else`: the `else` branch of a for- or while-loop isn't allowed
 - `name`: variable, function and other names aren't allowed.
 
-It's unlikely for `constant` and `name` to be flagged, as Python programs need them.
+It's unlikely for `constant` and `name` to be flagged, as all Python programs need them.
 
 By default, the allowed constructs are those taught in our algorithms and data structures course,
 but you can change that, as explained in the [Configuration](configuration.md) section.
