@@ -1,22 +1,22 @@
 #!/bin/bash
 
-
+cmd='python allowed/allowed.py'
 if [ $# -eq 0 ]; then
     echo "Usage: ./tests.sh [run|create]"
 elif [ $1 = "run" ]; then
     echo "sample.py"; echo "---"
-    python allowed.py sample.py | diff -w - tests/sample-py.txt
+    $cmd sample.py | diff -w - tests/sample-py.txt
     echo ; echo "sample.py -m"; echo "---"
-    python allowed.py sample.py -m | diff -w - tests/sample-py-m.txt
+    $cmd sample.py -m | diff -w - tests/sample-py-m.txt
     echo; echo "sample.ipynb"; echo "---"
-    python allowed.py sample.ipynb | diff -w - tests/sample-nb.txt
+    $cmd sample.ipynb | diff -w - tests/sample-nb.txt
     echo; echo "sample.ipynb -m"; echo "---"
-    python allowed.py sample.ipynb -m | diff -w - tests/sample-nb-m.txt
+    $cmd sample.ipynb -m | diff -w - tests/sample-nb-m.txt
 elif [ $1 = "create" ]; then
-    python allowed.py sample.py > tests/sample-py.txt
-    python allowed.py sample.py -m > tests/sample-py-m.txt
-    python allowed.py sample.ipynb > tests/sample-nb.txt
-    python allowed.py sample.ipynb -m > tests/sample-nb-m.txt
+    $cmd sample.py > tests/sample-py.txt
+    $cmd sample.py -m > tests/sample-py-m.txt
+    $cmd sample.ipynb > tests/sample-nb.txt
+    $cmd sample.ipynb -m > tests/sample-nb-m.txt
 else
     echo "Usage: ./tests.sh [run|create]"
 fi

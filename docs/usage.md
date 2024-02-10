@@ -1,23 +1,17 @@
 ## Usage
 
-Open a terminal or a PowerShell console. Use the `cd` command to go to the folder
-where you have put `allowed.py` and the other three files.
 You can check code files and Jupyter notebook files by typing
 ```bash
-python allowed.py path/to/file.py path/to/notebook.ipynb ...
-```
-For example, you can check the two sample files with:
-```bash
-python allowed.py sample.py sample.ipynb
+allowed path/to/file.py path/to/notebook.ipynb ...
 ```
 To check all `.py` and `.ipynb` files in a folder and its subfolders, type:
 ```bash
-python allowed.py path/to/folder
+allowed path/to/folder
 ```
 If you expect a long list of disallowed constructs, it may be better to
 check one file at a time and store the report in a text file, e.g.
 ```bash
-python allowed.py sample.py > disallowed.txt
+allowed path/to/file.py > disallowed.txt
 ```
 
 As `allowed` checks the files, it shows the line (and for notebooks the cell)
@@ -63,17 +57,12 @@ we must know the type of `variable`. For that purpose, `allowed` uses
 the `pytype` type checker, if it's installed and the Python version is 3.10.
 
 By default, `allowed` does _not_ check method calls because it slows down the process.
-You can enable these checks with option `-m` or `--methods`. For example,
-```bash
-python allowed.py -m sample.py
-```
-will print one further violation: method `list.count()` is used in line 52.
-
-The methods call option can appear anywhere after `allowed.py` and in either form.
+You can enable these checks with option `-m` or `--methods`.
+The option can appear anywhere after `allowed` and in either form.
 For example, the following two commands are equivalent:
 ```bash
-python allowed.py -m file1.py file2.py
-python allowed.py file1.py --methods file2.py
+allowed -m file1.py file2.py
+allowed file1.py --methods file2.py
 ```
 Note that the second command checks the method calls in _both_ files,
 not just in the second file.
@@ -96,30 +85,22 @@ the Python constructs introduced up to unit `N` (inclusive).
 For example, checking a submission to an assessment that covers units 1 to 5
 can be done with:
 ```bash
-python allowed.py -u 5 submission.py
+allowed -u 5 submission.py
 ```
-To see the weekly difference in the allowed constructs, type for example:
-```bash
-python allowed.py -u 2 sample.py
-python allowed.py -u 4 sample.py
-```
-The second command reports fewer violations because units 3 and 4 of
-the default configuration introduce Booleans, lists, strings and tuples.
-
 If the file name starts with the unit number and there's no unit option,
 the file is checked against that unit. For example,
 ```bash
-python allowed.py 05_submission.py
+allowed 05_submission.py
 ```
 also checks the submission against the constructs introduced in units 1–5.
 However, if the file name starts with a number that isn't the intended unit,
 you must provide it,
 e.g. if the file name starts with the number of the assignment, not of the unit:
 ```bash
-python allowed.py 01_submission.py --unit 5
+allowed 01_submission.py --unit 5
 ```
-As the previous example shows, the unit option can appear
-anywhere after `allowed.py` and in either form.
+As this example shows, the unit option can appear
+anywhere after `allowed` and in either form.
 
 ### Checking notebooks
 
@@ -129,11 +110,11 @@ means that line 5 of the 13th code cell uses a construct that wasn't taught.
 
 If a code cell has invalid Python, `allowed` reports a syntax error and
 skips the cell, but continues checking the rest of the notebook.
-Using IPython magics such as `%timeit` and `%run`
+Using IPython commands such as `%timeit` and `%run`
 triggers a syntax error if IPython isn't installed. If it is,
-the magics are transformed into Python code and the cell is checked,
+the commands are transformed into Python code and the cell is checked,
 if it hasn't other syntax errors.
-The transformed magics use function calls and attributes, so
-the cell will only pass the check if those constructs are allowed.
+The transformed commands use function calls and attributes, so
+the cell will only pass the check if those Python constructs are allowed.
 
 ⇦ [Installation](installation.md) | ⇧ [Start](../README.md) | [Configuration](configuration.md) ⇨
