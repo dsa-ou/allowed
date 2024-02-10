@@ -20,6 +20,9 @@ These changes are in the GitHub repository but not on [PyPI](https://pypi.org/pr
 - option `-V` / `--version`: displays the version number and exits
 - this change log
 
+### Fixed
+- annotated assignment is unknown construct: ignore type annotation
+
 ## [1.2.1](https://github.com/dsa-ou/allowed/compare/v1.2b1...v1.2.1) - 2024-02-10
 The 1.2 version on PyPI doesn't include a fix to the usage message.
 
