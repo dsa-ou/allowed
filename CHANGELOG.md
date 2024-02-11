@@ -24,9 +24,15 @@ These changes are in the GitHub repository but not on [PyPI](https://pypi.org/pr
 ### Fixed
 - locale encoding on Windows can't read UTF-8: use UTF-8 and replace characters that lead to errors
 - annotated assignment is unknown construct: ignore type annotation
+- processing of folders
+
+### Development
+- add a test that processes a folder and uses `-f`
 
 ## [1.2.1](https://github.com/dsa-ou/allowed/compare/v1.2b1...v1.2.1) - 2024-02-10
 The 1.2 version on PyPI doesn't include a fix to the usage message.
+
+Neither 1.2 and 1.2.1 can process folders, i.e. `allowed path/to/folder` won't work.
 
 ### Changed
 - make `allowed` publishable on PyPI
