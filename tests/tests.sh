@@ -13,14 +13,14 @@ elif [ $1 = "run" ]; then
     $cmd tests/sample.ipynb | diff -w - tests/sample-nb.txt
     echo; echo "sample.ipynb -m"; echo "---"
     $cmd tests/sample.ipynb -m | diff -w - tests/sample-nb-m.txt
-    echo; echo "-f ."; echo "---"
-    $cmd -f . | diff -w - tests/folder-first.txt
+    echo; echo "-f sample.ipynb allowed/"; echo "---"
+    $cmd -f tests/sample.ipynb allowed | diff -w - tests/folder-first.txt
 elif [ $1 = "create" ]; then
     $cmd tests/sample.py > tests/sample-py.txt
     $cmd tests/sample.py -m > tests/sample-py-m.txt
     $cmd tests/sample.ipynb > tests/sample-nb.txt
     $cmd tests/sample.ipynb -m > tests/sample-nb-m.txt
-    $cmd -f . > tests/folder-first.txt
+    $cmd -f tests/sample.ipynb allowed > tests/folder-first.txt
 else
     echo "Usage: ./tests.sh [run|create]"
 fi

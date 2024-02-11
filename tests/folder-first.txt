@@ -1,0 +1,40 @@
+tests/sample.ipynb:cell_1:2: SYNTAX ERROR: this cell has not been checked
+tests/sample.ipynb:cell_2:4: types
+tests/sample.ipynb:cell_2:5: choice
+tests/sample.ipynb:cell_2:10: assert
+tests/sample.ipynb:cell_2:16: break
+tests/sample.ipynb:cell_2:20: for-else
+tests/sample.ipynb:cell_2:26: try
+tests/sample.ipynb:cell_2:27: if expression
+tests/sample.ipynb:cell_5:12: continue
+tests/sample.ipynb:cell_5:13: while-else
+tests/sample.ipynb:cell_6:4: f-string
+tests/sample.ipynb:cell_6:9: <<
+tests/sample.ipynb:cell_6:10: math.e
+tests/sample.ipynb:cell_6:11: type()
+allowed/__main__.py:1: allowed
+allowed/allowed.py:5: argparse
+allowed/allowed.py:6: ast
+allowed/allowed.py:7: json
+allowed/allowed.py:8: os
+allowed/allowed.py:9: re
+allowed/allowed.py:10: sys
+allowed/allowed.py:11: pathlib
+allowed/allowed.py:15: try
+allowed/allowed.py:16: pytype
+allowed/allowed.py:17: pytype.tools.annotate_ast
+allowed/allowed.py:26: IPython.core.inputtransformer2
+allowed/allowed.py:128: dict comprehension
+allowed/allowed.py:263: if expression
+allowed/allowed.py:280: f-string
+allowed/allowed.py:292: :=
+allowed/allowed.py:293: int()
+allowed/allowed.py:389: hasattr()
+allowed/allowed.py:408: isinstance()
+allowed/allowed.py:413: type()
+allowed/allowed.py:503: with
+allowed/allowed.py:583: global
+allowed/allowed.py:636: break
+allowed/allowed.py:637: for-else
+WARNING: didn't check method calls (use option -m)
+WARNING: each construct was reported once; other occurrences may exist
