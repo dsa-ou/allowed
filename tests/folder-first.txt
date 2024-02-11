@@ -33,8 +33,8 @@ allowed/allowed.py:389: hasattr()
 allowed/allowed.py:408: isinstance()
 allowed/allowed.py:413: type()
 allowed/allowed.py:503: with
-allowed/allowed.py:583: global
-allowed/allowed.py:636: break
-allowed/allowed.py:637: for-else
+allowed/allowed.py:585: global
+allowed/allowed.py:638: break
+allowed/allowed.py:639: for-else
 WARNING: didn't check method calls (use option -m)
 WARNING: each construct was reported once; other occurrences may exist

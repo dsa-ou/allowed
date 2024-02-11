@@ -1,6 +1,6 @@
 """Check that Python and notebook files only use the allowed constructs."""
 
-__version__ = "1.3dev5"   # same as in pyproject.toml
+__version__ = "1.3dev6"   # same as in pyproject.toml
 
 import argparse
 import ast
@@ -514,14 +514,16 @@ def check_file(
         check_tree(tree, constructs, source.splitlines(), line_cell_map, errors)
         errors.sort()
         messages = set()
+        last_error = None
         for cell, line, message in errors:
-            if message not in messages:
+            if (cell, line, message) != last_error and message not in messages:
                 if cell:
                     print(f"{filename}:cell_{cell}:{line}: {message}")
                 else:
                     print(f"{filename}:{line}: {message}")
                 if report_first and message != SYNTAX_MSG:
                     messages.add(message)
+                last_error = (cell, line, message)
     except OSError as error:
         print(f"{filename}: OS ERROR: {error.strerror}")
     except SyntaxError as error:
