@@ -1,6 +1,6 @@
 """Check that Python and notebook files only use the allowed constructs."""
 
-__version__ = "1.3dev3"   # same as in pyproject.toml
+__version__ = "1.3dev4"   # same as in pyproject.toml
 
 import argparse
 import ast
@@ -600,7 +600,7 @@ def main() -> None:
         "-f",
         "--first",
         action="store_true",
-        help="report only the first occurrence of each construct",
+        help="report only the first of each disallowed construct (per file)",
     )
     argparser.add_argument(
         "-m",

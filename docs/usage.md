@@ -19,13 +19,22 @@ check one file at a time and store the report in a text file, e.g.
 ```bash
 allowed path/to/file.py > disallowed.txt
 ```
-As `allowed` checks the files, it shows the line (and for notebooks the cell)
+Another way to shorten the list of reported constructs is to report only
+the first occurrence in each file, using option `-f` or `--first`, e.g.
+```bash
+allowed -f path/to/file.py path/to/notebook.ipynb
+```
+If this option is used, a warning will remind you that other occurrences of
+the reported constructs may exist in the given files.
+
+As `allowed` checks the files, it reports the line (and for notebooks the cell)
 where each disallowed construct occurs, like so:
 ```
 file.py:3: break
 notebook.ipynb:cell_2:4: type()
 ```
-The message only shows the statement, operator, function, method that isn't allowed.
+The message doesn't show the code line but rather
+the statement, operator, function or method that isn't allowed.
 For example, if the line of code is `from random import choice`,
 then the message may be:
 - `from import`: the `from ... import ...` statement isn't allowed
