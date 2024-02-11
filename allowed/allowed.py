@@ -1,6 +1,6 @@
 """Check that Python and notebook files only use the allowed constructs."""
 
-__version__ = "1.3dev3"   # same as in pyproject.toml
+__version__ = "1.3dev4"   # same as in pyproject.toml
 
 import argparse
 import ast
@@ -479,7 +479,7 @@ def check_tree(
 
 
 def check_folder(
-    folder: str, last_unit: int, check_method_calls: bool  # noqa: FBT001
+    folder: str, last_unit: int, check_method_calls: bool, report_first: bool  # noqa: FBT001
 ) -> None:
     """Check all Python files in `folder` and its subfolders."""
     global_constructs = get_constructs(last_unit)
@@ -492,11 +492,11 @@ def check_folder(
                 else:
                     constructs = global_constructs
                 fullname = (Path(current_folder) / filename).name
-                check_file(fullname, constructs, check_method_calls)
+                check_file(fullname, constructs, check_method_calls, report_first)
 
 
 def check_file(
-    filename: str, constructs: tuple, check_method_calls: bool  # noqa: FBT001
+    filename: str, constructs: tuple, check_method_calls: bool, report_first: bool  # noqa: FBT001
 ) -> None:
     """Check that the file only uses the allowed constructs."""
     try:
@@ -513,15 +513,15 @@ def check_file(
             tree = ast.parse(source)
         check_tree(tree, constructs, source.splitlines(), line_cell_map, errors)
         errors.sort()
-        last_error = None
-        for error in errors:
-            if error != last_error:
-                cell, line, message = error
+        messages = set()
+        for cell, line, message in errors:
+            if message not in messages:
                 if cell:
                     print(f"{filename}:cell_{cell}:{line}: {message}")
                 else:
                     print(f"{filename}:{line}: {message}")
-            last_error = error
+                if report_first and message != SYNTAX_MSG:
+                    messages.add(message)
     except OSError as error:
         print(f"{filename}: OS ERROR: {error.strerror}")
     except SyntaxError as error:
@@ -597,6 +597,12 @@ def main() -> None:
         version=f"%(prog)s {__version__}",
     )
     argparser.add_argument(
+        "-f",
+        "--first",
+        action="store_true",
+        help="report only the first of each disallowed construct (per file)",
+    )
+    argparser.add_argument(
         "-m",
         "--methods",
         action="store_true",
@@ -647,10 +653,10 @@ def main() -> None:
 
     for name in args.file_or_folder:
         if Path(name).is_dir():
-            check_folder(name, args.unit, args.methods)
+            check_folder(name, args.unit, args.methods, args.first)
         elif name.endswith((".py", ".ipynb")):
             unit = args.unit if args.unit else get_unit(Path(name).name)
-            check_file(name, get_constructs(unit), args.methods)
+            check_file(name, get_constructs(unit), args.methods, args.first)
         else:
             print(f"{name}: not a folder, Python file or notebook")
 
@@ -658,6 +664,8 @@ def main() -> None:
         print("WARNING: didn't check method calls (use option -m)")
     if not IPYTHON_INSTALLED:
         print("WARNING: didn't check notebook cells with magics (need IPython)")
+    if args.first:
+        print("WARNING: each construct was reported once; other occurrences may exist")
 
 if __name__ == "__main__":
     main()

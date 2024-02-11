@@ -18,6 +18,7 @@ These changes are in the GitHub repository but not on [PyPI](https://pypi.org/pr
 
 ### Added
 - option `-V` / `--version`: displays the version number and exits
+- option `-f` / `--first`: for each file, only report the first of each construct
 - this change log
 
 ### Fixed
