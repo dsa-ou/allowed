@@ -52,7 +52,7 @@ items.union(l)
 
 # Dictionaries
 d : dict[str, int] = {"a": 1, "b": 2}
-d["c"] : int = int(f)
+d["c"] : int = int(f) + int("3") # duplicate constructs are reported once per line
 d.pop("a")
 for key, value in d.items():
     print(key, value)

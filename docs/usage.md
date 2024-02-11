@@ -41,6 +41,9 @@ then the message may be:
 - `random`: importing the `random` module isn't allowed
 - `choice`: importing the `random.choice()` function isn't allowed.
 
+If the same disallowed construct occurs more than once in a line,
+it is reported only once.
+
 For some constructs, `allowed` reports the type of the construct instead of
 the actual occurrence in the code line. For example:
 - `attribute`: dot notation, as in `a_list.sort()`, isn't allowed
