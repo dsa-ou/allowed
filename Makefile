@@ -1,5 +1,5 @@
 install:
-	poetry install
+	poetry install --extras "all"
 
 update:
 	poetry update
