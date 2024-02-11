@@ -491,7 +491,7 @@ def check_folder(
                     constructs = get_constructs(file_unit)
                 else:
                     constructs = global_constructs
-                fullname = (Path(current_folder) / filename).name
+                fullname = str(Path(current_folder) / filename)
                 check_file(fullname, constructs, check_method_calls, report_first)
 
 
