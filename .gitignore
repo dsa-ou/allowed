@@ -1,8 +1,8 @@
-m269_tests/
-extra.py
 *.pyc
 .ipynb_checkpoints
-env
-launch.json
-my_*
 dist/
+
+# Michel's local files:
+m269_tests/
+m269.toml
+my_*
