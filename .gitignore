@@ -1,5 +1,4 @@
-*.txt
-!sample*
+m269_tests/
 extra.py
 *.pyc
 .ipynb_checkpoints

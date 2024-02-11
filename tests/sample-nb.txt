@@ -1,17 +1,17 @@
-sample.ipynb:cell_1:2: SYNTAX ERROR: this cell has not been checked
-sample.ipynb:cell_2:4: types
-sample.ipynb:cell_2:5: choice
-sample.ipynb:cell_2:10: assert
-sample.ipynb:cell_2:16: break
-sample.ipynb:cell_2:19: break
-sample.ipynb:cell_2:20: for-else
-sample.ipynb:cell_2:26: try
-sample.ipynb:cell_2:27: if expression
-sample.ipynb:cell_5:7: break
-sample.ipynb:cell_5:12: continue
-sample.ipynb:cell_5:13: while-else
-sample.ipynb:cell_6:4: f-string
-sample.ipynb:cell_6:9: <<
-sample.ipynb:cell_6:10: math.e
-sample.ipynb:cell_6:11: type()
+tests/sample.ipynb:cell_1:2: SYNTAX ERROR: this cell has not been checked
+tests/sample.ipynb:cell_2:4: types
+tests/sample.ipynb:cell_2:5: choice
+tests/sample.ipynb:cell_2:10: assert
+tests/sample.ipynb:cell_2:16: break
+tests/sample.ipynb:cell_2:19: break
+tests/sample.ipynb:cell_2:20: for-else
+tests/sample.ipynb:cell_2:26: try
+tests/sample.ipynb:cell_2:27: if expression
+tests/sample.ipynb:cell_5:7: break
+tests/sample.ipynb:cell_5:12: continue
+tests/sample.ipynb:cell_5:13: while-else
+tests/sample.ipynb:cell_6:4: f-string
+tests/sample.ipynb:cell_6:9: <<
+tests/sample.ipynb:cell_6:10: math.e
+tests/sample.ipynb:cell_6:11: type()
 WARNING: didn't check method calls (use option -m)

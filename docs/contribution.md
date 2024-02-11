@@ -171,7 +171,13 @@ When working with the `allowed` environment, you can make use of the following `
 - `make update`: Updates project dependencies to their latest compatible versions.
 - `make format`: Formats your code in accordance with the project's style conventions.
 - `make lint`: Checks your code for errors.
-- `make test`: Runs all the project's tests.
+- `make run_tests`: Runs all the project's tests and checks against the expected outputs.
+- `make create_tests`: Runs tests  and stores outputs.
+
+After changing the behaviour or messages of `allowed`,
+do `make run_tests` to check that the outputs have changed as expected,
+then do `make create_tests` so that the new outputs are saved for future runs.
+The new outputs must be committed with the changes to `allowed`.
 
 ## Additional Resources
 

@@ -1,6 +1,6 @@
 """Check that Python and notebook files only use the allowed constructs."""
 
-__version__ = "1.3dev4"   # same as in pyproject.toml
+__version__ = "1.3dev5"   # same as in pyproject.toml
 
 import argparse
 import ast
@@ -491,7 +491,7 @@ def check_folder(
                     constructs = get_constructs(file_unit)
                 else:
                     constructs = global_constructs
-                fullname = (Path(current_folder) / filename).name
+                fullname = str(Path(current_folder) / filename)
                 check_file(fullname, constructs, check_method_calls, report_first)
 
 

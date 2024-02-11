@@ -12,5 +12,8 @@ lint:
 	poetry run mypy --ignore-missing-imports allowed/allowed.py
 	poetry run ruff check allowed/allowed.py
 
-test:
-	poetry run ./tests.sh run
+run_tests:
+	poetry run tests/tests.sh run
+
+create_tests:
+	poetry run tests/tests.sh create

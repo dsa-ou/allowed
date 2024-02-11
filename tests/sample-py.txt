@@ -1,16 +1,16 @@
-sample.py:8: types
-sample.py:9: choice
-sample.py:15: <<
-sample.py:22: if expression
-sample.py:29: f-string
-sample.py:33: list comprehension
-sample.py:48: ^
-sample.py:48: set comprehension
-sample.py:55: int()
-sample.py:67: break
-sample.py:70: while-else
-sample.py:71: continue
-sample.py:72: for-else
-sample.py:73: assert
-sample.py:85: math.e
+tests/sample.py:8: types
+tests/sample.py:9: choice
+tests/sample.py:15: <<
+tests/sample.py:22: if expression
+tests/sample.py:29: f-string
+tests/sample.py:33: list comprehension
+tests/sample.py:48: ^
+tests/sample.py:48: set comprehension
+tests/sample.py:55: int()
+tests/sample.py:67: break
+tests/sample.py:70: while-else
+tests/sample.py:71: continue
+tests/sample.py:72: for-else
+tests/sample.py:73: assert
+tests/sample.py:85: math.e
 WARNING: didn't check method calls (use option -m)
