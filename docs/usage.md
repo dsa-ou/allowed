@@ -20,7 +20,7 @@ check one file at a time and store the report in a text file, e.g.
 allowed path/to/file.py > disallowed.txt
 ```
 Another way to shorten the list of reported constructs is to report only
-the first occurrence in each file, using option `-f` or `--first`, e.g.
+the first occurrence in each file, using option `-f` or `--first`:
 ```bash
 allowed -f path/to/file.py path/to/notebook.ipynb
 ```
@@ -74,15 +74,10 @@ we must know the type of `variable`. For that purpose, `allowed` uses
 the `pytype` type checker, if it's installed and the Python version is 3.10.
 
 By default, `allowed` does _not_ check method calls because it slows down the process.
-You can enable these checks with option `-m` or `--methods`.
-The option can appear anywhere after `allowed` and in either form.
-For example, the following two commands are equivalent:
+You can enable these checks with option `-m` or `--methods`:
 ```bash
-allowed -m file1.py file2.py
-allowed file1.py --methods file2.py
+allowed -m file1.py notebook.ipynb
 ```
-Note that the second command checks the method calls in _both_ files,
-not just in the second file.
 
 ### Ignoring specific lines
 
@@ -114,10 +109,8 @@ However, if the file name starts with a number that isn't the intended unit,
 you must provide it,
 e.g. if the file name starts with the number of the assignment, not of the unit:
 ```bash
-allowed 01_submission.py --unit 5
+allowed --unit 5 01_submission.py
 ```
-As this example shows, the unit option can appear
-anywhere after `allowed` and in either form.
 
 ### Checking notebooks
 

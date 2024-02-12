@@ -1,25 +1,22 @@
 # Changelog
 
 This file documents notable changes to this project.
+Changes to the documentation are not listed.
 The format is based on [Keep a Changelog](https://keepachangelog.com),
 with an additional 'Development' section for changes that don't affect users.
 This project does *not* adhere to [Semantic Versioning](https://semver.org).
 
-<!-- Within each release:
-### Added
-### Changed
-### Deprecated
-### Removed
-### Fixed
-### Security -->
+<!-- Per release: Added / Changed / Deprecated / Removed / Fixed / Security -->
 
 ## [Unreleased](https://github.com/dsa-ou/allowed/compare/v1.2.1...HEAD)
 These changes are in the GitHub repository but not on [PyPI](https://pypi.org/project/allowed).
 
 ### Added
-- option `-V` / `--version`: displays the version number and exits
+- option `-V` / `--version`: display the version number and exit
 - option `-f` / `--first`: for each file, only report the first of each construct
-- this change log
+
+### Changed
+- run under Python > 3.10
 
 ### Fixed
 - locale encoding on Windows can't read UTF-8: use UTF-8; replace characters that lead to errors
@@ -28,6 +25,7 @@ These changes are in the GitHub repository but not on [PyPI](https://pypi.org/pr
 
 ### Development
 - improve tests: process a folder, use `-f`, report each construct once per line
+- move ipython and pytype to development dependencies
 
 ## [1.2.1](https://github.com/dsa-ou/allowed/compare/v1.2b1...v1.2.1) - 2024-02-10
 The 1.2 version on PyPI doesn't include a fix to the usage message.
