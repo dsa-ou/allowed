@@ -1,6 +1,6 @@
 """Check that Python and notebook files only use the allowed constructs."""
 
-__version__ = "1.3dev6"   # same as in pyproject.toml
+__version__ = "1.3dev7"   # same as in pyproject.toml
 
 import argparse
 import ast
@@ -10,17 +10,13 @@ import re
 import sys
 from pathlib import Path
 
-PYTHON_VERSION = sys.version_info[:2]
-if (3, 7) <= PYTHON_VERSION <= (3, 10):
-    try:
-        import pytype
-        from pytype.tools.annotate_ast import annotate_ast
+try:
+    import pytype
+    from pytype.tools.annotate_ast import annotate_ast
 
-        PYTYPE_OPTIONS = pytype.config.Options.create(python_version=PYTHON_VERSION)
-        PYTYPE_INSTALLED = True
-    except ImportError:
-        PYTYPE_INSTALLED = False
-else:
+    PYTYPE_OPTIONS = pytype.config.Options.create(python_version=(3,10))
+    PYTYPE_INSTALLED = True
+except ImportError:
     PYTYPE_INSTALLED = False
 try:
     from IPython.core.inputtransformer2 import TransformerManager as Transformer
@@ -28,7 +24,6 @@ try:
     IPYTHON_INSTALLED = True
 except ImportError:
     IPYTHON_INSTALLED = False
-
 
 # ----- Python's Abstract Syntax Tree (AST) -----
 
@@ -583,9 +578,6 @@ def read_notebook(file_contents: str) -> tuple[str, list, list]:
 def main() -> None:
     """Implement the CLI."""
     global FILE_UNIT, LANGUAGE, IMPORTS, METHODS
-
-    if PYTHON_VERSION < (3, 10):
-        sys.exit("error: can't check files (need Python 3.10 or higher)")
 
     argparser = argparse.ArgumentParser(
         prog="allowed",
