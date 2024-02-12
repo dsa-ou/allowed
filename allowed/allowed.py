@@ -388,6 +388,9 @@ def ignore(node: ast.AST, source: list[str]) -> bool:
 
 # ----- main functions -----
 
+read_nb = False                          # remember if a notebook was read
+read_py = False                          # remember if Python file was read
+
 
 def check_tree(
     tree: ast.AST,
@@ -494,14 +497,18 @@ def check_file(
     filename: str, constructs: tuple, check_method_calls: bool, report_first: bool  # noqa: FBT001
 ) -> None:
     """Check that the file only uses the allowed constructs."""
+    global read_nb, read_py
+
     try:
         with Path(filename).open(encoding="utf-8", errors="surrogateescape") as file:
             if filename.endswith(".ipynb"):
                 source, line_cell_map, errors = read_notebook(file.read())
+                read_nb = True
             else:
                 source = file.read()
                 line_cell_map = []
                 errors = []
+                read_py = True
         if check_method_calls and METHODS:
             tree = annotate_ast.annotate_source(source, ast, PYTYPE_OPTIONS)
         else:
@@ -526,7 +533,7 @@ def check_file(
     except UnicodeError as error:
         print(f"{filename}: UNICODE ERROR: {error}")
     except json.decoder.JSONDecodeError as error:
-        print(f"{filename}:{error.lineno}: FORMAT ERROR: {error.msg}")
+        print(f"{filename}:{error.lineno}: FORMAT ERROR: invalid JSON")
     except ValueError as error:
         print(f"{filename}: VALUE ERROR: {error}")
     except annotate_ast.PytypeError as error:
@@ -540,7 +547,7 @@ def check_file(
             print(f"{filename}: PYTYPE ERROR: {message}")
 
 
-SYNTAX_MSG = "SYNTAX ERROR: this cell has not been checked"
+SYNTAX_MSG = "SYNTAX ERROR: this cell wasn't checked"
 
 
 def read_notebook(file_contents: str) -> tuple[str, list, list]:
@@ -577,7 +584,7 @@ def read_notebook(file_contents: str) -> tuple[str, list, list]:
 
 def main() -> None:
     """Implement the CLI."""
-    global FILE_UNIT, LANGUAGE, IMPORTS, METHODS
+    global FILE_UNIT, LANGUAGE, IMPORTS, METHODS, read_nb, read_py
 
     argparser = argparse.ArgumentParser(
         prog="allowed",
@@ -607,21 +614,21 @@ def main() -> None:
         "--unit",
         type=int,
         default=0,
-        help="only use constructs from units 1 to UNIT (default: all units)",
+        help="only allow constructs from units 1 to UNIT (default: all units)",
     )
     argparser.add_argument(
         "-c",
         "--config",
         default="m269.json",
-        help="configuration file (default: m269.json)",
+        help="allow constructs in CONFIG (default: m269.json)",
     )
     argparser.add_argument("file_or_folder", nargs="+", help="file or folder to check")
     args = argparser.parse_args()
 
     if args.methods and not PYTYPE_INSTALLED:
-        sys.exit("error: can't check method calls (need pytype)")
+        sys.exit("ERROR: can't check method calls (pytype not installed)")
     if args.unit < 0:
-        sys.exit("error: unit must be positive")
+        sys.exit("ERROR: unit must be positive")
 
     for file in (Path(args.config), Path(__file__).parent / args.config):
         if file.exists():
@@ -629,7 +636,7 @@ def main() -> None:
                 configuration = json.load(config_file)
             break
     else:
-        sys.exit(f"error: configuration file {args.config} not found")
+        sys.exit(f"ERROR: configuration file {args.config} not found")
     FILE_UNIT = configuration.get("FILE_UNIT", "")
     LANGUAGE = {}
     for key, value in configuration["LANGUAGE"].items():
@@ -652,13 +659,14 @@ def main() -> None:
             unit = args.unit if args.unit else get_unit(Path(name).name)
             check_file(name, get_constructs(unit), args.methods, args.first)
         else:
-            print(f"{name}: not a folder, Python file or notebook")
+            print(f"WARNING: {name} skipped: not a folder, Python file or notebook")
 
-    if not args.methods:
-        print("WARNING: didn't check method calls (use option -m)")
-    if not IPYTHON_INSTALLED:
-        print("WARNING: didn't check notebook cells with magics (need IPython)")
-    if args.first:
+    if (read_py or read_nb) and not args.methods:
+        print("WARNING: didn't check method calls",
+              "(use option -m)" if PYTYPE_INSTALLED else "(pytype not installed)")
+    if read_nb and not IPYTHON_INSTALLED:
+        print("WARNING: didn't check notebook cells with %-commands (IPython not installed)")
+    if (read_py or read_nb) and args.first:
         print("WARNING: each construct was reported once; other occurrences may exist")
 
 if __name__ == "__main__":
