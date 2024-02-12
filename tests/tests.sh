@@ -5,7 +5,13 @@ cmd='python allowed/allowed.py'
 if [ $# -eq 0 ]; then
     echo "Usage: ./tests.sh [run|create]"
 elif [ $1 = "run" ]; then
-    echo "sample.py"; echo "---"
+    # test that there are no warnings if no file is processed
+    echo "foobar -fm"; echo "---"
+    $cmd foobar -fm | diff -w - tests/foobar-fm.txt
+    # -h trumps other flags
+    echo; echo "foobar -hfm"; echo "---"
+    $cmd foobar -hfm | diff -w - tests/foobar-hfm.txt
+    echo; echo "sample.py"; echo "---"
     $cmd tests/sample.py | diff -w - tests/sample-py.txt
     echo ; echo "sample.py -m"; echo "---"
     $cmd tests/sample.py -m | diff -w - tests/sample-py-m.txt
@@ -16,6 +22,8 @@ elif [ $1 = "run" ]; then
     echo; echo "-f sample.ipynb allowed/"; echo "---"
     $cmd -f tests/sample.ipynb allowed | diff -w - tests/folder-first.txt
 elif [ $1 = "create" ]; then
+    $cmd foobar -fm > tests/foobar-fm.txt
+    $cmd foobar -hfm > tests/foobar-hfm.txt
     $cmd tests/sample.py > tests/sample-py.txt
     $cmd tests/sample.py -m > tests/sample-py-m.txt
     $cmd tests/sample.ipynb > tests/sample-nb.txt

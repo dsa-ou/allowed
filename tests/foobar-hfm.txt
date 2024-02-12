@@ -1,0 +1,20 @@
+usage: allowed [-h] [-V] [-f] [-m] [-u UNIT] [-c CONFIG]
+               file_or_folder [file_or_folder ...]
+
+Check that the code only uses certain constructs. See http://dsa-
+ou.github.io/allowed for how to specify the constructs.
+
+positional arguments:
+  file_or_folder        file or folder to check
+
+options:
+  -h, --help            show this help message and exit
+  -V, --version         show program's version number and exit
+  -f, --first           report only the first of each disallowed construct
+                        (per file)
+  -m, --methods         enable method call checking
+  -u UNIT, --unit UNIT  only allow constructs from units 1 to UNIT (default:
+                        all units)
+  -c CONFIG, --config CONFIG
+                        allow the constructs given in CONFIG (default:
+                        m269.json)

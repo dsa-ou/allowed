@@ -1,4 +1,4 @@
-tests/sample.ipynb:cell_1:2: SYNTAX ERROR: this cell has not been checked
+tests/sample.ipynb:cell_1:2: SYNTAX ERROR: this cell wasn't checked
 tests/sample.ipynb:cell_2:4: types
 tests/sample.ipynb:cell_2:5: choice
 tests/sample.ipynb:cell_2:10: assert

@@ -1,6 +1,6 @@
 """Check that Python and notebook files only use the allowed constructs."""
 
-__version__ = "1.3dev7"   # same as in pyproject.toml
+__version__ = "1.3dev8"   # same as in pyproject.toml
 
 import argparse
 import ast
@@ -620,7 +620,7 @@ def main() -> None:
         "-c",
         "--config",
         default="m269.json",
-        help="allow constructs in CONFIG (default: m269.json)",
+        help="allow the constructs given in CONFIG (default: m269.json)",
     )
     argparser.add_argument("file_or_folder", nargs="+", help="file or folder to check")
     args = argparser.parse_args()
