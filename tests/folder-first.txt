@@ -20,21 +20,21 @@ allowed/allowed.py:8: os
 allowed/allowed.py:9: re
 allowed/allowed.py:10: sys
 allowed/allowed.py:11: pathlib
-allowed/allowed.py:15: try
-allowed/allowed.py:16: pytype
-allowed/allowed.py:17: pytype.tools.annotate_ast
-allowed/allowed.py:26: IPython.core.inputtransformer2
-allowed/allowed.py:128: dict comprehension
-allowed/allowed.py:263: if expression
-allowed/allowed.py:280: f-string
-allowed/allowed.py:292: :=
-allowed/allowed.py:293: int()
-allowed/allowed.py:389: hasattr()
-allowed/allowed.py:408: isinstance()
-allowed/allowed.py:413: type()
-allowed/allowed.py:503: with
-allowed/allowed.py:585: global
-allowed/allowed.py:638: break
-allowed/allowed.py:639: for-else
+allowed/allowed.py:13: try
+allowed/allowed.py:14: pytype
+allowed/allowed.py:15: pytype.tools.annotate_ast
+allowed/allowed.py:22: IPython.core.inputtransformer2
+allowed/allowed.py:123: dict comprehension
+allowed/allowed.py:258: if expression
+allowed/allowed.py:275: f-string
+allowed/allowed.py:287: :=
+allowed/allowed.py:288: int()
+allowed/allowed.py:384: hasattr()
+allowed/allowed.py:403: isinstance()
+allowed/allowed.py:408: type()
+allowed/allowed.py:498: with
+allowed/allowed.py:580: global
+allowed/allowed.py:630: break
+allowed/allowed.py:631: for-else
 WARNING: didn't check method calls (use option -m)
 WARNING: each construct was reported once; other occurrences may exist
