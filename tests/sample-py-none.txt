@@ -1,0 +1,4 @@
+16c16
+< WARNING: didn't check method calls (pytype not installed)
+---
+> WARNING: didn't check method calls (use option -m)

@@ -1,4 +1,4 @@
-tests/sample.ipynb:cell_1:2: SYNTAX ERROR: this cell has not been checked
+tests/sample.ipynb:cell_1:2: SYNTAX ERROR: this cell wasn't checked
 tests/sample.ipynb:cell_2:4: types
 tests/sample.ipynb:cell_2:5: choice
 tests/sample.ipynb:cell_2:10: assert
@@ -30,11 +30,11 @@ allowed/allowed.py:275: f-string
 allowed/allowed.py:287: :=
 allowed/allowed.py:288: int()
 allowed/allowed.py:384: hasattr()
-allowed/allowed.py:403: isinstance()
-allowed/allowed.py:408: type()
-allowed/allowed.py:498: with
-allowed/allowed.py:580: global
-allowed/allowed.py:630: break
-allowed/allowed.py:631: for-else
+allowed/allowed.py:406: isinstance()
+allowed/allowed.py:411: type()
+allowed/allowed.py:500: global
+allowed/allowed.py:503: with
+allowed/allowed.py:637: break
+allowed/allowed.py:638: for-else
 WARNING: didn't check method calls (use option -m)
 WARNING: each construct was reported once; other occurrences may exist
