@@ -1,6 +1,6 @@
 """Check that Python and notebook files only use the allowed constructs."""
 
-__version__ = "1.3dev8"   # same as in pyproject.toml
+__version__ = "1.3dev9"   # same as in pyproject.toml
 
 import argparse
 import ast
@@ -533,7 +533,7 @@ def check_file(
     except UnicodeError as error:
         print(f"{filename}: UNICODE ERROR: {error}")
     except json.decoder.JSONDecodeError as error:
-        print(f"{filename}:{error.lineno}: FORMAT ERROR: invalid JSON")
+        print(f"{filename}:{error.lineno}: FORMAT ERROR: invalid notebook format")
     except ValueError as error:
         print(f"{filename}: VALUE ERROR: {error}")
     except annotate_ast.PytypeError as error:
@@ -626,31 +626,43 @@ def main() -> None:
     args = argparser.parse_args()
 
     if args.methods and not PYTYPE_INSTALLED:
-        sys.exit("ERROR: can't check method calls (pytype not installed)")
+        print("ERROR: can't check method calls (pytype not installed)")
+        sys.exit(1)
     if args.unit < 0:
-        sys.exit("ERROR: unit must be positive")
+        print("ERROR: unit must be positive")
+        sys.exit(1)
 
-    for file in (Path(args.config), Path(__file__).parent / args.config):
-        if file.exists():
-            with file.open() as config_file:
-                configuration = json.load(config_file)
-            break
-    else:
-        sys.exit(f"ERROR: configuration file {args.config} not found")
-    FILE_UNIT = configuration.get("FILE_UNIT", "")
-    LANGUAGE = {}
-    for key, value in configuration["LANGUAGE"].items():
-        LANGUAGE[int(key)] = value
-    IMPORTS = {}
-    for key, value in configuration["IMPORTS"].items():
-        IMPORTS[int(key)] = value
-    METHODS = {}
-    for key, value in configuration["METHODS"].items():
-        METHODS[int(key)] = value
+    try:
+        for file in (Path(args.config), Path(__file__).parent / args.config):
+            if file.exists():
+                with file.open() as config_file:
+                    configuration = json.load(config_file)
+                    break
+        else:
+            print(f"CONFIGURATION ERROR: {args.config} not found")
+            sys.exit(1)
+        FILE_UNIT = configuration.get("FILE_UNIT", "")
+        LANGUAGE = {}
+        for key, value in configuration["LANGUAGE"].items():
+            assert isinstance(value, list)
+            LANGUAGE[int(key)] = value
+        IMPORTS = {}
+        for key, value in configuration["IMPORTS"].items():
+            assert isinstance(value, dict)
+            IMPORTS[int(key)] = value
+        METHODS = {}
+        for key, value in configuration["METHODS"].items():
+            assert isinstance(value, dict)
+            METHODS[int(key)] = value
+    except (json.JSONDecodeError, KeyError, AssertionError, ValueError) as error:
+        print(f"CONFIGURATION ERROR: invalid JSON format")
+        sys.exit(1)
     if unknown := check_language():
-        sys.exit(f"CONFIGURATION ERROR: unknown constructs:\n{', '.join(unknown)}")
+        print(f"CONFIGURATION ERROR: unknown constructs:\n{', '.join(unknown)}")
+        sys.exit(1)
     if error := check_imports():
-        sys.exit(error)
+        print(error)
+        sys.exit(1)
 
     for name in args.file_or_folder:
         if Path(name).is_dir():

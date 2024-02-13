@@ -34,7 +34,8 @@ allowed/allowed.py:406: isinstance()
 allowed/allowed.py:411: type()
 allowed/allowed.py:500: global
 allowed/allowed.py:503: with
-allowed/allowed.py:637: break
-allowed/allowed.py:638: for-else
+allowed/allowed.py:640: break
+allowed/allowed.py:641: for-else
+allowed/allowed.py:647: assert
 WARNING: didn't check method calls (use option -m)
 WARNING: each construct was reported once; other occurrences may exist

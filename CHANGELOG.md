@@ -23,6 +23,7 @@ These changes are in the GitHub repository but not on [PyPI](https://pypi.org/pr
 - locale encoding on Windows can't read UTF-8: use UTF-8; replace characters that lead to errors
 - annotated assignment is unknown construct: ignore type annotation
 - processing of folders
+- reduced likelihood of crashing when configuration is invalid
 
 ### Development
 - improve tests: process a folder, use `-f`, report each construct once per line, don't use pytype or ipython

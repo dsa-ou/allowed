@@ -4,7 +4,7 @@ Students and instructors often study and teach multiple courses at the same time
 You can have multiple configuration files and select one with
 option `-c` or `--config`, e.g.
 ```bash
-allowed path/to/file.py -c path/to/configuration.json
+allowed -c path/to/configuration.json path/to/file.py
 ```
 The program comes with two configuration files,
 one for our algorithms and data structures course M269,
@@ -12,7 +12,7 @@ and one for our introductory Computing course TM112.
 If no configuration file is given, `allowed` will use the one for M269.
 
 For example, `allowed program.py` will check the given program against the constructs
-taught in M269, while `allowed program.py -c tm112.json` will check it against those
+taught in M269, while `allowed -c tm112.json program.py` will check it against those
 taught in TM112.
 
 You can create your own configuration by writing a JSON file of the form

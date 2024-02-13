@@ -11,6 +11,16 @@ elif [ $1 = "run" ]; then
     # -h trumps other flags
     echo; echo "foobar -hfm"; echo "---"
     $cmd foobar -hfm | diff -w - tests/foobar-hfm.txt
+    # check with invalid notebook (not JSON)
+    echo; echo "invalid.ipynb"; echo "---"
+    $cmd tests/invalid.ipynb | diff -w - tests/invalid-nb.txt
+    # check with configuration file that isn't JSON
+    echo; echo "-c sample.py"; echo "---"
+    $cmd -c tests/sample.py foobar | diff -w - tests/sample-c.txt
+    # check with incomplete configuration file
+    echo; echo "-c invalid.json"; echo "---"
+    $cmd -c tests/invalid.json foobar | diff -w - tests/invalid-c.txt
+    # check the example code and notebook
     echo; echo "sample.py"; echo "---"
     $cmd tests/sample.py | diff -w - tests/sample-py.txt
     echo ; echo "sample.py -m"; echo "---"
@@ -24,6 +34,9 @@ elif [ $1 = "run" ]; then
 elif [ $1 = "create" ]; then
     $cmd foobar -fm > tests/foobar-fm.txt
     $cmd foobar -hfm > tests/foobar-hfm.txt
+    $cmd tests/invalid.ipynb > tests/invalid-nb.txt
+    $cmd -c tests/sample.py foobar > tests/sample-c.txt
+    $cmd -c tests/invalid.json foobar > tests/invalid-c.txt
     $cmd tests/sample.py > tests/sample-py.txt
     $cmd tests/sample.py -m > tests/sample-py-m.txt
     $cmd tests/sample.ipynb > tests/sample-nb.txt

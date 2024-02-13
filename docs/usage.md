@@ -59,7 +59,7 @@ but you can change that, as explained in the [Configuration](configuration.md) s
 
 If a message contains the string `ERROR`, then the indicated file or cell
 was _not_ checked, for these reasons:
-- `CONFIGURATION ERROR`: the allowed constructs are not well defined in the JSON configuration file
+- `CONFIGURATION ERROR`: the configuration file hasn't the [expected format](configuration.md)
 - `FORMAT ERROR`: the internal notebook format has been corrupted
 - `OS ERROR`: an operating system error, e.g. the file doesn't exist or can't be read
 - `PYTYPE ERROR`: an error that blocked the type checker, usually a syntax error
