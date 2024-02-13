@@ -25,17 +25,17 @@ allowed/allowed.py:14: pytype
 allowed/allowed.py:15: pytype.tools.annotate_ast
 allowed/allowed.py:22: IPython.core.inputtransformer2
 allowed/allowed.py:123: dict comprehension
-allowed/allowed.py:258: if expression
-allowed/allowed.py:275: f-string
-allowed/allowed.py:287: :=
-allowed/allowed.py:288: int()
-allowed/allowed.py:384: hasattr()
-allowed/allowed.py:406: isinstance()
-allowed/allowed.py:411: type()
-allowed/allowed.py:500: global
-allowed/allowed.py:503: with
-allowed/allowed.py:640: break
-allowed/allowed.py:641: for-else
-allowed/allowed.py:647: assert
+allowed/allowed.py:259: if expression
+allowed/allowed.py:276: f-string
+allowed/allowed.py:288: :=
+allowed/allowed.py:289: int()
+allowed/allowed.py:385: hasattr()
+allowed/allowed.py:407: isinstance()
+allowed/allowed.py:412: type()
+allowed/allowed.py:507: global
+allowed/allowed.py:510: with
+allowed/allowed.py:648: break
+allowed/allowed.py:649: for-else
+allowed/allowed.py:656: raise
 WARNING: didn't check method calls (use option -m)
 WARNING: each construct was reported once; other occurrences may exist

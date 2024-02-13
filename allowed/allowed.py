@@ -1,6 +1,6 @@
 """Check that Python and notebook files only use the allowed constructs."""
 
-__version__ = "1.3dev9"   # same as in pyproject.toml
+__version__ = "1.3.0"  # same as in pyproject.toml
 
 import argparse
 import ast
@@ -14,7 +14,7 @@ try:
     import pytype
     from pytype.tools.annotate_ast import annotate_ast
 
-    PYTYPE_OPTIONS = pytype.config.Options.create(python_version=(3,10))
+    PYTYPE_OPTIONS = pytype.config.Options.create(python_version=(3, 10))
     PYTYPE_INSTALLED = True
 except ImportError:
     PYTYPE_INSTALLED = False
@@ -236,10 +236,11 @@ BUILTINS = {
 # ----- check configuration -----
 
 # the configuration will be read in main()
-FILE_UNIT : str                             # regex of unit within file name
-LANGUAGE : dict[int, list[str]]             # unit -> list of constructs
-IMPORTS : dict[int, dict[str, list[str]]]   # unit -> module -> list of names
-METHODS : dict[int, dict[str, list[str]]]   # unit -> datatype -> list of methods
+FILE_UNIT: str  # regex of unit within file name
+LANGUAGE: dict[int, list[str]]  # unit -> list of constructs
+IMPORTS: dict[int, dict[str, list[str]]]  # unit -> module -> list of names
+METHODS: dict[int, dict[str, list[str]]]  # unit -> datatype -> list of methods
+
 
 def check_language() -> set:
     """Return the unknown constructs in LANGUAGE."""
@@ -388,8 +389,8 @@ def ignore(node: ast.AST, source: list[str]) -> bool:
 
 # ----- main functions -----
 
-read_nb = False                          # remember if a notebook was read
-read_py = False                          # remember if Python file was read
+read_nb = False  # remember if a notebook was read
+read_py = False  # remember if Python file was read
 
 
 def check_tree(
@@ -477,7 +478,10 @@ def check_tree(
 
 
 def check_folder(
-    folder: str, last_unit: int, check_method_calls: bool, report_first: bool  # noqa: FBT001
+    folder: str,
+    last_unit: int,
+    check_method_calls: bool,  # noqa: FBT001
+    report_first: bool,  # noqa: FBT001
 ) -> None:
     """Check all Python files in `folder` and its subfolders."""
     global_constructs = get_constructs(last_unit)
@@ -494,7 +498,10 @@ def check_folder(
 
 
 def check_file(
-    filename: str, constructs: tuple, check_method_calls: bool, report_first: bool  # noqa: FBT001
+    filename: str,
+    constructs: tuple,
+    check_method_calls: bool,  # noqa: FBT001
+    report_first: bool,  # noqa: FBT001
 ) -> None:
     """Check that the file only uses the allowed constructs."""
     global read_nb, read_py
@@ -560,7 +567,7 @@ def read_notebook(file_contents: str) -> tuple[str, list, list]:
     If IPython isn't installed, cells with magics trigger syntax errors.
     """
     cell_num = 0
-    line_cell_map : list[tuple[int, int]] = [(0, 0)]  # line_cell_map[0] is never used
+    line_cell_map: list[tuple[int, int]] = [(0, 0)]  # line_cell_map[0] is never used
     source_list, errors = [], []
     notebook = json.loads(file_contents)
     for cell in notebook["cells"]:
@@ -582,14 +589,15 @@ def read_notebook(file_contents: str) -> tuple[str, list, list]:
 
 # ---- main program ----
 
+
 def main() -> None:
     """Implement the CLI."""
-    global FILE_UNIT, LANGUAGE, IMPORTS, METHODS, read_nb, read_py
+    global FILE_UNIT, LANGUAGE, IMPORTS, METHODS
 
     argparser = argparse.ArgumentParser(
         prog="allowed",
         description="Check that the code only uses certain constructs. "
-        "See http://dsa-ou.github.io/allowed for how to specify the constructs."
+        "See http://dsa-ou.github.io/allowed for how to specify the constructs.",
     )
     argparser.add_argument(
         "-V",
@@ -644,18 +652,21 @@ def main() -> None:
         FILE_UNIT = configuration.get("FILE_UNIT", "")
         LANGUAGE = {}
         for key, value in configuration["LANGUAGE"].items():
-            assert isinstance(value, list)
+            if not isinstance(value, list):
+                raise TypeError
             LANGUAGE[int(key)] = value
         IMPORTS = {}
         for key, value in configuration["IMPORTS"].items():
-            assert isinstance(value, dict)
+            if not isinstance(value, dict):
+                raise TypeError
             IMPORTS[int(key)] = value
         METHODS = {}
         for key, value in configuration["METHODS"].items():
-            assert isinstance(value, dict)
+            if not isinstance(value, dict):
+                raise TypeError
             METHODS[int(key)] = value
-    except (json.JSONDecodeError, KeyError, AssertionError, ValueError) as error:
-        print(f"CONFIGURATION ERROR: invalid JSON format")
+    except (json.JSONDecodeError, KeyError, TypeError, ValueError):
+        print("CONFIGURATION ERROR: invalid JSON format")
         sys.exit(1)
     if unknown := check_language():
         print(f"CONFIGURATION ERROR: unknown constructs:\n{', '.join(unknown)}")
@@ -674,12 +685,17 @@ def main() -> None:
             print(f"WARNING: {name} skipped: not a folder, Python file or notebook")
 
     if (read_py or read_nb) and not args.methods:
-        print("WARNING: didn't check method calls",
-              "(use option -m)" if PYTYPE_INSTALLED else "(pytype not installed)")
+        print(
+            "WARNING: didn't check method calls",
+            "(use option -m)" if PYTYPE_INSTALLED else "(pytype not installed)",
+        )
     if read_nb and not IPYTHON_INSTALLED:
-        print("WARNING: didn't check notebook cells with %-commands (IPython not installed)")
+        print(
+            "WARNING: didn't check notebook cells with %-commands (IPython not installed)" # noqa: E501
+        )
     if (read_py or read_nb) and args.first:
         print("WARNING: each construct was reported once; other occurrences may exist")
+
 
 if __name__ == "__main__":
     main()

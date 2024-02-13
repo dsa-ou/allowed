@@ -8,16 +8,19 @@ This project does *not* adhere to [Semantic Versioning](https://semver.org).
 
 <!-- Per release: Added / Changed / Deprecated / Removed / Fixed / Security -->
 
-## [Unreleased](https://github.com/dsa-ou/allowed/compare/v1.2.1...HEAD)
+## [Unreleased](https://github.com/dsa-ou/allowed/compare/v1.3.0...HEAD)
 These changes are in the GitHub repository but not on [PyPI](https://pypi.org/project/allowed).
 
+Nothing yet
+
+## [1.3.0](https://github.com/dsa-ou/allowed/compare/v1.2.1...1.3.0)
 ### Added
 - option `-V` / `--version`: display the version number and exit
 - option `-f` / `--first`: for each file, only report the first of each construct
 
 ### Changed
 - run under Python > 3.10
-- improve messages
+- improve error and warning messages
 
 ### Fixed
 - locale encoding on Windows can't read UTF-8: use UTF-8; replace characters that lead to errors
@@ -26,7 +29,7 @@ These changes are in the GitHub repository but not on [PyPI](https://pypi.org/pr
 - reduced likelihood of crashing when configuration is invalid
 
 ### Development
-- improve tests: process a folder, use `-f`, report each construct once per line, don't use pytype or ipython
+- improve tests: check processing folders, using `-f`, not using pytype/ipython, etc.
 - move ipython and pytype to development dependencies
 
 ## [1.2.1](https://github.com/dsa-ou/allowed/compare/v1.2b1...v1.2.1) - 2024-02-10
