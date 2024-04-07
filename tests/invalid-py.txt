@@ -1,0 +1,2 @@
+tests/invalid.py:2: SYNTAX ERROR: '(' was never closed
+WARNING: didn't check method calls (use option -m)
