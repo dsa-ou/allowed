@@ -1,8 +1,8 @@
 10,15c10,17
-< tests/sample.ipynb:cell_3:1: SYNTAX ERROR: this cell wasn't checked
-< tests/sample.ipynb:cell_4:1: SYNTAX ERROR: this cell wasn't checked
-< tests/sample.ipynb:cell_5:17: SYNTAX ERROR: this cell wasn't checked
-< tests/sample.ipynb:cell_6:3: SYNTAX ERROR: this cell wasn't checked
+< tests/sample.ipynb:cell_3:1: SYNTAX ERROR: invalid syntax
+< tests/sample.ipynb:cell_4:1: SYNTAX ERROR: invalid syntax
+< tests/sample.ipynb:cell_5:17: SYNTAX ERROR: invalid syntax
+< tests/sample.ipynb:cell_6:3: SYNTAX ERROR: invalid syntax
 < WARNING: didn't check method calls (pytype not installed)
 < WARNING: didn't check notebook cells with %-commands (IPython not installed)
 ---
