@@ -688,7 +688,7 @@ def main() -> None:
         )
     if read_nb and not IPYTHON_INSTALLED:
         print(
-            "WARNING: didn't check notebook cells with %-commands (IPython not installed)" # noqa: E501
+            "WARNING: didn't check notebook cells with %-commands (IPython not installed)"  # noqa: E501
         )
     if (read_py or read_nb) and args.first:
         print("WARNING: each construct was reported once; other occurrences may exist")
