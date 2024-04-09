@@ -10,6 +10,11 @@ import re
 import sys
 from pathlib import Path
 
+issues = 0  # number of issues (unknown constructs) found
+py_checked = 0  # number of Python files checked
+nb_checked = 0  # number of notebooks checked
+unchecked = 0  # number of .py and .ipynb files skipped due to syntax or other errors
+
 try:
     import pytype
     from pytype.tools.annotate_ast import annotate_ast
@@ -293,6 +298,7 @@ def show_units(filename: str, last_unit: int):
         units = "all units"
     print(f"INFO: checking {filename} against {units}")
 
+
 def get_unit(filename: str) -> int:
     """Return the file's unit or zero (consider all units)."""
     if FILE_UNIT and (match := re.match(FILE_UNIT, filename)):
@@ -398,9 +404,6 @@ def ignore(node: ast.AST, source: list[str]) -> bool:
 
 
 # ----- main functions -----
-
-read_nb = False  # remember if a notebook was read
-read_py = False  # remember if Python file was read
 
 
 def check_tree(
@@ -519,18 +522,16 @@ def check_file(
     report_first: bool,  # noqa: FBT001
 ) -> None:
     """Check that the file only uses the allowed constructs."""
-    global read_nb, read_py
+    global py_checked, nb_checked, unchecked, issues
 
     try:
         with Path(filename).open(encoding="utf-8", errors="surrogateescape") as file:
             if filename.endswith(".ipynb"):
                 source, line_cell_map, errors = read_notebook(file.read())
-                read_nb = True
             else:
                 source = file.read()
                 line_cell_map = []
                 errors = []
-                read_py = True
         if check_method_calls and METHODS:
             tree = annotate_ast.annotate_source(source, ast, PYTYPE_OPTIONS)
         else:
@@ -545,19 +546,29 @@ def check_file(
                     print(f"{filename}:cell_{cell}:{line}: {message}")
                 else:
                     print(f"{filename}:{line}: {message}")
+                issues += 1
                 if report_first and "ERROR" not in message:
                     messages.add(message)
                 last_error = (cell, line, message)
+        if filename.endswith(".py"):
+            py_checked += 1
+        else:
+            nb_checked += 1
     except OSError as error:
         print(f"{filename}: OS ERROR: {error.strerror}")
+        unchecked += 1
     except SyntaxError as error:
         print(f"{filename}:{error.lineno}: SYNTAX ERROR: {error.msg}")
+        unchecked += 1
     except UnicodeError as error:
         print(f"{filename}: UNICODE ERROR: {error}")
+        unchecked += 1
     except json.decoder.JSONDecodeError as error:
         print(f"{filename}:{error.lineno}: FORMAT ERROR: invalid notebook format")
+        unchecked += 1
     except ValueError as error:
         print(f"{filename}: VALUE ERROR: {error}")
+        unchecked += 1
     except annotate_ast.PytypeError as error:
         #  write 'file:n: error' instead of 'Error reading file ... at line n: error'
         message = str(error)
@@ -567,6 +578,7 @@ def check_file(
             print(f"{filename}:{line}: PYTYPE ERROR: {message}")
         else:
             print(f"{filename}: PYTYPE ERROR: {message}")
+        unchecked += 1
 
 
 def read_notebook(file_contents: str) -> tuple[str, list, list]:
@@ -706,16 +718,25 @@ def main() -> None:
         else:
             print(f"WARNING: {name} skipped: not a folder, Python file or notebook")
 
-    if (read_py or read_nb) and not args.methods:
+    if args.verbose:
+        print(
+            f"INFO: found {issues} unknown constructs in {py_checked} .py and {nb_checked} .ipynb files"
+        )
+        if unchecked:
+            print(
+                f"INFO: didn't process {unchecked} files due to syntax or other errors"
+            )
+
+    if (py_checked or nb_checked) and not args.methods:
         print(
             "WARNING: didn't check method calls",
             "(use option -m)" if PYTYPE_INSTALLED else "(pytype not installed)",
         )
-    if read_nb and not IPYTHON_INSTALLED:
+    if nb_checked and not IPYTHON_INSTALLED:
         print(
             "WARNING: didn't check notebook cells with %-commands (IPython not installed)"  # noqa: E501
         )
-    if (read_py or read_nb) and args.first:
+    if (py_checked or nb_checked) and args.first:
         print("WARNING: each construct was reported once; other occurrences may exist")
 
 
