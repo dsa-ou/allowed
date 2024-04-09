@@ -120,7 +120,7 @@ allowed --unit 5 01_submission.py
 ### Checking notebooks
 
 As mentioned earlier, `allowed` does check Jupyter notebooks and
-reports the cells and lines with disallowed constructs: `notebook.ipynb:cell_13:5: ...`
+reports the cells and lines with unknown constructs: `notebook.ipynb:cell_13:5: ...`
 means that line 5 of the 13th code cell uses a construct that wasn't taught.
 
 If a code cell has invalid Python, `allowed` reports a syntax error and
@@ -131,5 +131,8 @@ the commands are transformed into Python code and the cell is checked,
 if it hasn't other syntax errors.
 The transformed commands use function calls and attributes, so
 the cell will only pass the check if those Python constructs are allowed.
+
+In the verbose output (option `-v` / `--verbose`), syntax errors do not count
+towards the unknown constructs total.
 
 ⇦ [Installation](installation.md) | ⇧ [Start](../README.md) | [Configuration](configuration.md) ⇨

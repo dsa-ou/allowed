@@ -288,12 +288,12 @@ def check_imports() -> str:
 # ----- auxiliary functions -----
 
 
-def show_units(filename: str, last_unit: int):
+def show_units(filename: str, last_unit: int) -> None:
     """Print a message about the units being checked."""
     if last_unit == 1:
         units = "unit 1"
     elif last_unit > 0:
-        units = f"units 1–{last_unit}"
+        units = f"units 1–{last_unit}"  # noqa: RUF001 (it's an en-dash)
     else:
         units = "all units"
     print(f"INFO: checking {filename} against {units}")
@@ -546,7 +546,9 @@ def check_file(
                     print(f"{filename}:cell_{cell}:{line}: {message}")
                 else:
                     print(f"{filename}:{line}: {message}")
-                issues += 1
+                # don't count syntax errors as unknown constructs
+                if "ERROR" not in message:
+                    issues += 1
                 if report_first and "ERROR" not in message:
                     messages.add(message)
                 last_error = (cell, line, message)
@@ -720,7 +722,8 @@ def main() -> None:
 
     if args.verbose:
         print(
-            f"INFO: found {issues} unknown constructs in {py_checked} .py and {nb_checked} .ipynb files"
+            f"INFO: found {issues} unknown constructs in",
+            f"{py_checked} .py and {nb_checked} .ipynb files",
         )
         if unchecked:
             print(
