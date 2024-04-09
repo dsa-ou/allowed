@@ -522,7 +522,7 @@ def check_file(
             tree = ast.parse(source)
         check_tree(tree, constructs, source.splitlines(), line_cell_map, errors)
         errors.sort()
-        messages = set()
+        messages = set()  # for --first option: unique messages (except errors)
         last_error = None
         for cell, line, message in errors:
             if (cell, line, message) != last_error and message not in messages:
@@ -530,7 +530,7 @@ def check_file(
                     print(f"{filename}:cell_{cell}:{line}: {message}")
                 else:
                     print(f"{filename}:{line}: {message}")
-                if report_first and message != SYNTAX_MSG:
+                if report_first and "ERROR" not in message:
                     messages.add(message)
                 last_error = (cell, line, message)
     except OSError as error:
@@ -552,9 +552,6 @@ def check_file(
             print(f"{filename}:{line}: PYTYPE ERROR: {message}")
         else:
             print(f"{filename}: PYTYPE ERROR: {message}")
-
-
-SYNTAX_MSG = "SYNTAX ERROR: this cell wasn't checked"
 
 
 def read_notebook(file_contents: str) -> tuple[str, list, list]:
@@ -582,7 +579,7 @@ def read_notebook(file_contents: str) -> tuple[str, list, list]:
                 for cell_line_num in range(1, cell_source.count("\n") + 2):
                     line_cell_map.append((cell_num, cell_line_num))  # noqa: PERF401
             except SyntaxError as error:
-                errors.append((cell_num, error.lineno, SYNTAX_MSG))
+                errors.append((cell_num, error.lineno, f"SYNTAX ERROR: {error.msg}"))
     source_str = "\n".join(source_list)
     return source_str, line_cell_map, errors
 
@@ -691,7 +688,7 @@ def main() -> None:
         )
     if read_nb and not IPYTHON_INSTALLED:
         print(
-            "WARNING: didn't check notebook cells with %-commands (IPython not installed)" # noqa: E501
+            "WARNING: didn't check notebook cells with %-commands (IPython not installed)"  # noqa: E501
         )
     if (read_py or read_nb) and args.first:
         print("WARNING: each construct was reported once; other occurrences may exist")

@@ -11,7 +11,8 @@ This project does *not* adhere to [Semantic Versioning](https://semver.org).
 ## [Unreleased](https://github.com/dsa-ou/allowed/compare/v1.3.0...HEAD)
 These changes are in the GitHub repository but not on [PyPI](https://pypi.org/project/allowed).
 
-Nothing yet
+### Fixed
+- report syntax errors in notebooks in the same way as in Python files
 
 ## [1.3.0](https://github.com/dsa-ou/allowed/compare/v1.2.1...1.3.0)
 ### Added

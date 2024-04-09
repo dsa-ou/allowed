@@ -6,3 +6,4 @@ dist/
 m269_tests/
 m269.toml
 my_*
+.vscode/

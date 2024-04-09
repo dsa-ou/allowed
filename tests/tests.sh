@@ -20,6 +20,9 @@ elif [ $1 = "run" ]; then
     # check with incomplete configuration file
     echo; echo "-c invalid.json"; echo "---"
     $cmd -c tests/invalid.json foobar | diff -w - tests/invalid-c.txt
+    # check with invalid Python code
+    echo; echo "invalid.py"; echo "---"
+    $cmd tests/invalid.py | diff -w - tests/invalid-py.txt
     # check the example code and notebook
     echo; echo "sample.py"; echo "---"
     $cmd tests/sample.py | diff -w - tests/sample-py.txt
@@ -37,6 +40,7 @@ elif [ $1 = "create" ]; then
     $cmd tests/invalid.ipynb > tests/invalid-nb.txt
     $cmd -c tests/sample.py foobar > tests/sample-c.txt
     $cmd -c tests/invalid.json foobar > tests/invalid-c.txt
+    $cmd tests/invalid.py > tests/invalid-py.txt
     $cmd tests/sample.py > tests/sample-py.txt
     $cmd tests/sample.py -m > tests/sample-py-m.txt
     $cmd tests/sample.ipynb > tests/sample-nb.txt

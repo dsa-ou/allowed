@@ -121,9 +121,11 @@ make lint
 > This command checks your code for errors.
 
 ```bash
-make test
+make run_tests
 ```
 > This command runs all the project's tests.
+> Some of the tests check the behaviour of `allowed` without IPython or pytype.
+> For that, they require your global environment to _not_ have those packages installed.
 
 Be sure to resolve any errors that arise before moving on to the next step.
 

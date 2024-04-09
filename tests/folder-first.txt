@@ -1,4 +1,4 @@
-tests/sample.ipynb:cell_1:2: SYNTAX ERROR: this cell wasn't checked
+tests/sample.ipynb:cell_1:2: SYNTAX ERROR: '(' was never closed
 tests/sample.ipynb:cell_2:4: types
 tests/sample.ipynb:cell_2:5: choice
 tests/sample.ipynb:cell_2:10: assert
@@ -34,8 +34,8 @@ allowed/allowed.py:407: isinstance()
 allowed/allowed.py:412: type()
 allowed/allowed.py:507: global
 allowed/allowed.py:510: with
-allowed/allowed.py:648: break
-allowed/allowed.py:649: for-else
-allowed/allowed.py:656: raise
+allowed/allowed.py:645: break
+allowed/allowed.py:646: for-else
+allowed/allowed.py:653: raise
 WARNING: didn't check method calls (use option -m)
 WARNING: each construct was reported once; other occurrences may exist
