@@ -283,6 +283,16 @@ def check_imports() -> str:
 # ----- auxiliary functions -----
 
 
+def show_units(filename: str, last_unit: int):
+    """Print a message about the units being checked."""
+    if last_unit == 1:
+        units = "unit 1"
+    elif last_unit > 0:
+        units = f"units 1–{last_unit}"
+    else:
+        units = "all units"
+    print(f"INFO: checking {filename} against {units}")
+
 def get_unit(filename: str) -> int:
     """Return the file's unit or zero (consider all units)."""
     if FILE_UNIT and (match := re.match(FILE_UNIT, filename)):
@@ -482,6 +492,7 @@ def check_folder(
     last_unit: int,
     check_method_calls: bool,  # noqa: FBT001
     report_first: bool,  # noqa: FBT001
+    verbose: bool,  # noqa: FBT001
 ) -> None:
     """Check all Python files in `folder` and its subfolders."""
     global_constructs = get_constructs(last_unit)
@@ -489,11 +500,15 @@ def check_folder(
         subfolders.sort()
         for filename in sorted(files):
             if filename.endswith((".py", ".ipynb")):
+                fullname = str(Path(current_folder) / filename)
                 if not last_unit and (file_unit := get_unit(filename)):
                     constructs = get_constructs(file_unit)
+                    if verbose:
+                        show_units(fullname, file_unit)
                 else:
                     constructs = global_constructs
-                fullname = str(Path(current_folder) / filename)
+                    if verbose:
+                        show_units(fullname, last_unit)
                 check_file(fullname, constructs, check_method_calls, report_first)
 
 
@@ -522,7 +537,7 @@ def check_file(
             tree = ast.parse(source)
         check_tree(tree, constructs, source.splitlines(), line_cell_map, errors)
         errors.sort()
-        messages = set()  # for --first option: unique messages (except errors)
+        messages = set()  # for --first option: the unique messages (except errors)
         last_error = None
         for cell, line, message in errors:
             if (cell, line, message) != last_error and message not in messages:
@@ -627,6 +642,12 @@ def main() -> None:
         default="m269.json",
         help="allow the constructs given in CONFIG (default: m269.json)",
     )
+    argparser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="show additional info as files are processed",
+    )
     argparser.add_argument("file_or_folder", nargs="+", help="file or folder to check")
     args = argparser.parse_args()
 
@@ -642,6 +663,8 @@ def main() -> None:
             if file.exists():
                 with file.open() as config_file:
                     configuration = json.load(config_file)
+                    if args.verbose:
+                        print(f"INFO: using configuration {file.resolve()}")
                     break
         else:
             print(f"CONFIGURATION ERROR: {args.config} not found")
@@ -674,9 +697,11 @@ def main() -> None:
 
     for name in args.file_or_folder:
         if Path(name).is_dir():
-            check_folder(name, args.unit, args.methods, args.first)
+            check_folder(name, args.unit, args.methods, args.first, args.verbose)
         elif name.endswith((".py", ".ipynb")):
             unit = args.unit if args.unit else get_unit(Path(name).name)
+            if args.verbose:
+                show_units(name, unit)
             check_file(name, get_constructs(unit), args.methods, args.first)
         else:
             print(f"WARNING: {name} skipped: not a folder, Python file or notebook")
