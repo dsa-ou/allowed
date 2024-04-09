@@ -67,6 +67,11 @@ was _not_ checked, for these reasons:
 - `UNICODE ERROR`: the file has some strange characters and couldn't be read
 - `VALUE ERROR`: some other cause; please report it to us.
 
+When the command line option `-v` or `--verbose` is given,
+the tool outputs additional information, including
+the total number of files processed and of unknown constructs found, and
+the total number of files not processed due to syntax, format or other errors.
+
 ### Extra checks
 
 To check method calls of the form `variable.method(...)`,
