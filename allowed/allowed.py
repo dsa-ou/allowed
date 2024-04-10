@@ -722,14 +722,28 @@ def main() -> None:
 
     if args.verbose:
         print(
-            f"INFO: found {issues} unknown constructs in",
-            f"{py_checked} .py and {nb_checked} .ipynb files",
+            "INFO: checked",
+            f"{py_checked} Python file{'' if py_checked == 1 else 's'} and",
+            f"{nb_checked} notebook{'' if nb_checked == 1 else 's'}",
         )
+        if issues:
+            print(
+                f"INFO: the {issues} Python construct{'s' if issues > 1 else ''}",
+                f"listed above {'are' if issues > 1 else 'is'} not allowed",
+            )
+        elif nb_checked or py_checked:
+            print("INFO: found no disallowed Python constructs")
         if unchecked:
             print(
-                f"INFO: didn't process {unchecked} files due to syntax or other errors"
+                f"INFO: didn't check {unchecked} Python",
+                f"file{'s' if unchecked > 1 else ''} or notebook{'s' if unchecked > 1 else ''}",
+                "due to syntax or other errors",
             )
-
+    if args.first and issues:
+        print(
+            "WARNING:",
+            "other occurrences of the listed constructs may exist (don't use option -f)",  # noqa: E501
+        )
     if (py_checked or nb_checked) and not args.methods:
         print(
             "WARNING: didn't check method calls",
@@ -739,8 +753,6 @@ def main() -> None:
         print(
             "WARNING: didn't check notebook cells with %-commands (IPython not installed)"  # noqa: E501
         )
-    if (py_checked or nb_checked) and args.first:
-        print("WARNING: each construct was reported once; other occurrences may exist")
 
 
 if __name__ == "__main__":
