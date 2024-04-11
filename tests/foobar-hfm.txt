@@ -1,4 +1,4 @@
-usage: allowed [-h] [-V] [-f] [-m] [-u UNIT] [-c CONFIG]
+usage: allowed [-h] [-V] [-f] [-m] [-u UNIT] [-c CONFIG] [-v]
                file_or_folder [file_or_folder ...]
 
 Check that the code only uses certain constructs. See http://dsa-
@@ -18,3 +18,4 @@ options:
   -c CONFIG, --config CONFIG
                         allow the constructs given in CONFIG (default:
                         m269.json)
+  -v, --verbose         show additional info as files are processed

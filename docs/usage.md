@@ -67,6 +67,11 @@ was _not_ checked, for these reasons:
 - `UNICODE ERROR`: the file has some strange characters and couldn't be read
 - `VALUE ERROR`: some other cause; please report it to us.
 
+When the command line option `-v` or `--verbose` is given,
+the tool outputs additional information, including
+the total number of files processed and of unknown constructs found, and
+the total number of files not processed due to syntax, format or other errors.
+
 ### Extra checks
 
 To check method calls of the form `variable.method(...)`,
@@ -115,7 +120,7 @@ allowed --unit 5 01_submission.py
 ### Checking notebooks
 
 As mentioned earlier, `allowed` does check Jupyter notebooks and
-reports the cells and lines with disallowed constructs: `notebook.ipynb:cell_13:5: ...`
+reports the cells and lines with unknown constructs: `notebook.ipynb:cell_13:5: ...`
 means that line 5 of the 13th code cell uses a construct that wasn't taught.
 
 If a code cell has invalid Python, `allowed` reports a syntax error and
@@ -126,5 +131,8 @@ the commands are transformed into Python code and the cell is checked,
 if it hasn't other syntax errors.
 The transformed commands use function calls and attributes, so
 the cell will only pass the check if those Python constructs are allowed.
+
+In the verbose output (option `-v` / `--verbose`), syntax errors do not count
+towards the unknown constructs total.
 
 ⇦ [Installation](installation.md) | ⇧ [Start](../README.md) | [Configuration](configuration.md) ⇨

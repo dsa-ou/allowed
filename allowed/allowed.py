@@ -10,6 +10,11 @@ import re
 import sys
 from pathlib import Path
 
+issues = 0  # number of issues (unknown constructs) found
+py_checked = 0  # number of Python files checked
+nb_checked = 0  # number of notebooks checked
+unchecked = 0  # number of .py and .ipynb files skipped due to syntax or other errors
+
 try:
     import pytype
     from pytype.tools.annotate_ast import annotate_ast
@@ -283,6 +288,17 @@ def check_imports() -> str:
 # ----- auxiliary functions -----
 
 
+def show_units(filename: str, last_unit: int) -> None:
+    """Print a message about the units being checked."""
+    if last_unit == 1:
+        units = "unit 1"
+    elif last_unit > 0:
+        units = f"units 1–{last_unit}"  # noqa: RUF001 (it's an en-dash)
+    else:
+        units = "all units"
+    print(f"INFO: checking {filename} against {units}")
+
+
 def get_unit(filename: str) -> int:
     """Return the file's unit or zero (consider all units)."""
     if FILE_UNIT and (match := re.match(FILE_UNIT, filename)):
@@ -389,9 +405,6 @@ def ignore(node: ast.AST, source: list[str]) -> bool:
 
 # ----- main functions -----
 
-read_nb = False  # remember if a notebook was read
-read_py = False  # remember if Python file was read
-
 
 def check_tree(
     tree: ast.AST,
@@ -482,6 +495,7 @@ def check_folder(
     last_unit: int,
     check_method_calls: bool,  # noqa: FBT001
     report_first: bool,  # noqa: FBT001
+    verbose: bool,  # noqa: FBT001
 ) -> None:
     """Check all Python files in `folder` and its subfolders."""
     global_constructs = get_constructs(last_unit)
@@ -489,11 +503,15 @@ def check_folder(
         subfolders.sort()
         for filename in sorted(files):
             if filename.endswith((".py", ".ipynb")):
+                fullname = str(Path(current_folder) / filename)
                 if not last_unit and (file_unit := get_unit(filename)):
                     constructs = get_constructs(file_unit)
+                    if verbose:
+                        show_units(fullname, file_unit)
                 else:
                     constructs = global_constructs
-                fullname = str(Path(current_folder) / filename)
+                    if verbose:
+                        show_units(fullname, last_unit)
                 check_file(fullname, constructs, check_method_calls, report_first)
 
 
@@ -504,25 +522,23 @@ def check_file(
     report_first: bool,  # noqa: FBT001
 ) -> None:
     """Check that the file only uses the allowed constructs."""
-    global read_nb, read_py
+    global py_checked, nb_checked, unchecked, issues
 
     try:
         with Path(filename).open(encoding="utf-8", errors="surrogateescape") as file:
             if filename.endswith(".ipynb"):
                 source, line_cell_map, errors = read_notebook(file.read())
-                read_nb = True
             else:
                 source = file.read()
                 line_cell_map = []
                 errors = []
-                read_py = True
         if check_method_calls and METHODS:
             tree = annotate_ast.annotate_source(source, ast, PYTYPE_OPTIONS)
         else:
             tree = ast.parse(source)
         check_tree(tree, constructs, source.splitlines(), line_cell_map, errors)
         errors.sort()
-        messages = set()  # for --first option: unique messages (except errors)
+        messages = set()  # for --first option: the unique messages (except errors)
         last_error = None
         for cell, line, message in errors:
             if (cell, line, message) != last_error and message not in messages:
@@ -530,19 +546,31 @@ def check_file(
                     print(f"{filename}:cell_{cell}:{line}: {message}")
                 else:
                     print(f"{filename}:{line}: {message}")
+                # don't count syntax errors as unknown constructs
+                if "ERROR" not in message:
+                    issues += 1
                 if report_first and "ERROR" not in message:
                     messages.add(message)
                 last_error = (cell, line, message)
+        if filename.endswith(".py"):
+            py_checked += 1
+        else:
+            nb_checked += 1
     except OSError as error:
         print(f"{filename}: OS ERROR: {error.strerror}")
+        unchecked += 1
     except SyntaxError as error:
         print(f"{filename}:{error.lineno}: SYNTAX ERROR: {error.msg}")
+        unchecked += 1
     except UnicodeError as error:
         print(f"{filename}: UNICODE ERROR: {error}")
+        unchecked += 1
     except json.decoder.JSONDecodeError as error:
         print(f"{filename}:{error.lineno}: FORMAT ERROR: invalid notebook format")
+        unchecked += 1
     except ValueError as error:
         print(f"{filename}: VALUE ERROR: {error}")
+        unchecked += 1
     except annotate_ast.PytypeError as error:
         #  write 'file:n: error' instead of 'Error reading file ... at line n: error'
         message = str(error)
@@ -552,6 +580,7 @@ def check_file(
             print(f"{filename}:{line}: PYTYPE ERROR: {message}")
         else:
             print(f"{filename}: PYTYPE ERROR: {message}")
+        unchecked += 1
 
 
 def read_notebook(file_contents: str) -> tuple[str, list, list]:
@@ -627,6 +656,12 @@ def main() -> None:
         default="m269.json",
         help="allow the constructs given in CONFIG (default: m269.json)",
     )
+    argparser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="show additional info as files are processed",
+    )
     argparser.add_argument("file_or_folder", nargs="+", help="file or folder to check")
     args = argparser.parse_args()
 
@@ -642,6 +677,8 @@ def main() -> None:
             if file.exists():
                 with file.open() as config_file:
                     configuration = json.load(config_file)
+                    if args.verbose:
+                        print(f"INFO: using configuration {file.resolve()}")
                     break
         else:
             print(f"CONFIGURATION ERROR: {args.config} not found")
@@ -674,24 +711,48 @@ def main() -> None:
 
     for name in args.file_or_folder:
         if Path(name).is_dir():
-            check_folder(name, args.unit, args.methods, args.first)
+            check_folder(name, args.unit, args.methods, args.first, args.verbose)
         elif name.endswith((".py", ".ipynb")):
             unit = args.unit if args.unit else get_unit(Path(name).name)
+            if args.verbose:
+                show_units(name, unit)
             check_file(name, get_constructs(unit), args.methods, args.first)
         else:
             print(f"WARNING: {name} skipped: not a folder, Python file or notebook")
 
-    if (read_py or read_nb) and not args.methods:
+    if args.verbose:
+        print(
+            "INFO: checked",
+            f"{py_checked} Python file{'' if py_checked == 1 else 's'} and",
+            f"{nb_checked} notebook{'' if nb_checked == 1 else 's'}",
+        )
+        if issues:
+            print(
+                f"INFO: the {issues} Python construct{'s' if issues > 1 else ''}",
+                f"listed above {'are' if issues > 1 else 'is'} not allowed",
+            )
+        elif nb_checked or py_checked:
+            print("INFO: found no disallowed Python constructs")
+        if unchecked:
+            print(
+                f"INFO: didn't check {unchecked} Python",
+                f"file{'s' if unchecked > 1 else ''} or notebook{'s' if unchecked > 1 else ''}",
+                "due to syntax or other errors",
+            )
+    if args.first and issues:
+        print(
+            "WARNING:",
+            "other occurrences of the listed constructs may exist (don't use option -f)",  # noqa: E501
+        )
+    if (py_checked or nb_checked) and not args.methods:
         print(
             "WARNING: didn't check method calls",
             "(use option -m)" if PYTYPE_INSTALLED else "(pytype not installed)",
         )
-    if read_nb and not IPYTHON_INSTALLED:
+    if nb_checked and not IPYTHON_INSTALLED:
         print(
             "WARNING: didn't check notebook cells with %-commands (IPython not installed)"  # noqa: E501
         )
-    if (read_py or read_nb) and args.first:
-        print("WARNING: each construct was reported once; other occurrences may exist")
 
 
 if __name__ == "__main__":
