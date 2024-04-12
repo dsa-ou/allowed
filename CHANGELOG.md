@@ -14,10 +14,16 @@ These changes are in the GitHub repository but not on [PyPI](https://pypi.org/pr
 ### Added
 - option `-v`/ `--verbose`: display additional info about the checking process
 
+### Changed
+- `-f` option: only warn that other constructs may exist if any were reported
+
 ### Fixed
 - report syntax errors in notebooks in the same way as in Python files
 
-## [1.3.0](https://github.com/dsa-ou/allowed/compare/v1.2.1...1.3.0)
+### Development
+- update tests and contribution guide
+
+## [1.3.0](https://github.com/dsa-ou/allowed/compare/v1.2.1...v1.3.0) - 2024-02-13
 ### Added
 - option `-V` / `--version`: display the version number and exit
 - option `-f` / `--first`: for each file, only report the first of each construct
