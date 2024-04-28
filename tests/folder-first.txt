@@ -39,9 +39,9 @@ allowed/allowed.py:420: isinstance()
 allowed/allowed.py:425: type()
 allowed/allowed.py:525: global
 allowed/allowed.py:528: with
-allowed/allowed.py:682: break
-allowed/allowed.py:683: for-else
-allowed/allowed.py:690: raise
+allowed/allowed.py:685: break
+allowed/allowed.py:686: for-else
+allowed/allowed.py:693: raise
 INFO: checked 3 Python files and 1 notebook
 INFO: the 38 Python constructs listed above are not allowed
 WARNING: other occurrences of the listed constructs may exist (don't use option -f)

@@ -17,9 +17,9 @@ elif [ $1 = "run" ]; then
     # check with configuration file that isn't JSON
     echo; echo "-c sample.py"; echo "---"
     $cmd -c tests/sample.py foobar | diff -w - tests/sample-c.txt
-    # check with incomplete configuration file
-    echo; echo "-c invalid.json"; echo "---"
-    $cmd -c tests/invalid.json foobar | diff -w - tests/invalid-c.txt
+    # check with incomplete configuration file and no extension
+    echo; echo "-c invalid"; echo "---"
+    $cmd -c tests/invalid foobar | diff -w - tests/invalid-c.txt
     # check with invalid Python code
     echo; echo "-v -u 3 invalid.py"; echo "---"
     $cmd -v -u 3 tests/invalid.py | diff -w - tests/invalid-py.txt
@@ -28,6 +28,8 @@ elif [ $1 = "run" ]; then
     $cmd tests/sample.py | diff -w - tests/sample-py.txt
     echo ; echo "sample.py -m"; echo "---"
     $cmd tests/sample.py -m | diff -w - tests/sample-py-m.txt
+    echo; echo "-c tm112 sample.py"; echo "---"
+    $cmd -c tm112 tests/sample.py | diff -w - tests/sample-py-tm112.txt
     echo; echo "sample.ipynb"; echo "---"
     $cmd tests/sample.ipynb | diff -w - tests/sample-nb.txt
     echo; echo "sample.ipynb -m"; echo "---"
@@ -39,10 +41,11 @@ elif [ $1 = "create" ]; then
     $cmd foobar -hfm > tests/foobar-hfm.txt
     $cmd tests/invalid.ipynb > tests/invalid-nb.txt
     $cmd -c tests/sample.py foobar > tests/sample-c.txt
-    $cmd -c tests/invalid.json foobar > tests/invalid-c.txt
+    $cmd -c tests/invalid foobar > tests/invalid-c.txt
     $cmd -v -u 3 tests/invalid.py > tests/invalid-py.txt
     $cmd tests/sample.py > tests/sample-py.txt
     $cmd tests/sample.py -m > tests/sample-py-m.txt
+    $cmd -c tm112 tests/sample.py > tests/sample-py-tm112.txt
     $cmd tests/sample.ipynb > tests/sample-nb.txt
     $cmd tests/sample.ipynb -m > tests/sample-nb-m.txt
     $cmd -vf tests/sample.ipynb allowed > tests/folder-first.txt

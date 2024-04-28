@@ -673,7 +673,10 @@ def main() -> None:
         sys.exit(1)
 
     try:
-        for file in (Path(args.config), Path(__file__).parent / args.config):
+        local = Path(args.config)
+        # The installed configurations are in this script's folder.
+        builtin = (Path(__file__).parent / args.config).with_suffix(".json")
+        for file in (local, local.with_suffix(".json"), builtin):
             if file.exists():
                 with file.open() as config_file:
                     configuration = json.load(config_file)
