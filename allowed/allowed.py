@@ -673,10 +673,11 @@ def main() -> None:
         sys.exit(1)
 
     try:
-        local = Path(args.config)
-        # The installed configurations are in this script's folder.
-        builtin = (Path(__file__).parent / args.config).with_suffix(".json")
-        for file in (local, local.with_suffix(".json"), builtin):
+        filename = args.config
+        if not filename.endswith(".json"):
+            filename += ".json"
+        # Look for configuration locally, then in this script's folder.
+        for file in (Path(filename), Path(__file__).parent / filename):
             if file.exists():
                 with file.open() as config_file:
                     configuration = json.load(config_file)
@@ -684,7 +685,7 @@ def main() -> None:
                         print(f"INFO: using configuration {file.resolve()}")
                     break
         else:
-            print(f"CONFIGURATION ERROR: {args.config} not found")
+            print(f"CONFIGURATION ERROR: {filename} not found")
             sys.exit(1)
         FILE_UNIT = configuration.get("FILE_UNIT", "")
         LANGUAGE = {}

@@ -14,12 +14,12 @@ elif [ $1 = "run" ]; then
     # check with invalid notebook (not JSON)
     echo; echo "invalid.ipynb"; echo "---"
     $cmd tests/invalid.ipynb | diff -w - tests/invalid-nb.txt
-    # check with configuration file that isn't JSON
-    echo; echo "-c sample.py"; echo "---"
-    $cmd -c tests/sample.py foobar | diff -w - tests/sample-c.txt
-    # check with incomplete configuration file and no extension
+    # check .json is added to local file; check non-JSON configuration
+    echo; echo "-c not"; echo "---"
+    $cmd -c tests/not foobar | diff -w - tests/not-c.txt
+    # check with incomplete configuration file
     echo; echo "-c invalid"; echo "---"
-    $cmd -c tests/invalid foobar | diff -w - tests/invalid-c.txt
+    $cmd -c tests/invalid.json foobar | diff -w - tests/invalid-c.txt
     # check with invalid Python code
     echo; echo "-v -u 3 invalid.py"; echo "---"
     $cmd -v -u 3 tests/invalid.py | diff -w - tests/invalid-py.txt
@@ -28,6 +28,7 @@ elif [ $1 = "run" ]; then
     $cmd tests/sample.py | diff -w - tests/sample-py.txt
     echo ; echo "sample.py -m"; echo "---"
     $cmd tests/sample.py -m | diff -w - tests/sample-py-m.txt
+    # check .json is added to pre-defined configuration
     echo; echo "-c tm112 sample.py"; echo "---"
     $cmd -c tm112 tests/sample.py | diff -w - tests/sample-py-tm112.txt
     echo; echo "sample.ipynb"; echo "---"
@@ -40,7 +41,7 @@ elif [ $1 = "create" ]; then
     $cmd foobar -fm > tests/foobar-fm.txt
     $cmd foobar -hfm > tests/foobar-hfm.txt
     $cmd tests/invalid.ipynb > tests/invalid-nb.txt
-    $cmd -c tests/sample.py foobar > tests/sample-c.txt
+    $cmd -c tests/not foobar > tests/not-c.txt
     $cmd -c tests/invalid foobar > tests/invalid-c.txt
     $cmd -v -u 3 tests/invalid.py > tests/invalid-py.txt
     $cmd tests/sample.py > tests/sample-py.txt
