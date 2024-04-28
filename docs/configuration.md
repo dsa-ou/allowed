@@ -6,13 +6,17 @@ option `-c` or `--config`, e.g.
 ```bash
 allowed -c path/to/configuration.json path/to/file.py
 ```
+If you omit the `.json` extension, it will be automatically added, i.e.
+`allowed -c my_course file.py` and `allowed -c my_course.json file.py`
+are equivalent.
+
 The program comes with two configuration files,
 one for our algorithms and data structures course M269,
 and one for our introductory Computing course TM112.
 If no configuration file is given, `allowed` will use the one for M269.
 
 For example, `allowed program.py` will check the given program against the constructs
-taught in M269, while `allowed -c tm112.json program.py` will check it against those
+taught in M269, while `allowed -c tm112 program.py` will check it against those
 taught in TM112.
 
 You can create your own configuration by writing a JSON file of the form

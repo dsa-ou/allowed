@@ -16,6 +16,7 @@ These changes are in the GitHub repository but not on [PyPI](https://pypi.org/pr
 
 ### Changed
 - `-f` option: only warn that other constructs may exist if any were reported
+- `-c` option: add `.json` extension if user does not type it
 
 ### Fixed
 - report syntax errors in notebooks in the same way as in Python files
@@ -36,7 +37,7 @@ These changes are in the GitHub repository but not on [PyPI](https://pypi.org/pr
 - locale encoding on Windows can't read UTF-8: use UTF-8; replace characters that lead to errors
 - annotated assignment is unknown construct: ignore type annotation
 - processing of folders
-- reduced likelihood of crashing when configuration is invalid
+- reduced the likelihood of crashing when the configuration is invalid
 
 ### Development
 - improve tests: check processing folders, using `-f`, not using pytype/ipython, etc.
