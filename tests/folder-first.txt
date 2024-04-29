@@ -153,16 +153,16 @@ allowed/allowed.py:27: IPython.core.inputtransformer2
 allowed/allowed.py:128: dict comprehension
 allowed/allowed.py:264: if expression
 allowed/allowed.py:281: f-string
-allowed/allowed.py:304: :=
-allowed/allowed.py:305: int()
-allowed/allowed.py:401: hasattr()
-allowed/allowed.py:420: isinstance()
-allowed/allowed.py:425: type()
-allowed/allowed.py:525: global
-allowed/allowed.py:528: with
-allowed/allowed.py:691: break
-allowed/allowed.py:692: for-else
-allowed/allowed.py:699: raise
+allowed/allowed.py:307: :=
+allowed/allowed.py:308: int()
+allowed/allowed.py:404: hasattr()
+allowed/allowed.py:423: isinstance()
+allowed/allowed.py:428: type()
+allowed/allowed.py:528: global
+allowed/allowed.py:531: with
+allowed/allowed.py:694: break
+allowed/allowed.py:695: for-else
+allowed/allowed.py:702: raise
 INFO: checked 8 Python files and 1 notebook
 INFO: the 150 Python constructs listed above are not allowed
 INFO: didn't check 2 Python files or notebooks due to syntax or other errors
