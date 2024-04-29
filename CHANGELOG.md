@@ -18,11 +18,11 @@ These changes are in the GitHub repository but not on [PyPI](https://pypi.org/pr
 ### Changed
 - `-f` option: only warn that other constructs may exist if any were reported
 - `-c` option: add `.json` extension if user does not type it
-- moved regular expression from the configuration file to the command line
+- remove `FILE_UNIT` section from the configuration files
 
 ### Fixed
 - report syntax errors in notebooks in the same way as in Python files
-- regular expression matches start of file name: now search for first match
+- regular expression must match start of file name: now search for first match
 
 ### Development
 - update tests and contribution guide
