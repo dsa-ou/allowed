@@ -35,8 +35,9 @@ elif [ $1 = "run" ]; then
     $cmd tests/sample.ipynb | diff -w - tests/sample-nb.txt
     echo; echo "sample.ipynb -m"; echo "---"
     $cmd tests/sample.ipynb -m | diff -w - tests/sample-nb-m.txt
-    echo; echo "-vf sample.ipynb allowed/"; echo "---"
-    $cmd -vf tests/sample.ipynb allowed | diff -w - tests/folder-first.txt
+    # check folder, -f, regex and empty file allowed/__init__.py; sample_DD.py = sample.py
+    echo; echo "-vf --file-unit '(\d+)' tests/ allowed/"; echo "---"
+    $cmd -vf --file-unit '(\d+)' tests allowed | diff -w - tests/folder-first.txt
 elif [ $1 = "create" ]; then
     $cmd foobar -fm > tests/foobar-fm.txt
     $cmd foobar -hfm > tests/foobar-hfm.txt
@@ -49,7 +50,7 @@ elif [ $1 = "create" ]; then
     $cmd -c tm112 tests/sample.py > tests/sample-py-tm112.txt
     $cmd tests/sample.ipynb > tests/sample-nb.txt
     $cmd tests/sample.ipynb -m > tests/sample-nb-m.txt
-    $cmd -vf tests/sample.ipynb allowed > tests/folder-first.txt
+    $cmd -vf --file-unit '(\d+)' tests allowed > tests/folder-first.txt
 else
     echo "Usage: ./tests.sh [run|create]"
 fi

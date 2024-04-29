@@ -301,7 +301,7 @@ def show_units(filename: str, last_unit: int) -> None:
 
 def get_unit(filename: str) -> int:
     """Return the file's unit or zero (consider all units)."""
-    if FILE_UNIT and (match := re.match(FILE_UNIT, filename)):
+    if FILE_UNIT and (match := re.search(FILE_UNIT, filename)):
         return int(match.group(1))
     return 0
 

@@ -1,4 +1,8 @@
 INFO: using configuration /Users/mw4687/GitHub/dsa-ou/allowed/allowed/m269.json
+INFO: checking tests/invalid.ipynb against all units
+tests/invalid.ipynb:1: FORMAT ERROR: invalid notebook format
+INFO: checking tests/invalid.py against all units
+tests/invalid.py:2: SYNTAX ERROR: '(' was never closed
 INFO: checking tests/sample.ipynb against all units
 tests/sample.ipynb:cell_1:2: SYNTAX ERROR: '(' was never closed
 tests/sample.ipynb:cell_2:4: types
@@ -14,6 +18,123 @@ tests/sample.ipynb:cell_6:4: f-string
 tests/sample.ipynb:cell_6:9: <<
 tests/sample.ipynb:cell_6:10: math.e
 tests/sample.ipynb:cell_6:11: type()
+INFO: checking tests/sample.py against all units
+tests/sample.py:8: types
+tests/sample.py:9: choice
+tests/sample.py:15: <<
+tests/sample.py:22: if expression
+tests/sample.py:29: f-string
+tests/sample.py:33: list comprehension
+tests/sample.py:48: ^
+tests/sample.py:48: set comprehension
+tests/sample.py:55: int()
+tests/sample.py:67: break
+tests/sample.py:70: while-else
+tests/sample.py:71: continue
+tests/sample.py:72: for-else
+tests/sample.py:73: assert
+tests/sample.py:85: math.e
+INFO: checking tests/sample_02.py against units 1–2
+tests/sample_02.py:8: types
+tests/sample_02.py:9: from import
+tests/sample_02.py:15: <<
+tests/sample_02.py:16: abs()
+tests/sample_02.py:20: and
+tests/sample_02.py:20: not
+tests/sample_02.py:20: or
+tests/sample_02.py:21: !=
+tests/sample_02.py:21: <
+tests/sample_02.py:21: <=
+tests/sample_02.py:21: ==
+tests/sample_02.py:21: >
+tests/sample_02.py:21: >=
+tests/sample_02.py:22: if expression
+tests/sample_02.py:27: str()
+tests/sample_02.py:29: f-string
+tests/sample_02.py:29: in
+tests/sample_02.py:33: list comprehension
+tests/sample_02.py:33: list literal
+tests/sample_02.py:33: list()
+tests/sample_02.py:34: keyword argument
+tests/sample_02.py:40: tuple literal
+tests/sample_02.py:40: tuple()
+tests/sample_02.py:43: index
+tests/sample_02.py:43: not in
+tests/sample_02.py:43: slice
+tests/sample_02.py:48: &
+tests/sample_02.py:48: ^
+tests/sample_02.py:48: range()
+tests/sample_02.py:48: set comprehension
+tests/sample_02.py:48: set literal
+tests/sample_02.py:48: set()
+tests/sample_02.py:48: |
+tests/sample_02.py:54: dict literal
+tests/sample_02.py:55: int()
+tests/sample_02.py:57: for
+tests/sample_02.py:63: while
+tests/sample_02.py:64: if
+tests/sample_02.py:67: break
+tests/sample_02.py:71: continue
+tests/sample_02.py:73: assert
+tests/sample_02.py:75: pass
+tests/sample_02.py:85: math.e
+INFO: checking tests/sample_04.py against units 1–4
+tests/sample_04.py:8: types
+tests/sample_04.py:9: from import
+tests/sample_04.py:15: <<
+tests/sample_04.py:16: abs()
+tests/sample_04.py:22: if expression
+tests/sample_04.py:29: f-string
+tests/sample_04.py:33: list comprehension
+tests/sample_04.py:48: &
+tests/sample_04.py:48: ^
+tests/sample_04.py:48: set comprehension
+tests/sample_04.py:48: set literal
+tests/sample_04.py:48: set()
+tests/sample_04.py:48: |
+tests/sample_04.py:54: dict literal
+tests/sample_04.py:55: int()
+tests/sample_04.py:67: break
+tests/sample_04.py:70: while-else
+tests/sample_04.py:71: continue
+tests/sample_04.py:72: for-else
+tests/sample_04.py:73: assert
+tests/sample_04.py:75: pass
+tests/sample_04.py:85: math.e
+INFO: checking tests/sample_08.py against units 1–8
+tests/sample_08.py:8: types
+tests/sample_08.py:9: random
+tests/sample_08.py:15: <<
+tests/sample_08.py:16: abs()
+tests/sample_08.py:22: if expression
+tests/sample_08.py:29: f-string
+tests/sample_08.py:33: list comprehension
+tests/sample_08.py:48: ^
+tests/sample_08.py:48: set comprehension
+tests/sample_08.py:55: int()
+tests/sample_08.py:67: break
+tests/sample_08.py:70: while-else
+tests/sample_08.py:71: continue
+tests/sample_08.py:72: for-else
+tests/sample_08.py:73: assert
+tests/sample_08.py:85: math.e
+INFO: checking tests/sample_16.py against units 1–16
+tests/sample_16.py:8: types
+tests/sample_16.py:9: choice
+tests/sample_16.py:15: <<
+tests/sample_16.py:16: abs()
+tests/sample_16.py:22: if expression
+tests/sample_16.py:29: f-string
+tests/sample_16.py:33: list comprehension
+tests/sample_16.py:48: ^
+tests/sample_16.py:48: set comprehension
+tests/sample_16.py:55: int()
+tests/sample_16.py:67: break
+tests/sample_16.py:70: while-else
+tests/sample_16.py:71: continue
+tests/sample_16.py:72: for-else
+tests/sample_16.py:73: assert
+tests/sample_16.py:85: math.e
 INFO: checking allowed/__init__.py against all units
 INFO: checking allowed/__main__.py against all units
 allowed/__main__.py:1: allowed
@@ -42,7 +163,8 @@ allowed/allowed.py:528: with
 allowed/allowed.py:691: break
 allowed/allowed.py:692: for-else
 allowed/allowed.py:699: raise
-INFO: checked 3 Python files and 1 notebook
-INFO: the 38 Python constructs listed above are not allowed
+INFO: checked 8 Python files and 1 notebook
+INFO: the 150 Python constructs listed above are not allowed
+INFO: didn't check 2 Python files or notebooks due to syntax or other errors
 WARNING: other occurrences of the listed constructs may exist (don't use option -f)
 WARNING: didn't check method calls (use option -m)
