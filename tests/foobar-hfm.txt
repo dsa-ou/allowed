@@ -1,4 +1,5 @@
-usage: allowed [-h] [-V] [-f] [-m] [-u UNIT] [-c CONFIG] [-v]
+usage: allowed [-h] [-V] [-f] [-m] [-u UNIT] [--file-unit FILE_UNIT]
+               [-c CONFIG] [-v]
                file_or_folder [file_or_folder ...]
 
 Check that the code only uses certain constructs. See http://dsa-
@@ -15,6 +16,9 @@ options:
   -m, --methods         enable method call checking
   -u UNIT, --unit UNIT  only allow constructs from units 1 to UNIT (default:
                         all units)
+  --file-unit FILE_UNIT
+                        regular expression of unit number in file name
+                        (default: '')
   -c CONFIG, --config CONFIG
                         allow the constructs given in CONFIG (default:
                         m269.json)

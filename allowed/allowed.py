@@ -651,6 +651,11 @@ def main() -> None:
         help="only allow constructs from units 1 to UNIT (default: all units)",
     )
     argparser.add_argument(
+        "--file-unit",
+        default="",
+        help="regular expression of unit number in file name (default: '')",
+    )
+    argparser.add_argument(
         "-c",
         "--config",
         default="m269.json",
@@ -687,7 +692,7 @@ def main() -> None:
         else:
             print(f"CONFIGURATION ERROR: {filename} not found")
             sys.exit(1)
-        FILE_UNIT = configuration.get("FILE_UNIT", "")
+        FILE_UNIT = args.file_unit
         LANGUAGE = {}
         for key, value in configuration["LANGUAGE"].items():
             if not isinstance(value, list):

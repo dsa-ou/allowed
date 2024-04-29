@@ -1,5 +1,4 @@
 {
-  "FILE_UNIT": "",
   "LANGUAGE": {
     "1": [
       "constant", "function call", "from import", "if", "for", "range",
