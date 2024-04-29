@@ -111,20 +111,23 @@ that extracts the unit from the file name.
 If there's a match, the unit number must be in the first group of the regular expression.
 If there's no match, all units or the unit given with option `-u` or `--unit` will be used.
 
-For example, `allowed --file-unit '(\d\d)' ...` will use the first two digits
-in the names of files as the unit number. If the file's name doesn't have
-two consecutive digits, then the file will be checked against all units,
+For example, to use the first two digits in the names of files as the unit number, type
+```bash
+allowed --file-unit '(\d\d)' path/to/file_or_folder
+```
+If the file's name doesn't have two consecutive digits, then the file will be checked against all units,
 because option `-u` is not given. So, if you have a folder `cs101/` with files
-named `weekDD_exerciseDD.py`, where D is a digit,
-then `allowed --file-unit '(\d\d)' cs101` will check each file against the
-corresponding units: `week01_exercise03.py` against unit 1,
-`week10_exercise02.py` against units 1 to 10, etc.
+named `weekDD_exerciseDD.py`, where D is a digit, then
+```bash
+allowed --file-unit '(\d\d)' cs101
+```
+will check each file against the corresponding units:
+`week01_exercise03.py` against unit 1, `week10_exercise02.py` against units 1 to 10, etc.
 You can use option `-v` (verbose output) to see the units each file is checked against.
 
 As a further example, if your files are named `cs101-week-DD-exercise-DD.ipynb`
-then the regular expression can't be `'(\d\d)'` because then all files would be
-checked against units 1 to 10, as those are the first two digits in the name.
-The regular expression should be `'-(\d\d)'`
+then using regular expression `'(\d\d)'` would check all files against units 1 to 10,
+as those are the first two digits in the name. The regular expression should be `'-(\d\d)'`
 so that only the first two digits after a hyphen are used for the unit.
 
 The part of the regular expression that indicates the unit must always be within brackets
