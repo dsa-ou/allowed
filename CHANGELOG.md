@@ -22,6 +22,7 @@ These changes are in the GitHub repository but not on [PyPI](https://pypi.org/pr
 
 ### Fixed
 - report syntax errors in notebooks in the same way as in Python files
+- regular expression matches start of file name: now search for first match
 
 ### Development
 - update tests and contribution guide
