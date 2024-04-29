@@ -25,3 +25,9 @@ create_tests:
 	poetry run tests/tests.sh create
 	-python3.10 allowed/allowed.py tests/sample.py | diff -w - tests/sample-py.txt > tests/sample-py-none.txt
 	-python3.10 allowed/allowed.py tests/sample.ipynb | diff -w - tests/sample-nb.txt > tests/sample-nb-none.txt
+
+run_m269_tests:
+	-@poetry run tests/m269_tests.sh run
+
+create_m269_tests:
+	-@poetry run tests/m269_tests.sh create
