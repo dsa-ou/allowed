@@ -1,6 +1,6 @@
 """Check that Python and notebook files only use the allowed constructs."""
 
-__version__ = "1.3.0"  # same as in pyproject.toml
+__version__ = "1.4.0"  # same as in pyproject.toml
 
 import argparse
 import ast
@@ -287,9 +287,11 @@ def check_imports() -> str:
 
 # ----- auxiliary functions -----
 
+
 def plural(number: int) -> str:
     """Return 's' or '' depending on number."""
     return "" if number == 1 else "s"
+
 
 def show_units(filename: str, last_unit: int) -> None:
     """Print a message about the units being checked."""

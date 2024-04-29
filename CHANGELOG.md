@@ -8,9 +8,12 @@ This project does *not* adhere to [Semantic Versioning](https://semver.org).
 
 <!-- Per release: Added / Changed / Deprecated / Removed / Fixed / Security -->
 
-## [Unreleased](https://github.com/dsa-ou/allowed/compare/v1.3.0...HEAD)
+## [Unreleased](https://github.com/dsa-ou/allowed/compare/v1.4.0...HEAD)
 These changes are in the GitHub repository but not on [PyPI](https://pypi.org/project/allowed).
 
+Nothing yet.
+
+## [1.4.0](https://github.com/dsa-ou/allowed/compare/v1.3.0...v1.4.0) - 2024-04-29
 ### Added
 - option `-v`/ `--verbose`: display additional info about the checking process
 - option `--file-unit`: regular expression to extract unit number from file name
@@ -22,7 +25,7 @@ These changes are in the GitHub repository but not on [PyPI](https://pypi.org/pr
 
 ### Fixed
 - report syntax errors in notebooks in the same way as in Python files
-- regular expression must match start of file name: now search for first match
+- regular expression searches for first match instead of matching start of file name
 
 ### Development
 - update tests and contribution guide
