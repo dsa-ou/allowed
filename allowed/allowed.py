@@ -287,6 +287,9 @@ def check_imports() -> str:
 
 # ----- auxiliary functions -----
 
+def plural(number: int) -> str:
+    """Return 's' or '' depending on number."""
+    return "" if number == 1 else "s"
 
 def show_units(filename: str, last_unit: int) -> None:
     """Print a message about the units being checked."""
@@ -301,7 +304,7 @@ def show_units(filename: str, last_unit: int) -> None:
 
 def get_unit(filename: str) -> int:
     """Return the file's unit or zero (consider all units)."""
-    if FILE_UNIT and (match := re.match(FILE_UNIT, filename)):
+    if FILE_UNIT and (match := re.search(FILE_UNIT, filename)):
         return int(match.group(1))
     return 0
 
@@ -651,6 +654,11 @@ def main() -> None:
         help="only allow constructs from units 1 to UNIT (default: all units)",
     )
     argparser.add_argument(
+        "--file-unit",
+        default="",
+        help="regular expression of unit number in file name (default: '')",
+    )
+    argparser.add_argument(
         "-c",
         "--config",
         default="m269.json",
@@ -687,7 +695,7 @@ def main() -> None:
         else:
             print(f"CONFIGURATION ERROR: {filename} not found")
             sys.exit(1)
-        FILE_UNIT = configuration.get("FILE_UNIT", "")
+        FILE_UNIT = args.file_unit
         LANGUAGE = {}
         for key, value in configuration["LANGUAGE"].items():
             if not isinstance(value, list):
@@ -727,12 +735,12 @@ def main() -> None:
     if args.verbose:
         print(
             "INFO: checked",
-            f"{py_checked} Python file{'' if py_checked == 1 else 's'} and",
-            f"{nb_checked} notebook{'' if nb_checked == 1 else 's'}",
+            f"{py_checked} Python file{plural(py_checked)} and",
+            f"{nb_checked} notebook{plural(nb_checked)}",
         )
         if issues:
             print(
-                f"INFO: the {issues} Python construct{'s' if issues > 1 else ''}",
+                f"INFO: the {issues} Python construct{plural(issues)}",
                 f"listed above {'are' if issues > 1 else 'is'} not allowed",
             )
         elif nb_checked or py_checked:
@@ -740,7 +748,7 @@ def main() -> None:
         if unchecked:
             print(
                 f"INFO: didn't check {unchecked} Python",
-                f"file{'s' if unchecked > 1 else ''} or notebook{'s' if unchecked > 1 else ''}",
+                f"file{plural(unchecked)} or notebook{plural(unchecked)}",
                 "due to syntax or other errors",
             )
     if args.first and issues:

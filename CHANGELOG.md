@@ -13,13 +13,16 @@ These changes are in the GitHub repository but not on [PyPI](https://pypi.org/pr
 
 ### Added
 - option `-v`/ `--verbose`: display additional info about the checking process
+- option `--file-unit`: regular expression to extract unit number from file name
 
 ### Changed
 - `-f` option: only warn that other constructs may exist if any were reported
 - `-c` option: add `.json` extension if user does not type it
+- remove `FILE_UNIT` section from the configuration files
 
 ### Fixed
 - report syntax errors in notebooks in the same way as in Python files
+- regular expression must match start of file name: now search for first match
 
 ### Development
 - update tests and contribution guide

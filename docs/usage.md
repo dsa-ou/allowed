@@ -104,18 +104,34 @@ can be done with:
 ```bash
 allowed -u 5 submission.py
 ```
-If the file name starts with the unit number and there's no unit option,
-the file is checked against that unit. For example,
+If the file name includes the unit it corresponds to, then you can provide
+option `--file-unit` followed by
+a [regular expression](https://docs.python.org/3/howto/regex.html)
+that extracts the unit from the file name.
+If there's a match, the unit number must be in the first group of the regular expression.
+If there's no match, all units or the unit given with option `-u` or `--unit` will be used.
+
+For example, to use the first two digits in the names of files as the unit number, type
 ```bash
-allowed 05_submission.py
+allowed --file-unit '(\d\d)' path/to/file_or_folder
 ```
-also checks the submission against the constructs introduced in units 1–5.
-However, if the file name starts with a number that isn't the intended unit,
-you must provide it,
-e.g. if the file name starts with the number of the assignment, not of the unit:
+If the file's name doesn't have two consecutive digits, then the file will be checked against all units,
+because option `-u` is not given. So, if you have a folder `cs101/` with files
+named `weekDD_exerciseDD.py`, where D is a digit, then
 ```bash
-allowed --unit 5 01_submission.py
+allowed --file-unit '(\d\d)' cs101
 ```
+will check each file against the corresponding units:
+`week01_exercise03.py` against unit 1, `week10_exercise02.py` against units 1 to 10, etc.
+You can use option `-v` (verbose output) to see the units each file is checked against.
+
+As a further example, if your files are named `cs101-week-DD-exercise-DD.ipynb`
+then using regular expression `'(\d\d)'` would check all files against units 1 to 10,
+as those are the first two digits in the name. The regular expression should be `'-(\d\d)'`
+so that only the first two digits after a hyphen are used for the unit.
+
+The part of the regular expression that indicates the unit must always be within brackets
+because `allowed` will use the first group of the regular expression as the unit number.
 
 ### Checking notebooks
 

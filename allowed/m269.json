@@ -1,5 +1,4 @@
 {
-  "FILE_UNIT": "^(\\d+)",
   "LANGUAGE": {
     "2": [
         "=", "name", "constant", "def", "return", "function call",

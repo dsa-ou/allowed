@@ -22,7 +22,6 @@ taught in TM112.
 You can create your own configuration by writing a JSON file of the form
 ```json
 {
-   "FILE_UNIT": "...",
    "LANGUAGE": { ... },
    "IMPORTS": { ... },
    "METHODS": { ... }
@@ -34,19 +33,6 @@ The easiest approach is to download and rename
 and edit it to suit your course.
 
 The rest of this document explains the various parts of the JSON file.
-
-### FILE_UNIT
-This entry in the JSON file is
-a [regular expression](https://docs.python.org/3/howto/regex.html)
-that extracts the unit from the file name.
-If there's a match, the unit number must be in the first group of the regular expression.
-If there's no match, the unit given with option `-u` or `--unit` will be used.
-
-Note that in JSON you have to double each backspace used in the regular expression.
-For example, `"^(\\d+)"` extracts the unit number from the start of the file name,
-while `"(\\d+).(py|ipynb)$"` extracts it from the end of the file name.
-If the names of your files don't include a unit number,
-remove the `"FILE_UNIT"` entry or set it to the empty string.
 
 ### LANGUAGE
 This entry is a dictionary that maps each unit number to
@@ -96,12 +82,11 @@ If a unit introduces literals of some type (e.g. lists) in the `"LANGUAGE"` sect
 then there should be an entry for the same unit and type in the `"METHODS"` section.
 If no methods are allowed, this must be explicitly indicated with an empty list.
 
-In the following example, unit 2 allows any immutable value
+In the following example, unit 2 allows any immutable literal
 (numbers, Booleans, `None`, strings, tuples), so it must also state
 which methods are allowed for strings (none in the example) and tuples (only `index`).
 ```
 {
-   "FILE_UNIT": "...",
    "LANGUAGE": {
       "2": [ "constant", ...],
       ...

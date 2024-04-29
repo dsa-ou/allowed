@@ -1,0 +1,64 @@
+/Users/mw4687/GitHub/M269-NE/book/notebooks/m269_digraph.py:2: networkx
+/Users/mw4687/GitHub/M269-NE/book/notebooks/m269_digraph.py:124: type()
+/Users/mw4687/GitHub/M269-NE/book/notebooks/m269_image.py:1: PIL
+/Users/mw4687/GitHub/M269-NE/book/notebooks/m269_image.py:2: matplotlib.pyplot
+/Users/mw4687/GitHub/M269-NE/book/notebooks/m269_image.py:50: raise
+/Users/mw4687/GitHub/M269-NE/book/notebooks/m269_util.py:16: *name
+/Users/mw4687/GitHub/M269-NE/book/notebooks/01_Introduction/01_2_preparation.ipynb:cell_1:1: def
+/Users/mw4687/GitHub/M269-NE/book/notebooks/01_Introduction/01_2_preparation.ipynb:cell_1:2: constant
+/Users/mw4687/GitHub/M269-NE/book/notebooks/01_Introduction/01_2_preparation.ipynb:cell_1:3: =
+/Users/mw4687/GitHub/M269-NE/book/notebooks/01_Introduction/01_2_preparation.ipynb:cell_1:3: name
+/Users/mw4687/GitHub/M269-NE/book/notebooks/01_Introduction/01_2_preparation.ipynb:cell_1:4: for
+/Users/mw4687/GitHub/M269-NE/book/notebooks/01_Introduction/01_2_preparation.ipynb:cell_1:5: +
+/Users/mw4687/GitHub/M269-NE/book/notebooks/01_Introduction/01_2_preparation.ipynb:cell_1:6: return
+/Users/mw4687/GitHub/M269-NE/book/notebooks/01_Introduction/01_2_preparation.ipynb:cell_2:1: function call
+/Users/mw4687/GitHub/M269-NE/book/notebooks/01_Introduction/01_2_preparation.ipynb:cell_2:1: list literal
+/Users/mw4687/GitHub/M269-NE/book/notebooks/01_Introduction/01_6_code.ipynb:cell_1:1: =
+/Users/mw4687/GitHub/M269-NE/book/notebooks/01_Introduction/01_6_code.ipynb:cell_1:1: constant
+/Users/mw4687/GitHub/M269-NE/book/notebooks/01_Introduction/01_6_code.ipynb:cell_1:1: name
+/Users/mw4687/GitHub/M269-NE/book/notebooks/01_Introduction/01_6_code.ipynb:cell_2:1: function call
+/Users/mw4687/GitHub/M269-NE/book/notebooks/01_Introduction/01_6_code.ipynb:cell_3:1: from import
+/Users/mw4687/GitHub/M269-NE/book/notebooks/01_Introduction/01_6_code.ipynb:cell_3:4: attribute
+/Users/mw4687/GitHub/M269-NE/book/notebooks/01_Introduction/01_6_code.ipynb:cell_3:4: list literal
+/Users/mw4687/GitHub/M269-NE/book/notebooks/01_Introduction/01_6_code.ipynb:cell_3:4: tuple literal
+/Users/mw4687/GitHub/M269-NE/book/notebooks/01_Introduction/01_6_code.ipynb:cell_3:5: keyword argument
+/Users/mw4687/GitHub/M269-NE/book/notebooks/01_Introduction/01_6_code.ipynb:cell_5:4: SYNTAX ERROR: unexpected indent
+/Users/mw4687/GitHub/M269-NE/book/notebooks/01_Introduction/01_6_code.ipynb:cell_7:3: *
+/Users/mw4687/GitHub/M269-NE/book/notebooks/02_Sequence/02_1_numbers.ipynb:cell_6:1: tuple literal
+/Users/mw4687/GitHub/M269-NE/book/notebooks/02_Sequence/02_1_numbers.ipynb:cell_8:1: maths
+/Users/mw4687/GitHub/M269-NE/book/notebooks/02_Sequence/02_2_operations.ipynb:cell_17:1: SYNTAX ERROR: invalid syntax
+/Users/mw4687/GitHub/M269-NE/book/notebooks/02_Sequence/02_4_assignments.ipynb:cell_6:1: SYNTAX ERROR: invalid syntax
+/Users/mw4687/GitHub/M269-NE/book/notebooks/02_Sequence/02_4_assignments.ipynb:cell_8:1: SYNTAX ERROR: invalid character '’' (U+2019)
+/Users/mw4687/GitHub/M269-NE/book/notebooks/02_Sequence/02_4_assignments.ipynb:cell_9:1: SYNTAX ERROR: unterminated string literal (detected at line 1)
+/Users/mw4687/GitHub/M269-NE/book/notebooks/02_Sequence/02_6_py_functions.ipynb:33: PYTYPE ERROR: 'return' outside function
+/Users/mw4687/GitHub/M269-NE/book/notebooks/03_Selection/03_3_expressions.ipynb:cell_11:1: SYNTAX ERROR: cannot assign to True
+/Users/mw4687/GitHub/M269-NE/book/notebooks/03_Selection/03_3_expressions.ipynb:cell_12:1: SYNTAX ERROR: invalid syntax
+/Users/mw4687/GitHub/M269-NE/book/notebooks/03_Selection/03_3_expressions.ipynb:cell_15:1: SYNTAX ERROR: invalid syntax
+/Users/mw4687/GitHub/M269-NE/book/notebooks/04_Iteration/04_2_strings.ipynb:cell_3:1: SYNTAX ERROR: invalid character '‘' (U+2018)
+/Users/mw4687/GitHub/M269-NE/book/notebooks/04_Iteration/04_2_strings.ipynb:cell_4:1: SYNTAX ERROR: unterminated string literal (detected at line 1)
+/Users/mw4687/GitHub/M269-NE/book/notebooks/04_Iteration/04_2_strings.ipynb:cell_5:1: SYNTAX ERROR: unterminated string literal (detected at line 1)
+/Users/mw4687/GitHub/M269-NE/book/notebooks/04_Iteration/04_7_reverse.ipynb:cell_5:3: from import
+/Users/mw4687/GitHub/M269-NE/book/notebooks/04_Iteration/04_7_reverse.ipynb:cell_5:17: *name
+/Users/mw4687/GitHub/M269-NE/book/notebooks/05_TMA01-1/05_3_coding_style.ipynb:cell_1:1: this
+/Users/mw4687/GitHub/M269-NE/book/notebooks/07_Ordered/07_2_stack_usage.ipynb:cell_1:1: SYNTAX ERROR: closing parenthesis ')' does not match opening parenthesis '['
+/Users/mw4687/GitHub/M269-NE/book/notebooks/08_Unordered/08_2_dictionary.ipynb: PYTYPE ERROR: Pytype error: TypeError: unhashable type: 'list'
+/Users/mw4687/GitHub/M269-NE/book/notebooks/09_Practice-1/09_6_sms.ipynb:cell_1:15: open()
+/Users/mw4687/GitHub/M269-NE/book/notebooks/09_Practice-1/09_6_sms.ipynb:cell_1:15: with
+/Users/mw4687/GitHub/M269-NE/book/notebooks/09_Practice-1/09_6_sms.ipynb:cell_1:17: str.split()
+/Users/mw4687/GitHub/M269-NE/book/notebooks/09_Practice-1/09_6_sms.ipynb:cell_1:19: int()
+/Users/mw4687/GitHub/M269-NE/book/notebooks/11_Search/11_2_factorisation.ipynb:cell_6:1: matplotlib.pyplot
+/Users/mw4687/GitHub/M269-NE/book/notebooks/11_Search/11_4_permutations.ipynb:cell_1:2: matplotlib.pyplot
+/Users/mw4687/GitHub/M269-NE/book/notebooks/17_Graphs_1/17_6_classes.ipynb:cell_1:3: networkx
+/Users/mw4687/GitHub/M269-NE/book/notebooks/17_Graphs_1/17_6_classes.ipynb:cell_1:125: type()
+/Users/mw4687/GitHub/M269-NE/book/notebooks/17_Graphs_1/17_7_traversal.ipynb:cell_10:2: random.draw
+/Users/mw4687/GitHub/M269-NE/book/notebooks/17_Graphs_1/17_8_bfs_dfs.ipynb:cell_10:2: random.draw
+/Users/mw4687/GitHub/M269-NE/book/notebooks/18_Greed/18_2_weighted_graph.ipynb:cell_2:67: type()
+/Users/mw4687/GitHub/M269-NE/book/notebooks/22_Backtracking/22_3_trackword.ipynb:cell_1:2: open()
+/Users/mw4687/GitHub/M269-NE/book/notebooks/22_Backtracking/22_3_trackword.ipynb:cell_1:2: with
+/Users/mw4687/GitHub/M269-NE/book/notebooks/22_Backtracking/22_3_trackword.ipynb:cell_1:4: str.strip()
+/Users/mw4687/GitHub/M269-NE/book/notebooks/22_Backtracking/22_4_optimising.ipynb:cell_3:5: sum()
+/Users/mw4687/GitHub/M269-NE/book/notebooks/32_Answers/Answers_09_6_02.ipynb:cell_1:5: open()
+/Users/mw4687/GitHub/M269-NE/book/notebooks/32_Answers/Answers_09_6_02.ipynb:cell_1:5: with
+/Users/mw4687/GitHub/M269-NE/book/notebooks/32_Answers/Answers_09_6_02.ipynb:cell_1:7: str.split()
+/Users/mw4687/GitHub/M269-NE/book/notebooks/32_Answers/Answers_09_6_02.ipynb:cell_1:9: int()
+WARNING: other occurrences of the listed constructs may exist (don't use option -f)
