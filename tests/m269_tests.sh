@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # this script is meant to be executed from the project's root directory
-folder="$HOME/GitHub/M269-NE/book"
-cmd="python allowed/allowed.py -f --file-unit (\d\d)"
+folder="$HOME/GitHub/M269-NE/book-24j"
+cmd="python allowed/allowed.py -f --file-unit (\d\d) -c m269-24j"
 
 if [ "$1" = "run" ]; then
     echo "NOTEBOOKS"; echo

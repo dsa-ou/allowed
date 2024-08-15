@@ -1,0 +1,48 @@
+{
+  "LANGUAGE": {
+    "1": [
+        "=", "name", "constant", "def", "return", "function call",
+        "+", "for", "*", "print", "list literal", "tuple literal"
+    ],
+    "2": [
+        "=", "name", "constant", "def", "return", "function call",
+        "import", "attribute",
+        "+", "-", "*", "/", "//", "%", "**", "-x", "+=",
+        "help", "min", "max", "print"
+    ],
+    "3": ["if", "and", "or", "not", "==", "!=", "<", "<=", ">", ">="],
+    "4": [
+        "for", "while", "from import",
+        "list", "list literal", "tuple", "tuple literal", "str", "range",
+        "len", "in", "not in", "index", "slice",
+        "sorted", "keyword argument"
+    ],
+    "6": ["pass", "class"],
+    "8": [
+        "dict literal", "set literal", "|", "&",
+        "dict", "set", "ord", "hash"
+    ],
+    "17": ["super"],
+    "18": ["abs"]
+  },
+  "IMPORTS": {
+    "2": {"math": ["floor", "pi"]},
+    "4": {"algoesup": ["test"]},
+    "6": {"math": ["inf"]},
+    "11": {
+        "math": ["sqrt", "factorial"],
+        "itertools": ["permutations", "combinations"],
+        "algoesup": ["time_functions_int"]
+    },
+    "14": {"random": ["shuffle"], "typing": ["Callable"]},
+    "16": {"heapq": ["heappush", "heappop"]},
+    "17": {"typing": ["Hashable"], "random": ["random"]},
+    "27": {"inspect": ["getsource"]}
+  },
+  "METHODS": {
+    "2": {"int": [], "float": [], "str": [], "Tuple": []},
+    "4": {"List": ["insert", "append", "pop", "sort"]},
+    "8": {"Dict": ["items", "pop"], "Set": ["add", "discard", "union", "intersection", "difference"]},
+    "11": {"Set": ["pop"]}
+  }
+}
