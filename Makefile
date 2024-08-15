@@ -13,7 +13,7 @@ lint:
 	poetry run ruff check allowed/allowed.py
 
 run_tests:
-	@echo "Tests in poetry environment, WITH ipython and ptype installed"
+	@echo "Tests in poetry environment, WITH ipython and pytype installed"
 	-@poetry run tests/tests.sh run
 	@echo "Tests in global environment, WITHOUT ipython or pytype installed"
 	@echo; echo "sample.py (no ipython or pytype)"; echo "---"

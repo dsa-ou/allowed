@@ -31,7 +31,7 @@ Virtual environments need to be activated in order install software in them.
    - `source path/to/folder/bin/activate` in Linux/macOS
    - `path/to/folder/scripts/Activate` in Windows.
 
-For our example, it would be `. ~/environments/cs101/bin/activate` or
+For our example, it would be `source ~/environments/cs101/bin/activate` or
 `~/environments/cs101/scripts/Activate`.
 After activating, the command prompt becomes `(folder)`, e.g. `(cs101)`,
 to show which environment is active.
