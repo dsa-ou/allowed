@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "allowed"
-version = "1.5.0" # as in allowed.py
+version = "1.5.1" # as in allowed.py
 description = "Check if a program only uses a subset of the Python language."
 authors = ["Michel Wermelinger <michel.wermelinger@open.ac.uk>"]
 readme = "README.md"

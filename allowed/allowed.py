@@ -1,6 +1,6 @@
 """Check that Python and notebook files only use the allowed constructs."""
 
-__version__ = "1.5.0"  # same as in pyproject.toml
+__version__ = "1.5.1"  # same as in pyproject.toml
 
 import argparse
 import ast

@@ -8,10 +8,12 @@ This project does *not* adhere to [Semantic Versioning](https://semver.org).
 
 <!-- Per release: Added / Changed / Deprecated / Removed / Fixed / Security -->
 
-## [Unreleased](https://github.com/dsa-ou/allowed/compare/v1.5.0...HEAD)
+## [Unreleased](https://github.com/dsa-ou/allowed/compare/v1.5.1...HEAD)
 These changes are in the GitHub repository but not on [PyPI](https://pypi.org/project/allowed).
 
-<!-- Nothing yet. -->
+Nothing yet.
+
+## [1.5.1](https://github.com/dsa-ou/allowed/compare/v1.5.0...v1.5.1) - 2024-09-10
 ### Fixed
 - option `-m` doesn't crash if Python 3.10 isn't installed
 
