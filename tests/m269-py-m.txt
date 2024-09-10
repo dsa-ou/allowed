@@ -3,7 +3,6 @@
 /Users/mw4687/GitHub/M269-NE/book-24j/python/m269_image.py:1: PIL
 /Users/mw4687/GitHub/M269-NE/book-24j/python/m269_image.py:2: matplotlib.pyplot
 /Users/mw4687/GitHub/M269-NE/book-24j/python/m269_image.py:50: raise
-/Users/mw4687/GitHub/M269-NE/book-24j/python/m269_test.py:16: *name
 /Users/mw4687/GitHub/M269-NE/book-24j/python/m269_tm.py:4: isinstance()
 /Users/mw4687/GitHub/M269-NE/book-24j/python/01_Introduction/01_6_code.py:46: PYTYPE ERROR: unexpected indent
 /Users/mw4687/GitHub/M269-NE/book-24j/python/02_Sequence/02_1_numbers.py:49: maths
@@ -12,17 +11,13 @@
 /Users/mw4687/GitHub/M269-NE/book-24j/python/02_Sequence/02_6_py_functions.py:54: PYTYPE ERROR: invalid syntax
 /Users/mw4687/GitHub/M269-NE/book-24j/python/03_Selection/03_3_expressions.py:65: PYTYPE ERROR: cannot assign to True
 /Users/mw4687/GitHub/M269-NE/book-24j/python/04_Iteration/04_2_strings.py:29: PYTYPE ERROR: invalid character '‘' (U+2018)
-/Users/mw4687/GitHub/M269-NE/book-24j/python/04_Iteration/04_7_reverse.py:70: typing
-/Users/mw4687/GitHub/M269-NE/book-24j/python/04_Iteration/04_7_reverse.py:84: *name
-/Users/mw4687/GitHub/M269-NE/book-24j/python/05_TMA01-1/05_3_coding_style.py:15: this
+/Users/mw4687/GitHub/M269-NE/book-24j/python/05_TMA01-1/05_3_coding_style.py:39: PYTYPE ERROR: expected an indented block after 'if' statement on line 37
 /Users/mw4687/GitHub/M269-NE/book-24j/python/07_Ordered/07_2_stack_usage.py:17: PYTYPE ERROR: closing parenthesis ')' does not match opening parenthesis '['
 /Users/mw4687/GitHub/M269-NE/book-24j/python/08_Unordered/08_2_dictionary.py: PYTYPE ERROR: Pytype error: TypeError: unhashable type: 'list'
 /Users/mw4687/GitHub/M269-NE/book-24j/python/09_Practice-1/09_5_sms.py:35: open()
 /Users/mw4687/GitHub/M269-NE/book-24j/python/09_Practice-1/09_5_sms.py:35: with
 /Users/mw4687/GitHub/M269-NE/book-24j/python/09_Practice-1/09_5_sms.py:37: str.split()
 /Users/mw4687/GitHub/M269-NE/book-24j/python/09_Practice-1/09_5_sms.py:39: int()
-/Users/mw4687/GitHub/M269-NE/book-24j/python/11_Search/11_2_factorisation.py:102: PYTYPE ERROR: invalid syntax
-/Users/mw4687/GitHub/M269-NE/book-24j/python/11_Search/11_4_permutations.py:24: matplotlib.pyplot
 /Users/mw4687/GitHub/M269-NE/book-24j/python/17_Graphs_1/17_6_classes.py:19: networkx
 /Users/mw4687/GitHub/M269-NE/book-24j/python/17_Graphs_1/17_6_classes.py:141: type()
 /Users/mw4687/GitHub/M269-NE/book-24j/python/17_Graphs_1/17_7_traversal.py:96: random.draw

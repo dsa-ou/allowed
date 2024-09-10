@@ -9,6 +9,7 @@ with `allowed` installed, then you may skip this section.
 2. Enter `python -V` to check the version you have installed.
 3. If it's 3.9 or earlier, [download and install](https://www.python.org/downloads)
    the latest version.
+   However, to use `pytype` (see below) you must install Python 3.10 or 3.11.
 
 ### Virtual environments
 Like any other Python package, `allowed` can be installed in your default global environment,
@@ -48,7 +49,7 @@ we recommend reading the first two sections of
 
 ### Installing
 The following instructions will install `allowed` and optional additional software
-in your current environment, whether it's the global environment or an active virtual environment
+in your current environment, whether it's the global environment or an active virtual environment.
 
 1. Enter `pip install allowed`.
 

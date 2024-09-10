@@ -31,4 +31,4 @@ tests/sample.py:70: while-else
 tests/sample.py:71: continue
 tests/sample.py:72: for-else
 tests/sample.py:75: pass
-WARNING: didn't check method calls (use option -m)
+WARNING: didn't check method calls (use option -m if possible)

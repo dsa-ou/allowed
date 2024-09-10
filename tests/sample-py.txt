@@ -13,4 +13,4 @@ tests/sample.py:71: continue
 tests/sample.py:72: for-else
 tests/sample.py:73: assert
 tests/sample.py:85: math.e
-WARNING: didn't check method calls (use option -m)
+WARNING: didn't check method calls (use option -m if possible)
