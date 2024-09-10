@@ -76,7 +76,7 @@ the total number of files not processed due to syntax, format or other errors.
 
 To check method calls of the form `variable.method(...)`,
 we must know the type of `variable`. For that purpose, `allowed` uses
-the `pytype` type checker, if it's installed and the Python version is 3.10.
+the `pytype` type checker, if it's installed and the Python version is 3.10 or 3.11.
 
 By default, `allowed` does _not_ check method calls because it slows down the process.
 You can enable these checks with option `-m` or `--methods`:

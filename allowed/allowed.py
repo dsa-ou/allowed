@@ -15,14 +15,21 @@ py_checked = 0  # number of Python files checked
 nb_checked = 0  # number of notebooks checked
 unchecked = 0  # number of .py and .ipynb files skipped due to syntax or other errors
 
-try:
-    import pytype
-    from pytype.tools.annotate_ast import annotate_ast
+PYTHON_VERSION = sys.version_info[:2]
 
-    PYTYPE_OPTIONS = pytype.config.Options.create(python_version=(3, 10))
-    PYTYPE_INSTALLED = True
-except ImportError:
+# pytype works for 3.8 to 3.11 and allowed for >=3.10, when `ast` module changed
+if PYTHON_VERSION in [(3, 10), (3, 11)]:
+    try:
+        import pytype
+        from pytype.tools.annotate_ast import annotate_ast
+
+        PYTYPE_OPTIONS = pytype.config.Options.create(python_version=PYTHON_VERSION)
+        PYTYPE_INSTALLED = True
+    except ImportError:
+        PYTYPE_INSTALLED = False
+else:
     PYTYPE_INSTALLED = False
+
 try:
     from IPython.core.inputtransformer2 import TransformerManager as Transformer
 
@@ -675,8 +682,14 @@ def main() -> None:
     argparser.add_argument("file_or_folder", nargs="+", help="file or folder to check")
     args = argparser.parse_args()
 
+    if PYTHON_VERSION < (3, 10):
+        print("ERROR: can't check code (Python 3.10 or later needed)")
+        sys.exit(1)
     if args.methods and not PYTYPE_INSTALLED:
-        print("ERROR: can't check method calls (pytype not installed)")
+        if PYTHON_VERSION > (3, 11):
+            print("ERROR: can't check method calls (Python < 3.12 needed)")
+        else:
+            print("ERROR: can't check method calls (pytype not installed)")
         sys.exit(1)
     if args.unit < 0:
         print("ERROR: unit must be positive")
@@ -759,10 +772,7 @@ def main() -> None:
             "other occurrences of the listed constructs may exist (don't use option -f)",  # noqa: E501
         )
     if (py_checked or nb_checked) and not args.methods:
-        print(
-            "WARNING: didn't check method calls",
-            "(use option -m)" if PYTYPE_INSTALLED else "(pytype not installed)",
-        )
+        print("WARNING: didn't check method calls (use option -m if possible)")
     if nb_checked and not IPYTHON_INSTALLED:
         print(
             "WARNING: didn't check notebook cells with %-commands (IPython not installed)"  # noqa: E501
