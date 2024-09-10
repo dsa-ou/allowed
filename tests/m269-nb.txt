@@ -3,7 +3,6 @@
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/m269_image.py:1: PIL
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/m269_image.py:2: matplotlib.pyplot
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/m269_image.py:50: raise
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/m269_test.py:16: *name
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/m269_tm.py:4: isinstance()
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/01_Introduction/01_6_code.ipynb:cell_3:1: from import
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/01_Introduction/01_6_code.ipynb:cell_3:4: attribute
@@ -23,15 +22,13 @@
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/04_Iteration/04_2_strings.ipynb:cell_3:1: SYNTAX ERROR: invalid character '‘' (U+2018)
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/04_Iteration/04_2_strings.ipynb:cell_4:1: SYNTAX ERROR: unterminated string literal (detected at line 1)
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/04_Iteration/04_2_strings.ipynb:cell_5:1: SYNTAX ERROR: unterminated string literal (detected at line 1)
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/04_Iteration/04_7_reverse.ipynb:cell_5:3: typing
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/04_Iteration/04_7_reverse.ipynb:cell_5:17: *name
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/05_TMA01-1/05_3_coding_style.ipynb:cell_1:1: this
+/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/05_TMA01-1/05_3_coding_style.ipynb:cell_5:5: dict literal
+/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/05_TMA01-1/05_3_coding_style.ipynb:cell_5:8: pass
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/07_Ordered/07_2_stack_usage.ipynb:cell_1:1: SYNTAX ERROR: closing parenthesis ')' does not match opening parenthesis '['
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/09_Practice-1/09_5_sms.ipynb:cell_1:15: open()
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/09_Practice-1/09_5_sms.ipynb:cell_1:15: with
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/09_Practice-1/09_5_sms.ipynb:cell_1:19: int()
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/11_Search/11_2_factorisation.ipynb:cell_6:1: matplotlib.pyplot
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/11_Search/11_4_permutations.ipynb:cell_1:2: matplotlib.pyplot
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/17_Graphs_1/17_6_classes.ipynb:cell_1:3: networkx
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/17_Graphs_1/17_6_classes.ipynb:cell_1:125: type()
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/17_Graphs_1/17_7_traversal.ipynb:cell_10:2: random.draw
@@ -45,4 +42,4 @@
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/32_Answers/Answers_09_5_02.ipynb:cell_1:5: with
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/32_Answers/Answers_09_5_02.ipynb:cell_1:9: int()
 WARNING: other occurrences of the listed constructs may exist (don't use option -f)
-WARNING: didn't check method calls (use option -m)
+WARNING: didn't check method calls (use option -m if possible)

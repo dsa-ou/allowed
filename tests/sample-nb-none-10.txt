@@ -1,10 +1,8 @@
-10,15c10,17
+10,13c10,16
 < tests/sample.ipynb:cell_3:1: SYNTAX ERROR: invalid syntax
 < tests/sample.ipynb:cell_4:1: SYNTAX ERROR: invalid syntax
 < tests/sample.ipynb:cell_5:17: SYNTAX ERROR: invalid syntax
 < tests/sample.ipynb:cell_6:3: SYNTAX ERROR: invalid syntax
-< WARNING: didn't check method calls (pytype not installed)
-< WARNING: didn't check notebook cells with %-commands (IPython not installed)
 ---
 > tests/sample.ipynb:cell_5:7: break
 > tests/sample.ipynb:cell_5:12: continue
@@ -13,4 +11,5 @@
 > tests/sample.ipynb:cell_6:9: <<
 > tests/sample.ipynb:cell_6:10: math.e
 > tests/sample.ipynb:cell_6:11: type()
-> WARNING: didn't check method calls (use option -m)
+15d17
+< WARNING: didn't check notebook cells with %-commands (IPython not installed)

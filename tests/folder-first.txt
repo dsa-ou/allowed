@@ -146,25 +146,25 @@ allowed/allowed.py:8: os
 allowed/allowed.py:9: re
 allowed/allowed.py:10: sys
 allowed/allowed.py:11: pathlib
-allowed/allowed.py:18: try
-allowed/allowed.py:19: pytype
-allowed/allowed.py:20: pytype.tools.annotate_ast
-allowed/allowed.py:27: IPython.core.inputtransformer2
-allowed/allowed.py:128: dict comprehension
-allowed/allowed.py:264: if expression
-allowed/allowed.py:281: f-string
-allowed/allowed.py:309: :=
-allowed/allowed.py:310: int()
-allowed/allowed.py:406: hasattr()
-allowed/allowed.py:425: isinstance()
-allowed/allowed.py:430: type()
-allowed/allowed.py:530: global
-allowed/allowed.py:533: with
-allowed/allowed.py:696: break
-allowed/allowed.py:697: for-else
-allowed/allowed.py:704: raise
+allowed/allowed.py:22: try
+allowed/allowed.py:23: pytype
+allowed/allowed.py:24: pytype.tools.annotate_ast
+allowed/allowed.py:34: IPython.core.inputtransformer2
+allowed/allowed.py:135: dict comprehension
+allowed/allowed.py:271: if expression
+allowed/allowed.py:288: f-string
+allowed/allowed.py:316: :=
+allowed/allowed.py:317: int()
+allowed/allowed.py:413: hasattr()
+allowed/allowed.py:432: isinstance()
+allowed/allowed.py:437: type()
+allowed/allowed.py:537: global
+allowed/allowed.py:540: with
+allowed/allowed.py:709: break
+allowed/allowed.py:710: for-else
+allowed/allowed.py:717: raise
 INFO: checked 8 Python files and 1 notebook
 INFO: the 150 Python constructs listed above are not allowed
 INFO: didn't check 2 Python files or notebooks due to syntax or other errors
 WARNING: other occurrences of the listed constructs may exist (don't use option -f)
-WARNING: didn't check method calls (use option -m)
+WARNING: didn't check method calls (use option -m if possible)
