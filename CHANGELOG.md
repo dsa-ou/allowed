@@ -11,7 +11,9 @@ This project does *not* adhere to [Semantic Versioning](https://semver.org).
 ## [Unreleased](https://github.com/dsa-ou/allowed/compare/v1.5.1...HEAD)
 These changes are in the GitHub repository but not on [PyPI](https://pypi.org/project/allowed).
 
-Nothing yet.
+<!-- Nothing yet. -->
+### Fixed
+- option `-m` now works with Python 3.12 and most recent pytype
 
 ## [1.5.1](https://github.com/dsa-ou/allowed/compare/v1.5.0...v1.5.1) - 2024-09-10
 ### Fixed

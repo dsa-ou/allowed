@@ -17,13 +17,16 @@ unchecked = 0  # number of .py and .ipynb files skipped due to syntax or other e
 
 PYTHON_VERSION = sys.version_info[:2]
 
-# pytype works for 3.8 to 3.11 and allowed for >=3.10, when `ast` module changed
-if PYTHON_VERSION in [(3, 10), (3, 11)]:
+# pytype works for <= 3.12 and allowed for >= 3.10, when `ast` module changed
+if PYTHON_VERSION in [(3, 10), (3, 11), (3, 12)]:
     try:
         import pytype
         from pytype.tools.annotate_ast import annotate_ast
 
-        PYTYPE_OPTIONS = pytype.config.Options.create(python_version=PYTHON_VERSION)
+        # configuration for 3.12 crashes when annotating AST with comprehensions
+        PYTYPE_OPTIONS = pytype.config.Options.create(
+            python_version=min((3, 11), PYTHON_VERSION)
+        )
         PYTYPE_INSTALLED = True
     except ImportError:
         PYTYPE_INSTALLED = False
@@ -244,6 +247,8 @@ BUILTINS = {
     "zip",
 }
 
+# types that pytype reports in lowercase since 2024.10.11
+BUILTIN_TYPES = ("Dict", "List", "Set", "Tuple")
 
 # ----- check configuration -----
 
@@ -385,6 +390,8 @@ def get_methods(last_unit: int) -> dict[str, list[str]]:
     for unit, methods in METHODS.items():
         if not last_unit or unit <= last_unit:
             for datatype, names in methods.items():
+                if datatype in BUILTIN_TYPES:
+                    datatype = datatype.lower()
                 if datatype in allowed:
                     allowed[datatype].extend(names)
                 else:
@@ -479,9 +486,11 @@ def check_tree(
             elif hasattr(name, "resolved_annotation"):  # noqa: SIM102
                 if matched := re.match(r"[a-zA-Z.]*", name.resolved_annotation):
                     type_name = matched.group()
+                    if type_name in BUILTIN_TYPES:
+                        type_name = type_name.lower()
                     if type_name in methods and attribute not in methods[type_name]:
                         cell, line = location(name.lineno, line_cell_map)
-                        message = f"{type_name.lower()}.{attribute}()"
+                        message = f"{type_name}.{attribute}()"
                         errors.append((cell, line, message))
         elif isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
             function = node.func.id
@@ -686,8 +695,8 @@ def main() -> None:
         print("ERROR: can't check code (Python 3.10 or later needed)")
         sys.exit(1)
     if args.methods and not PYTYPE_INSTALLED:
-        if PYTHON_VERSION > (3, 11):
-            print("ERROR: can't check method calls (Python < 3.12 needed)")
+        if PYTHON_VERSION > (3, 12):
+            print("ERROR: can't check method calls (Python < 3.13 needed)")
         else:
             print("ERROR: can't check method calls (pytype not installed)")
         sys.exit(1)

@@ -123,9 +123,17 @@ make lint
 ```bash
 make run_tests
 ```
-> This command runs all the project's tests.
-> Some of the tests check the behaviour of `allowed` without IPython or pytype.
-> For that, they require your global environment to _not_ have those packages installed.
+> This command runs some tests within the created Poetry environment
+> and other tests in the current environment. The latter will only pass if
+> your environment has Python 3.10 to 3.12 installed but _not_ IPython or pytype.
+
+If you have a virtual environment with a specific version of Python and pytype
+you want to test, activate that environment and then type
+```bash
+tests/tests.sh run
+```
+> This executes the same tests as for the Poetry environment, but runs them
+> in the current environment instead.
 
 Be sure to resolve any errors that arise before moving on to the next step.
 
