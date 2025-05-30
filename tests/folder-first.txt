@@ -149,20 +149,20 @@ allowed/allowed.py:11: pathlib
 allowed/allowed.py:22: try
 allowed/allowed.py:23: pytype
 allowed/allowed.py:24: pytype.tools.annotate_ast
-allowed/allowed.py:34: IPython.core.inputtransformer2
-allowed/allowed.py:135: dict comprehension
-allowed/allowed.py:271: if expression
-allowed/allowed.py:288: f-string
-allowed/allowed.py:316: :=
-allowed/allowed.py:317: int()
-allowed/allowed.py:413: hasattr()
-allowed/allowed.py:432: isinstance()
-allowed/allowed.py:437: type()
-allowed/allowed.py:537: global
-allowed/allowed.py:540: with
-allowed/allowed.py:709: break
-allowed/allowed.py:710: for-else
-allowed/allowed.py:717: raise
+allowed/allowed.py:37: IPython.core.inputtransformer2
+allowed/allowed.py:138: dict comprehension
+allowed/allowed.py:276: if expression
+allowed/allowed.py:293: f-string
+allowed/allowed.py:321: :=
+allowed/allowed.py:322: int()
+allowed/allowed.py:420: hasattr()
+allowed/allowed.py:439: isinstance()
+allowed/allowed.py:444: type()
+allowed/allowed.py:546: global
+allowed/allowed.py:549: with
+allowed/allowed.py:718: break
+allowed/allowed.py:719: for-else
+allowed/allowed.py:726: raise
 INFO: checked 8 Python files and 1 notebook
 INFO: the 150 Python constructs listed above are not allowed
 INFO: didn't check 2 Python files or notebooks due to syntax or other errors

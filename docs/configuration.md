@@ -47,6 +47,7 @@ means that unit 2 introduces names (identifiers), the plus operator and the buil
 For the possible syntactical elements, see dictionary `SYNTAX` in
 [`allowed.py`](https://github.com/dsa-ou/allowed/blob/main/allowed/allowed.py).
 For the possible built-in functions, see set `BUILTINS` in the same file.
+Only a subset of the Python 3.10 language is currently supported.
 
 The various uses of a construct can't be individually allowed or disallowed.
 For example, you can't allow integer addition
