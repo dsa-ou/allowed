@@ -13,7 +13,10 @@
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/02_Sequence/02_4_assignments.ipynb:cell_6:1: SYNTAX ERROR: invalid syntax
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/02_Sequence/02_4_assignments.ipynb:cell_8:1: SYNTAX ERROR: invalid character '’' (U+2019)
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/02_Sequence/02_4_assignments.ipynb:cell_9:1: SYNTAX ERROR: unterminated string literal (detected at line 1)
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/02_Sequence/02_6_py_functions.ipynb:33: PYTYPE ERROR: 'return' outside function
+/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/02_Sequence/02_6_py_functions.ipynb: WARNING: method calls will not be checked
+/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/02_Sequence/02_6_py_functions.ipynb:cell_6:1: SYNTAX ERROR: invalid syntax
+/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/02_Sequence/02_6_py_functions.ipynb:cell_9:1: SYNTAX ERROR: invalid syntax
+/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/02_Sequence/02_6_py_functions.ipynb:cell_10:2: SYNTAX ERROR: expected an indented block after function definition on line 1
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/03_Selection/03_3_expressions.ipynb:cell_11:1: SYNTAX ERROR: cannot assign to True
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/03_Selection/03_3_expressions.ipynb:cell_12:1: SYNTAX ERROR: invalid syntax
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/03_Selection/03_3_expressions.ipynb:cell_15:1: SYNTAX ERROR: invalid syntax
@@ -25,7 +28,7 @@
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/05_TMA01-1/05_3_coding_style.ipynb:cell_5:7: list.count()
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/05_TMA01-1/05_3_coding_style.ipynb:cell_5:8: pass
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/07_Ordered/07_2_stack_usage.ipynb:cell_1:1: SYNTAX ERROR: closing parenthesis ')' does not match opening parenthesis '['
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/08_Unordered/08_2_dictionary.ipynb: PYTYPE ERROR: Pytype error: TypeError: unhashable type: 'list'
+/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/08_Unordered/08_2_dictionary.ipynb: WARNING: method calls will not be checked
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/09_Practice-1/09_5_sms.ipynb:cell_1:15: open()
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/09_Practice-1/09_5_sms.ipynb:cell_1:15: with
 /Users/mw4687/GitHub/M269-NE/book-24j/notebooks/09_Practice-1/09_5_sms.ipynb:cell_1:17: str.split()

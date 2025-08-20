@@ -23,10 +23,7 @@ if PYTHON_VERSION in [(3, 10), (3, 11), (3, 12)]:
         import pytype
         from pytype.tools.annotate_ast import annotate_ast
 
-        # configuration for 3.12 crashes when annotating AST with comprehensions
-        PYTYPE_OPTIONS = pytype.config.Options.create(
-            python_version=min((3, 11), PYTHON_VERSION)
-        )
+        PYTYPE_OPTIONS = pytype.config.Options.create(python_version=PYTHON_VERSION)
         PYTYPE_INSTALLED = True
     except ImportError:
         PYTYPE_INSTALLED = False
@@ -553,10 +550,12 @@ def check_file(
                 source = file.read()
                 line_cell_map = []
                 errors = []
+        tree = ast.parse(source)
         if check_method_calls and METHODS:
-            tree = annotate_ast.annotate_source(source, ast, PYTYPE_OPTIONS)
-        else:
-            tree = ast.parse(source)
+            try:
+                tree = annotate_ast.annotate_source(source, ast, PYTYPE_OPTIONS)
+            except annotate_ast.PytypeError as error:
+                print(f"{filename}: WARNING: method calls will not be checked")
         check_tree(tree, constructs, source.splitlines(), line_cell_map, errors)
         errors.sort()
         messages = set()  # for --first option: the unique messages (except errors)

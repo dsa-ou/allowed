@@ -83,6 +83,9 @@ You can enable these checks with option `-m` or `--methods`:
 ```bash
 allowed -m file1.py notebook.ipynb
 ```
+If `pytype` can't process the code for some reason, you get a warning that
+method calls won't be checked (other checks will be done as usual).
+In Python 3.12, method calls won't be checked in code using comprehensions.
 
 ### Ignoring specific lines
 

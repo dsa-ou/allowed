@@ -11,7 +11,12 @@ This project does *not* adhere to [Semantic Versioning](https://semver.org).
 ## [Unreleased](https://github.com/dsa-ou/allowed/compare/v1.5.2...HEAD)
 These changes are in the GitHub repository but not on [PyPI](https://pypi.org/project/allowed).
 
-Nothing yet.
+<!-- Nothing yet. -->
+### Fixed
+- option `-m` doesn't lead to a crash if only Python 3.12 is installed
+
+### Changed
+- option `-m` is ignored if pytype can't parse the code
 
 ## [1.5.2](https://github.com/dsa-ou/allowed/compare/v1.5.1...v1.5.2) - 2025-05-30
 ### Fixed
