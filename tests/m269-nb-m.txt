@@ -1,50 +1,50 @@
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/m269_digraph.py:2: networkx
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/m269_digraph.py:124: type()
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/m269_image.py:1: PIL
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/m269_image.py:2: matplotlib.pyplot
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/m269_image.py:50: raise
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/m269_tm.py:4: isinstance()
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/01_Introduction/01_6_code.ipynb:cell_3:1: from import
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/01_Introduction/01_6_code.ipynb:cell_3:4: attribute
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/01_Introduction/01_6_code.ipynb:cell_3:5: keyword argument
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/01_Introduction/01_6_code.ipynb:cell_5:4: SYNTAX ERROR: unexpected indent
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/02_Sequence/02_1_numbers.ipynb:cell_8:1: maths
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/02_Sequence/02_2_operations.ipynb:cell_17:1: SYNTAX ERROR: invalid syntax
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/02_Sequence/02_4_assignments.ipynb:cell_6:1: SYNTAX ERROR: invalid syntax
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/02_Sequence/02_4_assignments.ipynb:cell_8:1: SYNTAX ERROR: invalid character '’' (U+2019)
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/02_Sequence/02_4_assignments.ipynb:cell_9:1: SYNTAX ERROR: unterminated string literal (detected at line 1)
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/02_Sequence/02_6_py_functions.ipynb: WARNING: method calls will not be checked
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/02_Sequence/02_6_py_functions.ipynb:cell_6:1: SYNTAX ERROR: invalid syntax
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/02_Sequence/02_6_py_functions.ipynb:cell_9:1: SYNTAX ERROR: invalid syntax
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/02_Sequence/02_6_py_functions.ipynb:cell_10:2: SYNTAX ERROR: expected an indented block after function definition on line 1
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/03_Selection/03_3_expressions.ipynb:cell_11:1: SYNTAX ERROR: cannot assign to True
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/03_Selection/03_3_expressions.ipynb:cell_12:1: SYNTAX ERROR: invalid syntax
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/03_Selection/03_3_expressions.ipynb:cell_15:1: SYNTAX ERROR: invalid syntax
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/04_Iteration/04_2_strings.ipynb:cell_3:1: SYNTAX ERROR: invalid character '‘' (U+2018)
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/04_Iteration/04_2_strings.ipynb:cell_4:1: SYNTAX ERROR: unterminated string literal (detected at line 1)
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/04_Iteration/04_2_strings.ipynb:cell_5:1: SYNTAX ERROR: unterminated string literal (detected at line 1)
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/05_TMA01-1/05_3_coding_style.ipynb:cell_1:1: this
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/05_TMA01-1/05_3_coding_style.ipynb:cell_5:5: dict literal
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/05_TMA01-1/05_3_coding_style.ipynb:cell_5:7: list.count()
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/05_TMA01-1/05_3_coding_style.ipynb:cell_5:8: pass
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/07_Ordered/07_2_stack_usage.ipynb:cell_1:1: SYNTAX ERROR: closing parenthesis ')' does not match opening parenthesis '['
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/08_Unordered/08_2_dictionary.ipynb: WARNING: method calls will not be checked
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/09_Practice-1/09_5_sms.ipynb:cell_1:15: open()
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/09_Practice-1/09_5_sms.ipynb:cell_1:15: with
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/09_Practice-1/09_5_sms.ipynb:cell_1:17: str.split()
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/09_Practice-1/09_5_sms.ipynb:cell_1:19: int()
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/17_Graphs_1/17_6_classes.ipynb:cell_1:3: networkx
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/17_Graphs_1/17_6_classes.ipynb:cell_1:125: type()
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/17_Graphs_1/17_7_traversal.ipynb:cell_10:2: random.draw
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/17_Graphs_1/17_8_bfs_dfs.ipynb:cell_12:2: random.draw
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/18_Greed/18_2_weighted_graph.ipynb:cell_2:67: type()
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/22_Backtracking/22_3_trackword.ipynb:cell_1:2: open()
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/22_Backtracking/22_3_trackword.ipynb:cell_1:2: with
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/22_Backtracking/22_3_trackword.ipynb:cell_1:4: str.strip()
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/22_Backtracking/22_4_optimising.ipynb:cell_3:5: sum()
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/27_Computability/27_1_turing_machine.ipynb:cell_3:5: isinstance()
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/32_Answers/Answers_09_5_02.ipynb:cell_1:5: open()
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/32_Answers/Answers_09_5_02.ipynb:cell_1:5: with
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/32_Answers/Answers_09_5_02.ipynb:cell_1:7: str.split()
-/Users/mw4687/GitHub/M269-NE/book-24j/notebooks/32_Answers/Answers_09_5_02.ipynb:cell_1:9: int()
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/m269_digraph.py:2: networkx
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/m269_digraph.py:125: isinstance()
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/m269_image.py:1: PIL
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/m269_image.py:2: matplotlib.pyplot
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/m269_image.py:50: raise
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/m269_tm.py:4: check_table
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/m269_tm.py:26: isinstance()
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/m269_tm.py:39: f-string
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/m269_tm.py:91: is not
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/m269_tm.py:221: try
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/m269_tm.py:222: *name
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/02_Sequence/02_1_numbers.ipynb:cell_8:1: maths
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/02_Sequence/02_2_operations.ipynb:cell_17:1: SYNTAX ERROR: invalid syntax
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/02_Sequence/02_4_assignments.ipynb:cell_6:1: SYNTAX ERROR: invalid syntax
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/02_Sequence/02_4_assignments.ipynb:cell_8:1: SYNTAX ERROR: invalid character '’' (U+2019)
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/02_Sequence/02_4_assignments.ipynb:cell_9:1: SYNTAX ERROR: unterminated string literal (detected at line 1)
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/02_Sequence/02_6_py_functions.ipynb: WARNING: method calls will not be checked
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/02_Sequence/02_6_py_functions.ipynb:cell_6:1: SYNTAX ERROR: invalid syntax
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/02_Sequence/02_6_py_functions.ipynb:cell_9:1: SYNTAX ERROR: invalid syntax
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/02_Sequence/02_6_py_functions.ipynb:cell_10:2: SYNTAX ERROR: expected an indented block after function definition on line 1
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/03_Selection/03_3_expressions.ipynb:cell_11:1: SYNTAX ERROR: cannot assign to True
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/03_Selection/03_3_expressions.ipynb:cell_12:1: SYNTAX ERROR: invalid syntax
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/03_Selection/03_3_expressions.ipynb:cell_15:1: SYNTAX ERROR: invalid syntax
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/04_Iteration/04_2_strings.ipynb:cell_3:1: SYNTAX ERROR: invalid character '‘' (U+2018)
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/04_Iteration/04_2_strings.ipynb:cell_4:1: SYNTAX ERROR: unterminated string literal (detected at line 1)
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/04_Iteration/04_2_strings.ipynb:cell_5:1: SYNTAX ERROR: unterminated string literal (detected at line 1)
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/05_TMA01-1/05_3_coding_style.ipynb:cell_1:1: this
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/05_TMA01-1/05_3_coding_style.ipynb:cell_5:1: platform
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/05_TMA01-1/05_3_coding_style.ipynb:cell_7:6: dict literal
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/05_TMA01-1/05_3_coding_style.ipynb:cell_7:8: list.count()
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/05_TMA01-1/05_3_coding_style.ipynb:cell_7:9: pass
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/07_Ordered/07_2_stack_usage.ipynb:cell_1:1: SYNTAX ERROR: closing parenthesis ')' does not match opening parenthesis '['
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/08_Unordered/08_2_dictionary.ipynb: WARNING: method calls will not be checked
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/09_Practice-1/09_5_sms.ipynb:cell_1:16: open()
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/09_Practice-1/09_5_sms.ipynb:cell_1:16: with
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/09_Practice-1/09_5_sms.ipynb:cell_1:18: str.split()
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/09_Practice-1/09_5_sms.ipynb:cell_1:20: int()
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/17_Graphs_1/17_6_classes.ipynb:cell_1:3: networkx
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/17_Graphs_1/17_6_classes.ipynb:cell_1:127: isinstance()
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/17_Graphs_1/17_7_traversal.ipynb:cell_10:2: random.draw
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/17_Graphs_1/17_8_bfs_dfs.ipynb:cell_12:2: random.draw
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/18_Greed/18_2_weighted_graph.ipynb:cell_2:68: isinstance()
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/22_Backtracking/22_3_trackword.ipynb:cell_1:2: open()
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/22_Backtracking/22_3_trackword.ipynb:cell_1:2: with
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/22_Backtracking/22_3_trackword.ipynb:cell_1:4: str.strip()
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/32_Answers/Answers_09_5_02.ipynb:cell_1:4: open()
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/32_Answers/Answers_09_5_02.ipynb:cell_1:4: with
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/32_Answers/Answers_09_5_02.ipynb:cell_1:6: str.split()
+/Users/mw4687/GitHub/M269-NE/book-25j/notebooks/32_Answers/Answers_09_5_02.ipynb:cell_1:8: int()
 WARNING: other occurrences of the listed constructs may exist (don't use option -f)

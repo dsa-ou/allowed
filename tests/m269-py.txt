@@ -1,33 +1,35 @@
-/Users/mw4687/GitHub/M269-NE/book-24j/python/m269_digraph.py:2: networkx
-/Users/mw4687/GitHub/M269-NE/book-24j/python/m269_digraph.py:124: type()
-/Users/mw4687/GitHub/M269-NE/book-24j/python/m269_image.py:1: PIL
-/Users/mw4687/GitHub/M269-NE/book-24j/python/m269_image.py:2: matplotlib.pyplot
-/Users/mw4687/GitHub/M269-NE/book-24j/python/m269_image.py:50: raise
-/Users/mw4687/GitHub/M269-NE/book-24j/python/m269_tm.py:4: isinstance()
-/Users/mw4687/GitHub/M269-NE/book-24j/python/01_Introduction/01_6_code.py:46: SYNTAX ERROR: unexpected indent
-/Users/mw4687/GitHub/M269-NE/book-24j/python/02_Sequence/02_1_numbers.py:49: maths
-/Users/mw4687/GitHub/M269-NE/book-24j/python/02_Sequence/02_2_operations.py:94: SYNTAX ERROR: invalid syntax
-/Users/mw4687/GitHub/M269-NE/book-24j/python/02_Sequence/02_4_assignments.py:66: SYNTAX ERROR: invalid character '’' (U+2019)
-/Users/mw4687/GitHub/M269-NE/book-24j/python/02_Sequence/02_6_py_functions.py:54: SYNTAX ERROR: invalid syntax
-/Users/mw4687/GitHub/M269-NE/book-24j/python/03_Selection/03_3_expressions.py:65: SYNTAX ERROR: cannot assign to True
-/Users/mw4687/GitHub/M269-NE/book-24j/python/04_Iteration/04_2_strings.py:29: SYNTAX ERROR: invalid character '‘' (U+2018)
-/Users/mw4687/GitHub/M269-NE/book-24j/python/05_TMA01-1/05_3_coding_style.py:39: SYNTAX ERROR: expected an indented block after 'if' statement on line 37
-/Users/mw4687/GitHub/M269-NE/book-24j/python/07_Ordered/07_2_stack_usage.py:17: SYNTAX ERROR: closing parenthesis ')' does not match opening parenthesis '['
-/Users/mw4687/GitHub/M269-NE/book-24j/python/09_Practice-1/09_5_sms.py:35: open()
-/Users/mw4687/GitHub/M269-NE/book-24j/python/09_Practice-1/09_5_sms.py:35: with
-/Users/mw4687/GitHub/M269-NE/book-24j/python/09_Practice-1/09_5_sms.py:39: int()
-/Users/mw4687/GitHub/M269-NE/book-24j/python/17_Graphs_1/17_6_classes.py:19: networkx
-/Users/mw4687/GitHub/M269-NE/book-24j/python/17_Graphs_1/17_6_classes.py:141: type()
-/Users/mw4687/GitHub/M269-NE/book-24j/python/17_Graphs_1/17_7_traversal.py:96: random.draw
-/Users/mw4687/GitHub/M269-NE/book-24j/python/17_Graphs_1/17_8_bfs_dfs.py:111: random.draw
-/Users/mw4687/GitHub/M269-NE/book-24j/python/18_Greed/18_2_weighted_graph.py:90: type()
-/Users/mw4687/GitHub/M269-NE/book-24j/python/22_Backtracking/22_3_trackword.py:16: open()
-/Users/mw4687/GitHub/M269-NE/book-24j/python/22_Backtracking/22_3_trackword.py:16: with
-/Users/mw4687/GitHub/M269-NE/book-24j/python/22_Backtracking/22_4_optimising.py:37: sum()
-/Users/mw4687/GitHub/M269-NE/book-24j/python/23_Dynamic_Programming/23_1_fibonacci.py:50: SYNTAX ERROR: expected an indented block after 'for' statement on line 43
-/Users/mw4687/GitHub/M269-NE/book-24j/python/27_Computability/27_1_turing_machine.py:60: isinstance()
-/Users/mw4687/GitHub/M269-NE/book-24j/python/32_Answers/Answers_09_5_02.py:19: open()
-/Users/mw4687/GitHub/M269-NE/book-24j/python/32_Answers/Answers_09_5_02.py:19: with
-/Users/mw4687/GitHub/M269-NE/book-24j/python/32_Answers/Answers_09_5_02.py:23: int()
+/Users/mw4687/GitHub/M269-NE/book-25j/python/m269_digraph.py:2: networkx
+/Users/mw4687/GitHub/M269-NE/book-25j/python/m269_digraph.py:125: isinstance()
+/Users/mw4687/GitHub/M269-NE/book-25j/python/m269_image.py:1: PIL
+/Users/mw4687/GitHub/M269-NE/book-25j/python/m269_image.py:2: matplotlib.pyplot
+/Users/mw4687/GitHub/M269-NE/book-25j/python/m269_image.py:50: raise
+/Users/mw4687/GitHub/M269-NE/book-25j/python/m269_tm.py:4: check_table
+/Users/mw4687/GitHub/M269-NE/book-25j/python/m269_tm.py:26: isinstance()
+/Users/mw4687/GitHub/M269-NE/book-25j/python/m269_tm.py:39: f-string
+/Users/mw4687/GitHub/M269-NE/book-25j/python/m269_tm.py:91: is not
+/Users/mw4687/GitHub/M269-NE/book-25j/python/m269_tm.py:221: try
+/Users/mw4687/GitHub/M269-NE/book-25j/python/m269_tm.py:222: *name
+/Users/mw4687/GitHub/M269-NE/book-25j/python/02_Sequence/02_1_numbers.py:49: maths
+/Users/mw4687/GitHub/M269-NE/book-25j/python/02_Sequence/02_2_operations.py:94: SYNTAX ERROR: invalid syntax
+/Users/mw4687/GitHub/M269-NE/book-25j/python/02_Sequence/02_4_assignments.py:66: SYNTAX ERROR: invalid character '’' (U+2019)
+/Users/mw4687/GitHub/M269-NE/book-25j/python/02_Sequence/02_6_py_functions.py:54: SYNTAX ERROR: invalid syntax
+/Users/mw4687/GitHub/M269-NE/book-25j/python/03_Selection/03_3_expressions.py:65: SYNTAX ERROR: cannot assign to True
+/Users/mw4687/GitHub/M269-NE/book-25j/python/04_Iteration/04_2_strings.py:29: SYNTAX ERROR: invalid character '‘' (U+2018)
+/Users/mw4687/GitHub/M269-NE/book-25j/python/05_TMA01-1/05_3_coding_style.py:50: SYNTAX ERROR: expected an indented block after 'if' statement on line 48
+/Users/mw4687/GitHub/M269-NE/book-25j/python/07_Ordered/07_2_stack_usage.py:17: SYNTAX ERROR: closing parenthesis ')' does not match opening parenthesis '['
+/Users/mw4687/GitHub/M269-NE/book-25j/python/09_Practice-1/09_5_sms.py:36: open()
+/Users/mw4687/GitHub/M269-NE/book-25j/python/09_Practice-1/09_5_sms.py:36: with
+/Users/mw4687/GitHub/M269-NE/book-25j/python/09_Practice-1/09_5_sms.py:40: int()
+/Users/mw4687/GitHub/M269-NE/book-25j/python/17_Graphs_1/17_6_classes.py:19: networkx
+/Users/mw4687/GitHub/M269-NE/book-25j/python/17_Graphs_1/17_6_classes.py:143: isinstance()
+/Users/mw4687/GitHub/M269-NE/book-25j/python/17_Graphs_1/17_7_traversal.py:96: random.draw
+/Users/mw4687/GitHub/M269-NE/book-25j/python/17_Graphs_1/17_8_bfs_dfs.py:113: random.draw
+/Users/mw4687/GitHub/M269-NE/book-25j/python/18_Greed/18_2_weighted_graph.py:91: isinstance()
+/Users/mw4687/GitHub/M269-NE/book-25j/python/22_Backtracking/22_3_trackword.py:16: open()
+/Users/mw4687/GitHub/M269-NE/book-25j/python/22_Backtracking/22_3_trackword.py:16: with
+/Users/mw4687/GitHub/M269-NE/book-25j/python/23_Dynamic_Programming/23_1_fibonacci.py:53: SYNTAX ERROR: expected an indented block after 'for' statement on line 46
+/Users/mw4687/GitHub/M269-NE/book-25j/python/32_Answers/Answers_09_5_02.py:18: open()
+/Users/mw4687/GitHub/M269-NE/book-25j/python/32_Answers/Answers_09_5_02.py:18: with
+/Users/mw4687/GitHub/M269-NE/book-25j/python/32_Answers/Answers_09_5_02.py:22: int()
 WARNING: other occurrences of the listed constructs may exist (don't use option -f)
 WARNING: didn't check method calls (use option -m if possible)

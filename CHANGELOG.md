@@ -18,6 +18,12 @@ These changes are in the GitHub repository but not on [PyPI](https://pypi.org/pr
 ### Changed
 - option `-m` is ignored if pytype can't parse the code
 
+### Added
+- configuration file `m269-25j.json`
+
+### Development
+- run M269 tests on 25J version
+
 ## [1.5.2](https://github.com/dsa-ou/allowed/compare/v1.5.1...v1.5.2) - 2025-05-30
 ### Fixed
 - option `-m` now works with Python 3.12 and most recent pytype
