@@ -550,12 +550,13 @@ def check_file(
                 source = file.read()
                 line_cell_map = []
                 errors = []
-        tree = ast.parse(source)
-        if check_method_calls and METHODS:
+        tree = ast.parse(source)  # raises exception on syntax errors
+        if check_method_calls and METHODS:  # no syntax error: try to annotate AST
             try:
                 tree = annotate_ast.annotate_source(source, ast, PYTYPE_OPTIONS)
             except annotate_ast.PytypeError as error:
                 print(f"{filename}: WARNING: method calls will not be checked")
+                # proceed with the non-annotated tree
         check_tree(tree, constructs, source.splitlines(), line_cell_map, errors)
         errors.sort()
         messages = set()  # for --first option: the unique messages (except errors)
