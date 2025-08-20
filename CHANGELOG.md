@@ -8,10 +8,12 @@ This project does *not* adhere to [Semantic Versioning](https://semver.org).
 
 <!-- Per release: Added / Changed / Deprecated / Removed / Fixed / Security -->
 
-## [Unreleased](https://github.com/dsa-ou/allowed/compare/v1.5.2...HEAD)
+## [Unreleased](https://github.com/dsa-ou/allowed/compare/v1.5.3...HEAD)
 These changes are in the GitHub repository but not on [PyPI](https://pypi.org/project/allowed).
 
-<!-- Nothing yet. -->
+Nothing yet.
+
+## [1.5.3](https://github.com/dsa-ou/allowed/compare/v1.5.2...v1.5.3) - 2025-08-20
 ### Fixed
 - option `-m` doesn't lead to a crash if only Python 3.12 is installed
 
@@ -22,7 +24,7 @@ These changes are in the GitHub repository but not on [PyPI](https://pypi.org/pr
 - configuration file `m269-25j.json`
 
 ### Development
-- run M269 tests on 25J version
+- run M269 tests on 25J book
 
 ## [1.5.2](https://github.com/dsa-ou/allowed/compare/v1.5.1...v1.5.2) - 2025-05-30
 ### Fixed
