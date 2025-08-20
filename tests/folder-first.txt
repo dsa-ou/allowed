@@ -160,9 +160,9 @@ allowed/allowed.py:436: isinstance()
 allowed/allowed.py:441: type()
 allowed/allowed.py:543: global
 allowed/allowed.py:546: with
-allowed/allowed.py:719: break
-allowed/allowed.py:720: for-else
-allowed/allowed.py:727: raise
+allowed/allowed.py:718: break
+allowed/allowed.py:719: for-else
+allowed/allowed.py:726: raise
 INFO: checked 8 Python files and 1 notebook
 INFO: the 150 Python constructs listed above are not allowed
 INFO: didn't check 2 Python files or notebooks due to syntax or other errors
