@@ -17,7 +17,7 @@
 /Users/mw4687/GitHub/M269-NE/book-25j/python/04_Iteration/04_2_strings.py:29: SYNTAX ERROR: invalid character '‘' (U+2018)
 /Users/mw4687/GitHub/M269-NE/book-25j/python/05_TMA01-1/05_3_coding_style.py:50: SYNTAX ERROR: expected an indented block after 'if' statement on line 48
 /Users/mw4687/GitHub/M269-NE/book-25j/python/07_Ordered/07_2_stack_usage.py:17: SYNTAX ERROR: closing parenthesis ')' does not match opening parenthesis '['
-/Users/mw4687/GitHub/M269-NE/book-25j/python/08_Unordered/08_2_dictionary.py: WARNING: method calls will not be checked
+/Users/mw4687/GitHub/M269-NE/book-25j/python/08_Unordered/08_2_dictionary.py: WARNING: didn't check method calls
 /Users/mw4687/GitHub/M269-NE/book-25j/python/09_Practice-1/09_5_sms.py:36: open()
 /Users/mw4687/GitHub/M269-NE/book-25j/python/09_Practice-1/09_5_sms.py:36: with
 /Users/mw4687/GitHub/M269-NE/book-25j/python/09_Practice-1/09_5_sms.py:38: str.split()

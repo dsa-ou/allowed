@@ -8,11 +8,16 @@ This project does *not* adhere to [Semantic Versioning](https://semver.org).
 
 <!-- Per release: Added / Changed / Deprecated / Removed / Fixed / Security -->
 
-## [Unreleased](https://github.com/dsa-ou/allowed/compare/v1.5.3...HEAD)
+## [Unreleased](https://github.com/dsa-ou/allowed/compare/v1.5.4...HEAD)
 These changes are in the GitHub repository but not on [PyPI](https://pypi.org/project/allowed).
 
 Nothing yet.
 
+## [1.5.4](https://github.com/dsa-ou/allowed/compare/v1.5.3...v1.5.4) - 2025-08-21
+### Changed
+- make warning message clearer when displayed by algoesup in a notebook cell
+
+### Changed
 ## [1.5.3](https://github.com/dsa-ou/allowed/compare/v1.5.2...v1.5.3) - 2025-08-20
 ### Fixed
 - option `-m` doesn't lead to a crash if only Python 3.12 is installed

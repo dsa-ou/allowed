@@ -1,6 +1,6 @@
 """Check that Python and notebook files only use the allowed constructs."""
 
-__version__ = "1.5.3"  # same as in pyproject.toml
+__version__ = "1.5.4"  # same as in pyproject.toml
 
 import argparse
 import ast
@@ -555,7 +555,7 @@ def check_file(
             try:
                 tree = annotate_ast.annotate_source(source, ast, PYTYPE_OPTIONS)
             except annotate_ast.PytypeError as error:
-                print(f"{filename}: WARNING: method calls will not be checked")
+                print(f"{filename}: WARNING: didn't check method calls")
                 # proceed with the non-annotated tree
         check_tree(tree, constructs, source.splitlines(), line_cell_map, errors)
         errors.sort()
