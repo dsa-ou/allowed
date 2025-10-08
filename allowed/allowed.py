@@ -9,6 +9,7 @@ import os
 import re
 import sys
 from pathlib import Path
+from pyrefly_client import PyreflyClient
 
 issues = 0  # number of issues (unknown constructs) found
 py_checked = 0  # number of Python files checked
@@ -16,19 +17,6 @@ nb_checked = 0  # number of notebooks checked
 unchecked = 0  # number of .py and .ipynb files skipped due to syntax or other errors
 
 PYTHON_VERSION = sys.version_info[:2]
-
-# pytype works for <= 3.12 and allowed for >= 3.10, when `ast` module changed
-if PYTHON_VERSION in [(3, 10), (3, 11), (3, 12)]:
-    try:
-        import pytype
-        from pytype.tools.annotate_ast import annotate_ast
-
-        PYTYPE_OPTIONS = pytype.config.Options.create(python_version=PYTHON_VERSION)
-        PYTYPE_INSTALLED = True
-    except ImportError:
-        PYTYPE_INSTALLED = False
-else:
-    PYTYPE_INSTALLED = False
 
 try:
     from IPython.core.inputtransformer2 import TransformerManager as Transformer
@@ -428,6 +416,7 @@ def check_tree(
     source: list,
     line_cell_map: list,
     errors: list,
+    type_checker: PyreflyClient | None,
 ) -> None:
     """Check if tree only uses allowed constructs. Add violations to errors."""
     language, options, imports, functions, methods = constructs
@@ -480,21 +469,26 @@ def check_tree(
                     cell, line = location(node.lineno, line_cell_map)
                     message = f"{name.id}.{attribute}"
                     errors.append((cell, line, message))
-            elif hasattr(name, "resolved_annotation"):  # noqa: SIM102
-                if matched := re.match(r"[a-zA-Z.]*", name.resolved_annotation):
-                    type_name = matched.group()
-                    if type_name in BUILTIN_TYPES:
-                        type_name = type_name.lower()
-                    if type_name in methods and attribute not in methods[type_name]:
-                        cell, line = location(name.lineno, line_cell_map)
-                        message = f"{type_name}.{attribute}()"
-                        errors.append((cell, line, message))
-        elif isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
-            function = node.func.id
-            if function in BUILTINS and function not in functions:
-                cell, line = location(node.lineno, line_cell_map)
-                message = f"{function}()"
-                errors.append((cell, line, message))
+        elif isinstance(node, ast.Call):
+            if isinstance(node.func, ast.Attribute) and type_checker:
+                receiver = node.func.value
+                attribute = node.func.attr
+                lineno = receiver.lineno
+                # location somewhere on the attribute/method name
+                att_col = node.func.end_col_offset - 1
+                typ = type_checker.type_from_attribute((lineno - 1, att_col))
+                if typ in BUILTIN_TYPES:
+                    typ = typ.lower()
+                if typ in methods and attribute not in methods[typ]:
+                    cell, line = location(lineno, line_cell_map)
+                    message = f"{typ}.{attribute}()"
+                    errors.append((cell, line, message))
+            if isinstance(node.func, ast.Name):
+                function = node.func.id
+                if function in BUILTINS and function not in functions:
+                    cell, line = location(node.lineno, line_cell_map)
+                    message = f"{function}()"
+                    errors.append((cell, line, message))
         elif isinstance(node, ast.For) and node.orelse and "for else" not in options:
             # we assume `else:` is in the line before the first statement in that block
             cell, line = location(node.orelse[0].lineno - 1, line_cell_map)
@@ -551,13 +545,20 @@ def check_file(
                 line_cell_map = []
                 errors = []
         tree = ast.parse(source)  # raises exception on syntax errors
-        if check_method_calls and METHODS:  # no syntax error: try to annotate AST
+        client = None
+        if check_method_calls and METHODS:
             try:
-                tree = annotate_ast.annotate_source(source, ast, PYTYPE_OPTIONS)
-            except annotate_ast.PytypeError as error:
-                print(f"{filename}: WARNING: didn't check method calls")
-                # proceed with the non-annotated tree
-        check_tree(tree, constructs, source.splitlines(), line_cell_map, errors)
+                client = PyreflyClient(source)
+            except OSError as error:
+                print(f"OS ERROR: {error}")
+                sys.exit(1)
+        try:
+            check_tree(
+                tree, constructs, source.splitlines(), line_cell_map, errors, client
+            )
+        finally:
+            if client:
+                client.close()
         errors.sort()
         messages = set()  # for --first option: the unique messages (except errors)
         last_error = None
@@ -591,16 +592,6 @@ def check_file(
         unchecked += 1
     except ValueError as error:
         print(f"{filename}: VALUE ERROR: {error}")
-        unchecked += 1
-    except annotate_ast.PytypeError as error:
-        #  write 'file:n: error' instead of 'Error reading file ... at line n: error'
-        message = str(error)
-        if match := re.match(r"Error .* at line (\d+): (.*)", message):
-            line = int(match.group(1))
-            message = match.group(2)
-            print(f"{filename}:{line}: PYTYPE ERROR: {message}")
-        else:
-            print(f"{filename}: PYTYPE ERROR: {message}")
         unchecked += 1
 
 
@@ -693,12 +684,6 @@ def main() -> None:
 
     if PYTHON_VERSION < (3, 10):
         print("ERROR: can't check code (Python 3.10 or later needed)")
-        sys.exit(1)
-    if args.methods and not PYTYPE_INSTALLED:
-        if PYTHON_VERSION > (3, 12):
-            print("ERROR: can't check method calls (Python < 3.13 needed)")
-        else:
-            print("ERROR: can't check method calls (pytype not installed)")
         sys.exit(1)
     if args.unit < 0:
         print("ERROR: unit must be positive")

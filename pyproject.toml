@@ -9,12 +9,12 @@ repository = "https://github.com/dsa-ou/allowed"
 homepage = "https://dsa-ou.github.io/allowed"
 keywords = ["education"]
 classifiers = [
-    "Intended Audience :: Education",
-    "License :: OSI Approved :: BSD License",
-    "Programming Language :: Python :: 3.10",
-    "Topic :: Education",
-    "Operating System :: OS Independent",
-    ]
+  "Intended Audience :: Education",
+  "License :: OSI Approved :: BSD License",
+  "Programming Language :: Python :: 3.10",
+  "Topic :: Education",
+  "Operating System :: OS Independent",
+]
 
 [tool.poetry.urls]
 "Changelog" = "https://github.com/dsa-ou/allowed/blob/main/CHANGELOG.md"
@@ -27,7 +27,8 @@ ruff = "^0.1.11"
 mypy = "^1.8.0"
 bandit = "^1.7.6"
 ipython = "^8.13.1"
-pytype = {version = ">=2023.04.27", markers = "platform_system != 'Windows'"}
+pytype = { version = ">=2023.04.27", markers = "platform_system != 'Windows'" }
+pyrefly = "^0.36.2"
 
 [tool.poetry.scripts]
 allowed = "allowed.allowed:main"
@@ -37,18 +38,20 @@ target-version = "py310"
 
 [tool.ruff.lint]
 select = ["ALL"]
-ignore = [              # ignore these rules:
-    "ANN101",           # provide the type of `self`
-    "ANN401",           # don't use `Any`
-    "SIM110",           # simplify for-loops with all() or any()
-    "T201",             # don't use `print`
-    "ISC001", "COM812", # these rules may conflict with the formatter
-    "UP038",            # this rule leads to slower code
-    ]
+ignore = [ # ignore these rules:
+  "ANN101", # provide the type of `self`
+  "ANN401", # don't use `Any`
+  "SIM110", # simplify for-loops with all() or any()
+  "T201",   # don't use `print`
+  "ISC001",
+  "COM812", # these rules may conflict with the formatter
+  "UP038",  # this rule leads to slower code
+]
 
 [tool.ruff.lint.pydocstyle]
-convention = "pep257"   # this project's docstrings follow PEP 257
+convention = "pep257" # this project's docstrings follow PEP 257
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
