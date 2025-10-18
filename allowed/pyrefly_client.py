@@ -1,4 +1,4 @@
-"""Client for interacting with pyrefly language server."""
+"""Minimal client for interacting with pyrefly language server via LSP."""
 
 import json
 import os
@@ -18,8 +18,7 @@ class PyreflyClient:
         self.source_code = source
         # LSP protocol requires a uri, even if we only pass source.
         self.uri = "file://" + str(Path.cwd() / "__inmemory__.py")
-        self.process = None
-        self._next_request_id = 0
+        self.next_request_id = 0
         self.process = subprocess.Popen(
             ["pyrefly", "lsp"],
             stdin=subprocess.PIPE,
@@ -57,7 +56,10 @@ class PyreflyClient:
         )
 
     def _read_message(self) -> dict[str, Any] | None:
-        """Read a single LSP-framed JSON message from stdout."""
+        """Read a single LSP-framed JSON message from stdout.
+
+        Assumes single 'content-length' header followed by blank line.
+        """
         header = self.stdout.readline()
         if not header or not header.startswith(b"Content-Length: "):
             return None
@@ -81,8 +83,8 @@ class PyreflyClient:
 
     def _send_request(self, method: str, params: dict[str, Any] | None = None) -> Any:
         """Send a JSON-RPC request and return its result."""
-        self._next_request_id += 1
-        request_id = self._next_request_id
+        self.next_request_id += 1
+        request_id = self.next_request_id
         msg = {"jsonrpc": "2.0", "id": request_id, "method": method}
         if params:
             msg["params"] = params
@@ -91,13 +93,13 @@ class PyreflyClient:
         while True:
             response = self._read_message()
             if response is None:
-                raise RuntimeError("LSP stream ended before a response was received.")
+                raise RuntimeError("LSP stream ended before a response was received.")  # noqa: EM101
             if response.get("id") == request_id:
                 if "error" in response:
                     raise RuntimeError(f"{method} error: {response['error']}")
                 return response.get("result")
 
-    def _hover(self, location: Location) -> str | None:
+    def _hover(self, location: Location) -> dict[str, Any] | None:
         """Return the hover result from a given a location, or None."""
         line, column = location
         pos = {"line": line, "character": column}
@@ -105,8 +107,8 @@ class PyreflyClient:
             "textDocument/hover", {"textDocument": {"uri": self.uri}, "position": pos}
         )
 
-    def _parse_pyrefly_hover(self, hover_result: str | None) -> str | None:
-        """Return the type from the given pyrefly hover result, or None."""
+    def _parse_pyrefly_hover(self, hover_result: dict[str, Any] | None) -> str | None:
+        """Parse the receiver type from a pyrefly hover on a method name, or None."""
         if not hover_result:
             return None
         contents = hover_result.get("contents")
@@ -114,14 +116,15 @@ class PyreflyClient:
             return None
         typ = None
         text = contents.get("value", "")
+        # Capture type name after 'self:' (start or non-word before, stops before space/bracket/comma/paren).
         if match := re.search(r"(?:^|[^\w])self\s*:\s*([^\s\[\],)]+)", text):
             typ = match.group(1)
         if typ == "LiteralString":
             typ = "str"
         return typ
 
-    def type_from_attribute(self, location: Location) -> str | None:
-        """Return the type given a location inside of an attribute name, or None."""
+    def receiver_type(self, location: Location) -> str | None:
+        """Return the receiver type, given a location on the method name, or None."""
         return self._parse_pyrefly_hover(self._hover(location))
 
     def close(self) -> None:

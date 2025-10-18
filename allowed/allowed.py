@@ -476,7 +476,7 @@ def check_tree(
                 lineno = receiver.lineno
                 # location somewhere on the attribute/method name
                 att_col = node.func.end_col_offset - 1
-                typ = type_checker.type_from_attribute((lineno - 1, att_col))
+                typ = type_checker.receiver_type((lineno - 1, att_col))
                 if typ in BUILTIN_TYPES:
                     typ = typ.lower()
                 if typ in methods and attribute not in methods[typ]:
@@ -550,8 +550,7 @@ def check_file(
             try:
                 client = PyreflyClient(source)
             except OSError as error:
-                print(f"OS ERROR: {error}")
-                sys.exit(1)
+                print(f"{filename}: WARNING: didn't check method calls\n{error}")
         try:
             check_tree(
                 tree, constructs, source.splitlines(), line_cell_map, errors, client

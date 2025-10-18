@@ -27,7 +27,6 @@ ruff = "^0.1.11"
 mypy = "^1.8.0"
 bandit = "^1.7.6"
 ipython = "^8.13.1"
-pytype = { version = ">=2023.04.27", markers = "platform_system != 'Windows'" }
 pyrefly = "^0.36.2"
 
 [tool.poetry.scripts]
@@ -43,8 +42,7 @@ ignore = [ # ignore these rules:
   "ANN401", # don't use `Any`
   "SIM110", # simplify for-loops with all() or any()
   "T201",   # don't use `print`
-  "ISC001",
-  "COM812", # these rules may conflict with the formatter
+  "ISC001", "COM812", # these rules may conflict with the formatter
   "UP038",  # this rule leads to slower code
 ]
 
@@ -54,4 +52,3 @@ convention = "pep257" # this project's docstrings follow PEP 257
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
