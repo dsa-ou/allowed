@@ -9,7 +9,7 @@ import os
 import re
 import sys
 from pathlib import Path
-from pyrefly_client import PyreflyClient
+from ls_client import LSClient, PyreflyServer
 
 issues = 0  # number of issues (unknown constructs) found
 py_checked = 0  # number of Python files checked
@@ -416,7 +416,7 @@ def check_tree(
     source: list,
     line_cell_map: list,
     errors: list,
-    type_checker: PyreflyClient | None,
+    type_checker: LSClient | None,
 ) -> None:
     """Check if tree only uses allowed constructs. Add violations to errors."""
     language, options, imports, functions, methods = constructs
@@ -474,9 +474,11 @@ def check_tree(
                 receiver = node.func.value
                 attribute = node.func.attr
                 lineno = receiver.lineno
-                # location somewhere on the attribute/method name
-                att_col = node.func.end_col_offset - 1
-                typ = type_checker.receiver_type((lineno - 1, att_col))
+                # method name location: last character of attr
+                method_loc = (lineno, node.func.end_col_offset - 1)
+                # receiver location: somewhere inside the receiver token
+                receiver_loc = (lineno, receiver.col_offset + 1)
+                typ = type_checker.receiver_type(method_loc, receiver_loc)
                 if typ in BUILTIN_TYPES:
                     typ = typ.lower()
                 if typ in methods and attribute not in methods[typ]:
@@ -548,7 +550,7 @@ def check_file(
         client = None
         if check_method_calls and METHODS:
             try:
-                client = PyreflyClient(source)
+                client = LSClient(source, PyreflyServer())
             except OSError as error:
                 print(f"{filename}: WARNING: didn't check method calls\n{error}")
         try:
@@ -556,7 +558,7 @@ def check_file(
                 tree, constructs, source.splitlines(), line_cell_map, errors, client
             )
         finally:
-            if client:
+            if client is not None:
                 client.close()
         errors.sort()
         messages = set()  # for --first option: the unique messages (except errors)
