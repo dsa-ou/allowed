@@ -470,7 +470,7 @@ def check_tree(
                     message = f"{name.id}.{attribute}"
                     errors.append((cell, line, message))
         elif isinstance(node, ast.Call):
-            if isinstance(node.func, ast.Attribute) and type_checker:
+            if isinstance(node.func, ast.Attribute) and type_checker is not None:
                 receiver = node.func.value
                 attribute = node.func.attr
                 lineno = receiver.lineno
@@ -478,12 +478,12 @@ def check_tree(
                 method_loc = (lineno, node.func.end_col_offset - 1)
                 # receiver location: somewhere inside the receiver token
                 receiver_loc = (lineno, receiver.col_offset + 1)
-                typ = type_checker.receiver_type(method_loc, receiver_loc)
-                if typ in BUILTIN_TYPES:
-                    typ = typ.lower()
-                if typ in methods and attribute not in methods[typ]:
+                type_name = type_checker.receiver_type(method_loc, receiver_loc)
+                if type_name in BUILTIN_TYPES:
+                    type_name = type_name.lower()
+                if type_name in methods and attribute not in methods[type_name]:
                     cell, line = location(lineno, line_cell_map)
-                    message = f"{typ}.{attribute}()"
+                    message = f"{type_name}.{attribute}()"
                     errors.append((cell, line, message))
             if isinstance(node.func, ast.Name):
                 function = node.func.id
@@ -551,8 +551,11 @@ def check_file(
         if check_method_calls and METHODS:
             try:
                 client = LSClient(source, PyreflyServer())
-            except OSError as error:
-                print(f"{filename}: WARNING: didn't check method calls\n{error}")
+            except (OSError, RuntimeError) as error:
+                client = None
+                print(
+                    f"{filename}: WARNING: couldn't check method calls due to\n{error}"
+                )
         try:
             check_tree(
                 tree, constructs, source.splitlines(), line_cell_map, errors, client

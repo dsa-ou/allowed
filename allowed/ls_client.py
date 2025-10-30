@@ -15,30 +15,30 @@ class LspStdioConnection:
 
     def __init__(self, command: list[str]) -> None:
         """Start the process with connected stdio streams."""
-        self.process = subprocess.Popen(
+        self._process = subprocess.Popen(
             command,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             bufsize=0,
         )
-        if not self.process.stdin or not self.process.stdout:
+        if not self._process.stdin or not self._process.stdout:
             raise RuntimeError("Failed to open stdio for language server")  # noqa: EM101, TRY003
-        self.stdin = self.process.stdin
-        self.stdout = self.process.stdout
-        self.request_id = 0
+        self._stdin = self._process.stdin
+        self._stdout = self._process.stdout
+        self._request_id = 0
 
     def _read_message(self) -> dict[str, Any] | None:
         """Read a single LSP-framed JSON message from stdout.
 
         Assumes single 'content-length' header followed by blank line.
         """
-        header = self.stdout.readline()
+        header = self._stdout.readline()
         if not header or not header.startswith(b"Content-Length: "):
             return None
         content_length = int(header.split(b":", 1)[1].strip())
-        self.stdout.readline()  # Skip blank line, as per LSP specification.
-        body = self.stdout.read(content_length)
+        self._stdout.readline()  # Skip blank line, as per LSP specification.
+        body = self._stdout.read(content_length)
         if not body:
             return None
         return json.loads(body.decode("utf-8"))
@@ -47,13 +47,13 @@ class LspStdioConnection:
         """Write a single LSP-framed JSON message to stdin."""
         data = json.dumps(payload, separators=(",", ":")).encode("utf-8")
         header = f"Content-Length: {len(data)}\r\n\r\n".encode("ascii")
-        self.stdin.write(header + data)
-        self.stdin.flush()
+        self._stdin.write(header + data)
+        self._stdin.flush()
 
     def request(self, method: str, params: dict[str, Any] | None = None) -> Any:
         """Send a JSON-RPC request and return its result."""
-        self.request_id += 1
-        request_id = self.request_id
+        self._request_id += 1
+        request_id = self._request_id
         msg = {"jsonrpc": "2.0", "id": request_id, "method": method}
         if params is not None:
             msg["params"] = params
@@ -78,9 +78,9 @@ class LspStdioConnection:
     def close(self) -> None:
         """Shut down the language server cleanly."""
         try:
-            self.process.terminate()
+            self._process.terminate()
         finally:
-            self.process.wait(0.25)
+            self._process.wait(0.25)
 
 
 class LanguageServer(Protocol):
@@ -113,7 +113,7 @@ class PyreflyServer:
         }
 
     def method(self) -> str:
-        """Return the name of the LSP method used to query the document for type info."""
+        """Return the LSP method used to query the document for type info."""
         return "textDocument/hover"
 
     def choose_location(self, method_loc: Location, receiver_loc: Location) -> Location:
@@ -121,20 +121,20 @@ class PyreflyServer:
         return method_loc
 
     def parse_result(self, result: dict[str, Any] | None) -> str | None:
-        """Parse the receiver type from a Pyrefly hover result on a method name, or None."""
+        """Return the receiver type name from a Pyrefly hover result, or None."""
         if not result:
             return None
         contents = result.get("contents")
         if not isinstance(contents, dict):
             return None
-        typ = None
+        type_name = None
         text = contents.get("value", "")
         # Capture type name after 'self:' (start or non-word before, stops before space/bracket/comma/paren).
         if match := re.search(r"(?:^|[^\w])self\s*:\s*([^\s\[\],)]+)", text):
-            typ = match.group(1)
-        if typ == "LiteralString":
-            typ = "str"
-        return typ
+            type_name = match.group(1)
+        if type_name == "LiteralString":
+            type_name = "str"
+        return type_name
 
 
 class PyrightServer:
@@ -164,7 +164,7 @@ class PyrightServer:
         return receiver_loc
 
     def parse_result(self, result: dict[str, Any] | None) -> str | None:
-        """Parse the receiver type from a Pyright hover result on a receiver object, or None."""
+        """Return the receiver type name from a Pyright hover result, or None."""
         if not result:
             return None
         contents = result.get("contents", {})
@@ -172,12 +172,15 @@ class PyrightServer:
             contents.get("value", "") if isinstance(contents, dict) else str(contents)
         )
         if m := re.search(r":\s*([\w\[\],\.]+)", text):
-            typ = m.group(1)
+            type_name = m.group(1)
         elif m := re.search(r"\(class\)\s+([\w\.]+)", text):
-            typ = m.group(1)
+            type_name = m.group(1)
         else:
             return None
-        if typ.startswith("Literal[") and (m := re.search(r"Literal\[(.*)\]", typ)):
+        # If it's a Literal[...] value, infer inner type
+        if type_name.startswith("Literal[") and (
+            m := re.search(r"Literal\[(.*)\]", type_name)
+        ):
             inner = m.group(1).strip()
             if re.match(r"^b(['\"].*['\"])$", inner):
                 return "bytes"
@@ -188,7 +191,8 @@ class PyrightServer:
             if re.match(r"^[0-9]*\.?[0-9]+$", inner):
                 return "float"
             return "Literal"
-        return typ.split("[", 1)[0]
+        # Otherwise strip any generics, e.g. list[int] → list
+        return type_name.split("[", 1)[0]
 
 
 class TyServer:
@@ -209,7 +213,7 @@ class TyServer:
         }
 
     def method(self) -> str:
-        """Return the name of the LSP method used to query the document for type info."""
+        """Return the LSP method used to query the document for type info."""
         return "textDocument/hover"
 
     def choose_location(self, method_loc: Location, receiver_loc: Location) -> Location:
@@ -217,7 +221,7 @@ class TyServer:
         return receiver_loc
 
     def parse_result(self, result: dict[str, Any] | None) -> str | None:
-        """Parse the receiver type from a Ty hover result on a receiver object, or None."""
+        """Return the receiver type name from a Ty hover result, or None."""
         if not result:
             return None
         contents = result.get("contents", {})
@@ -249,19 +253,19 @@ class LSClient:
 
     def __init__(self, source: str, server: LanguageServer) -> None:
         """Perform the handshake, open the document."""
-        self.server = server
-        self.uri = "file://" + str(Path.cwd() / "__inmemory__.py")
-        self.connection = LspStdioConnection(self.server.command())
+        self._server = server
+        self._uri = "file://" + str(Path.cwd() / "__inmemory__.py")
+        self._connection = LspStdioConnection(self._server.command())
         # Handshake
         root_uri = Path.cwd().resolve().as_uri()
-        self.connection.request("initialize", server.initialise_params(root_uri))
-        self.connection.notify("initialized", {})
+        self._connection.request("initialize", server.initialise_params(root_uri))
+        self._connection.notify("initialized", {})
         # Open document
-        self.connection.notify(
+        self._connection.notify(
             "textDocument/didOpen",
             {
                 "textDocument": {
-                    "uri": self.uri,
+                    "uri": self._uri,
                     "languageId": "python",
                     "version": 1,
                     "text": source,
@@ -271,18 +275,18 @@ class LSClient:
 
     def receiver_type(self, method_loc: Location, receiver_loc: Location) -> str | None:
         """Return the receiver type, given a location on a method call expression, or None."""
-        line, column = self.server.choose_location(method_loc, receiver_loc)
+        line, column = self._server.choose_location(method_loc, receiver_loc)
         pos = {"line": line - 1, "character": column}  # 0-based location
-        result = self.connection.request(
-            self.server.method(),
-            {"textDocument": {"uri": self.uri}, "position": pos},
+        result = self._connection.request(
+            self._server.method(),
+            {"textDocument": {"uri": self._uri}, "position": pos},
         )
-        return self.server.parse_result(result)
+        return self._server.parse_result(result)
 
     def close(self) -> None:
         """Shut down the language server cleanly."""
         try:
-            self.connection.request("shutdown")
-            self.connection.notify("exit", {})
+            self._connection.request("shutdown")
+            self._connection.notify("exit", {})
         finally:
-            self.connection.close()
+            self._connection.close()

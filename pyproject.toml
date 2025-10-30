@@ -21,13 +21,13 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.10"
+pyrefly = "^0.39.2"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.1.11"
 mypy = "^1.8.0"
 bandit = "^1.7.6"
 ipython = "^8.13.1"
-pyrefly = "^0.36.2"
 pyright = "^1.1.407"
 ty = "^0.0.1a24"
 
