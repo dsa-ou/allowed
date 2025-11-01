@@ -124,10 +124,9 @@ make lint
 make run_tests
 ```
 > This command runs some tests within the created Poetry environment
-> and other tests in the current environment. The latter will only pass if
-> your environment has Python 3.10 to 3.12 installed but _not_ IPython or pytype.
+> and other tests in the current environment.
 
-If you have a virtual environment with a specific version of Python and pytype
+If you have a virtual environment with a specific version of Python
 you want to test, activate that environment and then type
 ```bash
 tests/tests.sh run

@@ -3,7 +3,7 @@
 import json
 import os
 import re
-import subprocess
+import subprocess  # nosec B404
 from pathlib import Path
 from typing import Any, Protocol
 
@@ -15,7 +15,7 @@ class LspStdioConnection:
 
     def __init__(self, command: list[str]) -> None:
         """Start the process with connected stdio streams."""
-        self._process = subprocess.Popen(
+        self._process = subprocess.Popen(  # nosec B603
             command,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
@@ -70,7 +70,7 @@ class LspStdioConnection:
 
     def notify(self, method: str, params: dict[str, Any] | None = None) -> None:
         """Send a JSON-RPC notification."""
-        msg = {"jsonrpc": "2.0", "method": method}
+        msg: dict[str, Any] = {"jsonrpc": "2.0", "method": method}
         if params is not None:
             msg["params"] = params
         self._write_message(msg)
@@ -86,12 +86,18 @@ class LspStdioConnection:
 class LanguageServer(Protocol):
     """Define the Language server adaptor interface."""
 
-    def command(self) -> list[str]: ...  # noqa: D102
-    def initialise_params(self, root_uri: str) -> dict[str, Any]: ...  # noqa: D102
+    def command(self) -> list[str]:  # noqa: D102
+        ...
+
+    def initialise_params(self, root_uri: str) -> dict[str, Any]:  # noqa: D102
+        ...
+
     def method(self) -> str: ...  # noqa: D102
+
     def choose_location(  # noqa: D102
         self, method_name: Location, receiver: Location
     ) -> Location: ...
+
     def parse_result(self, result: dict[str, Any] | None) -> str | None: ...  # noqa: D102
 
 
@@ -116,7 +122,7 @@ class PyreflyServer:
         """Return the LSP method used to query the document for type info."""
         return "textDocument/hover"
 
-    def choose_location(self, method_loc: Location, receiver_loc: Location) -> Location:
+    def choose_location(self, method_loc: Location, receiver_loc: Location) -> Location:  # noqa: ARG002
         """Return a location on the method name."""
         return method_loc
 
@@ -159,7 +165,7 @@ class PyrightServer:
         """Return the name of the LSP method used to query the document for type info."""
         return "textDocument/hover"
 
-    def choose_location(self, method_loc: Location, receiver_loc: Location) -> Location:
+    def choose_location(self, method_loc: Location, receiver_loc: Location) -> Location:  # noqa: ARG002
         """Return a location on the receiver object."""
         return receiver_loc
 
@@ -216,7 +222,7 @@ class TyServer:
         """Return the LSP method used to query the document for type info."""
         return "textDocument/hover"
 
-    def choose_location(self, method_loc: Location, receiver_loc: Location) -> Location:
+    def choose_location(self, method_loc: Location, receiver_loc: Location) -> Location:  # noqa: ARG002
         """Return a location on the receiver object."""
         return receiver_loc
 
@@ -273,8 +279,12 @@ class LSClient:
             },
         )
 
-    def receiver_type(self, method_loc: Location, receiver_loc: Location) -> str | None:
+    def receiver_type(
+        self, method_loc: Location | None, receiver_loc: Location | None
+    ) -> str | None:
         """Return the receiver type, given a location on a method call expression, or None."""
+        if method_loc is None or receiver_loc is None:
+            return None
         line, column = self._server.choose_location(method_loc, receiver_loc)
         pos = {"line": line - 1, "character": column}  # 0-based location
         result = self._connection.request(

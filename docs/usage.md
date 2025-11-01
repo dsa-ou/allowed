@@ -62,7 +62,6 @@ was _not_ checked, for these reasons:
 - `CONFIGURATION ERROR`: the configuration file hasn't the [expected format](configuration.md)
 - `FORMAT ERROR`: the internal notebook format has been corrupted
 - `OS ERROR`: an operating system error, e.g. the file doesn't exist or can't be read
-- `PYTYPE ERROR`: an error that blocked the type checker, usually a syntax error
 - `SYNTAX ERROR`: the file has invalid Python
 - `UNICODE ERROR`: the file has some strange characters and couldn't be read
 - `VALUE ERROR`: some other cause; please report it to us.
@@ -76,16 +75,15 @@ the total number of files not processed due to syntax, format or other errors.
 
 To check method calls of the form `variable.method(...)`,
 we must know the type of `variable`. For that purpose, `allowed` uses
-the `pytype` type checker, if it's installed and the Python version is 3.10 to 3.12.
+the `pyrefly` type checker.
 
 By default, `allowed` does _not_ check method calls because it slows down the process.
 You can enable these checks with option `-m` or `--methods`:
 ```bash
 allowed -m file1.py notebook.ipynb
 ```
-If `pytype` can't process the code for some reason, you get a warning that
-method calls won't be checked (other checks will be done as usual).
-In Python 3.12, method calls won't be checked in code using comprehensions.
+If `pyrefly` can't process the code for some reason, you get a warning that
+method calls couldn't be checked (other checks will be done as usual).
 
 ### Ignoring specific lines
 

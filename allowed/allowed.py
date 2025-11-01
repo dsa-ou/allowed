@@ -474,10 +474,14 @@ def check_tree(
                 receiver = node.func.value
                 attribute = node.func.attr
                 lineno = receiver.lineno
-                # method name location: last character of attr
-                method_loc = (lineno, node.func.end_col_offset - 1)
-                # receiver location: somewhere inside the receiver token
-                receiver_loc = (lineno, receiver.col_offset + 1)
+                end_col = node.func.end_col_offset
+                col = receiver.col_offset
+                if lineno is None or end_col is None or col is None:
+                    method_loc = None
+                    receiver_loc = None
+                else:
+                    method_loc = (lineno, end_col - 1)
+                    receiver_loc = (lineno, col + 1)
                 type_name = type_checker.receiver_type(method_loc, receiver_loc)
                 if type_name in BUILTIN_TYPES:
                     type_name = type_name.lower()
