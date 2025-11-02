@@ -135,7 +135,7 @@ class PyreflyServer:
             return None
         type_name = None
         text = contents.get("value", "")
-        # Capture type name after 'self:' (start or non-word before, stops before space/bracket/comma/paren).
+        # Capture type name after 'self:'
         if match := re.search(r"(?:^|[^\w])self\s*:\s*([^\s\[\],)]+)", text):
             type_name = match.group(1)
         if type_name == "LiteralString":

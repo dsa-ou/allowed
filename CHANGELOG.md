@@ -11,7 +11,24 @@ This project does *not* adhere to [Semantic Versioning](https://semver.org).
 ## [Unreleased](https://github.com/dsa-ou/allowed/compare/v1.5.4...HEAD)
 These changes are in the GitHub repository but not on [PyPI](https://pypi.org/project/allowed).
 
-Nothing yet.
+### Added
+- minimal language server client `allowed/ls_client.py` to check the receiver type of method calls
+- adaptors for multiple servers; currently supports `pyrefly` (default), `pyright`, and `ty`
+- `pyrefly` dependency in `pyproject.toml` 
+
+### Changed
+- replace 'pytype''s annotate_ast functionality with location based checks using hover requests from a type-checking language server 
+- update documentation 
+
+### Removed
+- all code relating to `pytype`.
+- `pytype` references from docs
+
+### Development
+- Makefile: extend format/lint targets to include `allowed/ls_client.py`
+- refresh tests
+- add `pyright` and ``ty` to dev dependencies
+- update `pyproject.toml` and `poetry.lock` accordingly.
 
 ## [1.5.4](https://github.com/dsa-ou/allowed/compare/v1.5.3...v1.5.4) - 2025-08-21
 ### Changed
