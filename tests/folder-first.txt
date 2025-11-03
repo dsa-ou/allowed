@@ -178,9 +178,9 @@ allowed/ls_client.py:49: f-string
 allowed/ls_client.py:58: is not
 allowed/ls_client.py:64: is
 allowed/ls_client.py:80: try
-allowed/ls_client.py:137: isinstance()
-allowed/ls_client.py:142: :=
-allowed/ls_client.py:181: if expression
+allowed/ls_client.py:147: isinstance()
+allowed/ls_client.py:152: :=
+allowed/ls_client.py:191: if expression
 INFO: checked 9 Python files and 1 notebook
 INFO: the 167 Python constructs listed above are not allowed
 INFO: didn't check 2 Python files or notebooks due to syntax or other errors

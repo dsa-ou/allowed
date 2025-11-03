@@ -101,6 +101,19 @@ class LanguageServer(Protocol):
     def parse_result(self, result: dict[str, Any] | None) -> str | None: ...  # noqa: D102
 
 
+def _infer_literal(inner: str) -> str:
+    """Infer base type from the inner value of a Literal[...] expression."""
+    if re.match(r"^b(['\"].*['\"])$", inner):
+        return "bytes"
+    if re.match(r"^(['\"].*['\"])$", inner):
+        return "str"
+    if re.match(r"^[0-9]+$", inner):
+        return "int"
+    if re.match(r"^[0-9]*\.?[0-9]+$", inner):
+        return "float"
+    return "Literal"
+
+
 class PyreflyServer:
     """Pyrefly language server adaptor."""
 
@@ -162,7 +175,7 @@ class PyrightServer:
         }
 
     def method(self) -> str:
-        """Return the name of the LSP method used to query the document for type info."""
+        """Return the name of the LSP method used to get type info."""
         return "textDocument/hover"
 
     def choose_location(self, method_loc: Location, receiver_loc: Location) -> Location:  # noqa: ARG002
@@ -177,27 +190,15 @@ class PyrightServer:
         text = (
             contents.get("value", "") if isinstance(contents, dict) else str(contents)
         )
-        if m := re.search(r":\s*([\w\[\],\.]+)", text):
-            type_name = m.group(1)
-        elif m := re.search(r"\(class\)\s+([\w\.]+)", text):
-            type_name = m.group(1)
-        else:
+        lm = re.search(r"Literal\[(.*?)\]", text)
+        if lm:
+            return _infer_literal(lm.group(1).strip())
+        m = re.search(r":\s*([^\s\)]+)", text) or re.search(
+            r"\(class\)\s+([\w\.]+)", text
+        )
+        if not m:
             return None
-        # If it's a Literal[...] value, infer inner type
-        if type_name.startswith("Literal[") and (
-            m := re.search(r"Literal\[(.*)\]", type_name)
-        ):
-            inner = m.group(1).strip()
-            if re.match(r"^b(['\"].*['\"])$", inner):
-                return "bytes"
-            if re.match(r"^(['\"].*['\"])$", inner):
-                return "str"
-            if re.match(r"^[0-9]+$", inner):
-                return "int"
-            if re.match(r"^[0-9]*\.?[0-9]+$", inner):
-                return "float"
-            return "Literal"
-        # Otherwise strip any generics, e.g. list[int] → list
+        type_name = m.group(1)
         return type_name.split("[", 1)[0]
 
 
@@ -235,23 +236,13 @@ class TyServer:
             contents.get("value", "") if isinstance(contents, dict) else str(contents)
         )
         text = text.strip().removeprefix("```python").removesuffix("```").strip()
-        typ = None
-        # If it's a Literal[...] value, infer inner type
+        type_name = None
         if m := re.match(r"Literal\[(.*)\]", text):
             inner = m.group(1).strip()
-            if re.match(r"^b(['\"].*['\"])$", inner):
-                typ = "bytes"
-            if re.match(r"^(['\"].*['\"])$", inner):
-                typ = "str"
-            if re.match(r"^[0-9]+$", inner):
-                typ = "int"
-            if re.match(r"^[0-9]*\.?[0-9]+$", inner):
-                typ = "float"
-            typ = "Literal"
-        # Otherwise strip any generics, e.g. list[int] → list
+            type_name = _infer_literal(inner)
         elif m := re.match(r"([A-Za-z_]\w*)", text):
-            typ = m.group(1)
-        return typ
+            type_name = m.group(1)
+        return type_name
 
 
 class LSClient:
