@@ -16,7 +16,7 @@ class LspStdioConnection:
     def __init__(self, command: list[str]) -> None:
         """Start the process with connected stdio streams."""
         self._process = subprocess.Popen(  # nosec B603
-            command,
+            command,  # noqa: S603
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -92,13 +92,15 @@ class LanguageServer(Protocol):
     def initialise_params(self, root_uri: str) -> dict[str, Any]:  # noqa: D102
         ...
 
-    def method(self) -> str: ...  # noqa: D102
+    def method(self) -> str:  # noqa: D102
+        ...
 
     def choose_location(  # noqa: D102
         self, method_name: Location, receiver: Location
     ) -> Location: ...
 
-    def parse_result(self, result: dict[str, Any] | None) -> str | None: ...  # noqa: D102
+    def parse_result(self, result: dict[str, Any] | None) -> str | None:  # noqa: D102
+        ...
 
 
 def _infer_literal(inner: str) -> str:
@@ -273,7 +275,7 @@ class LSClient:
     def receiver_type(
         self, method_loc: Location | None, receiver_loc: Location | None
     ) -> str | None:
-        """Return the receiver type, given a location on a method call expression, or None."""
+        """Return the receiver type given a method call expression, or None."""
         if method_loc is None or receiver_loc is None:
             return None
         line, column = self._server.choose_location(method_loc, receiver_loc)

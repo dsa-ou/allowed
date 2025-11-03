@@ -1,16 +1,23 @@
 tests/sample.py:8: types
 tests/sample.py:9: choice
-tests/sample.py:15: <<
-tests/sample.py:22: if expression
-tests/sample.py:29: f-string
-tests/sample.py:30: str.upper()
-tests/sample.py:33: list comprehension
-tests/sample.py:48: ^
-tests/sample.py:48: set comprehension
-tests/sample.py:55: int()
-tests/sample.py:67: break
-tests/sample.py:70: while-else
-tests/sample.py:71: continue
-tests/sample.py:72: for-else
-tests/sample.py:73: assert
-tests/sample.py:85: math.e
+tests/sample.py:10: Iterable
+tests/sample.py:16: <<
+tests/sample.py:23: if expression
+tests/sample.py:30: f-string
+tests/sample.py:31: str.upper()
+tests/sample.py:32: str.upper()
+tests/sample.py:33: str.join()
+tests/sample.py:34: str.lower()
+tests/sample.py:37: list comprehension
+tests/sample.py:52: ^
+tests/sample.py:52: set comprehension
+tests/sample.py:59: int()
+tests/sample.py:71: break
+tests/sample.py:74: while-else
+tests/sample.py:75: continue
+tests/sample.py:76: for-else
+tests/sample.py:77: assert
+tests/sample.py:91: str.lower()
+tests/sample.py:91: str.strip()
+tests/sample.py:96: str.upper()
+tests/sample.py:100: math.e

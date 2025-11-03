@@ -7,6 +7,7 @@ This file is NOT meant to cover all Python constructs.
 import math
 import types
 from random import choice, shuffle
+from typing import Iterable
 
 # Atomic types: literals, operators, functions
 
@@ -25,9 +26,12 @@ True if 1 > 0 else False
 
 # Strings
 s = "hello" + str(123)
-f : float
+f: float
 f"{f}3" in s
 s.upper()
+"abc".upper()
+",".join(["A", "B", "C"])
+("" + " ").lower()
 
 # Lists
 l = [] + list("abc") + [letter for letter in "abc"]
@@ -51,8 +55,8 @@ items.discard(9)
 items.union(l)
 
 # Dictionaries
-d : dict[str, int] = {"a": 1, "b": 2}
-d["c"] : int = int(f) + int("3") # duplicate constructs are reported once per line
+d: dict[str, int] = {"a": 1, "b": 2}
+d["c"]: int = int(f) + int("3")  # duplicate constructs are reported once per line
 d.pop("a")
 for key, value in d.items():
     print(key, value)
@@ -79,6 +83,17 @@ except AssertionError as error:
 def whatever(values: list[int]) -> bool:
     """Pointless function."""
     return True
+
+
+def some_function(strings: Iterable[str]) -> list[str]:
+    list_of_str: list[str] = []
+    for string in strings:
+        list_of_str.append(string.strip().lower())  # chained methods
+    return list_of_str
+
+
+def another_test(txt: str):
+    print(txt[0].upper())
 
 
 # Imported methods
