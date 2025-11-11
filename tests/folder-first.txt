@@ -148,7 +148,7 @@ allowed/allowed.py:8: os
 allowed/allowed.py:9: re
 allowed/allowed.py:10: sys
 allowed/allowed.py:11: pathlib
-allowed/allowed.py:13: ls_client
+allowed/allowed.py:13: allowed.ls_client
 allowed/allowed.py:22: try
 allowed/allowed.py:23: IPython.core.inputtransformer2
 allowed/allowed.py:124: dict comprehension
