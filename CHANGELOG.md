@@ -11,7 +11,15 @@ This project does *not* adhere to [Semantic Versioning](https://semver.org).
 ## [Unreleased](https://github.com/dsa-ou/allowed/compare/v1.5.4...HEAD)
 These changes are in the GitHub repository but not on [PyPI](https://pypi.org/project/allowed).
 
-Nothing yet.
+### Added
+- `pyrefly` as a dependency
+
+### Changed
+- use `pyrefly` instead of `pytype` for better and faster method call checks
+
+### Development
+- add adaptors for `pyright`, `ty`, `pyrefly` language servers but use only latter
+- add method call tests where receiver is not a variable
 
 ## [1.5.4](https://github.com/dsa-ou/allowed/compare/v1.5.3...v1.5.4) - 2025-08-21
 ### Changed

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # this script is meant to be executed from the project's root directory
-cmd='python allowed/allowed.py'
+cmd='python -m allowed.allowed'
 if [ $# -eq 0 ]; then
     echo "Usage: ./tests.sh [run|create]"
 elif [ $1 = "run" ]; then

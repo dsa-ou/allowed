@@ -21,19 +21,21 @@ tests/sample.ipynb:cell_6:11: type()
 INFO: checking tests/sample.py against all units
 tests/sample.py:8: types
 tests/sample.py:9: choice
-tests/sample.py:15: <<
-tests/sample.py:22: if expression
-tests/sample.py:29: f-string
-tests/sample.py:33: list comprehension
-tests/sample.py:48: ^
-tests/sample.py:48: set comprehension
-tests/sample.py:55: int()
-tests/sample.py:67: break
-tests/sample.py:70: while-else
-tests/sample.py:71: continue
-tests/sample.py:72: for-else
-tests/sample.py:73: assert
-tests/sample.py:85: math.e
+tests/sample.py:10: Any
+tests/sample.py:10: Iterable
+tests/sample.py:16: <<
+tests/sample.py:23: if expression
+tests/sample.py:30: f-string
+tests/sample.py:37: list comprehension
+tests/sample.py:52: ^
+tests/sample.py:52: set comprehension
+tests/sample.py:59: int()
+tests/sample.py:71: break
+tests/sample.py:74: while-else
+tests/sample.py:75: continue
+tests/sample.py:76: for-else
+tests/sample.py:77: assert
+tests/sample.py:108: math.e
 INFO: checking tests/sample_02.py against units 1–2
 tests/sample_02.py:8: types
 tests/sample_02.py:9: from import
@@ -146,25 +148,43 @@ allowed/allowed.py:8: os
 allowed/allowed.py:9: re
 allowed/allowed.py:10: sys
 allowed/allowed.py:11: pathlib
+allowed/allowed.py:13: allowed.ls_client
 allowed/allowed.py:22: try
-allowed/allowed.py:23: pytype
-allowed/allowed.py:24: pytype.tools.annotate_ast
-allowed/allowed.py:34: IPython.core.inputtransformer2
-allowed/allowed.py:135: dict comprehension
-allowed/allowed.py:273: if expression
-allowed/allowed.py:290: f-string
-allowed/allowed.py:318: :=
-allowed/allowed.py:319: int()
-allowed/allowed.py:417: hasattr()
-allowed/allowed.py:436: isinstance()
-allowed/allowed.py:441: type()
-allowed/allowed.py:543: global
-allowed/allowed.py:546: with
-allowed/allowed.py:718: break
-allowed/allowed.py:719: for-else
-allowed/allowed.py:726: raise
-INFO: checked 8 Python files and 1 notebook
-INFO: the 150 Python constructs listed above are not allowed
+allowed/allowed.py:23: IPython.core.inputtransformer2
+allowed/allowed.py:124: dict comprehension
+allowed/allowed.py:262: if expression
+allowed/allowed.py:279: f-string
+allowed/allowed.py:307: :=
+allowed/allowed.py:308: int()
+allowed/allowed.py:406: hasattr()
+allowed/allowed.py:426: isinstance()
+allowed/allowed.py:431: type()
+allowed/allowed.py:474: is not
+allowed/allowed.py:480: is
+allowed/allowed.py:544: global
+allowed/allowed.py:547: with
+allowed/allowed.py:712: break
+allowed/allowed.py:713: for-else
+allowed/allowed.py:720: raise
+INFO: checking allowed/ls_client.py against all units
+allowed/ls_client.py:3: json
+allowed/ls_client.py:4: os
+allowed/ls_client.py:5: re
+allowed/ls_client.py:6: subprocess
+allowed/ls_client.py:7: pathlib
+allowed/ls_client.py:8: Any
+allowed/ls_client.py:8: Protocol
+allowed/ls_client.py:26: raise
+allowed/ls_client.py:39: int()
+allowed/ls_client.py:49: f-string
+allowed/ls_client.py:58: is not
+allowed/ls_client.py:64: is
+allowed/ls_client.py:80: try
+allowed/ls_client.py:150: isinstance()
+allowed/ls_client.py:155: :=
+allowed/ls_client.py:194: if expression
+INFO: checked 9 Python files and 1 notebook
+INFO: the 169 Python constructs listed above are not allowed
 INFO: didn't check 2 Python files or notebooks due to syntax or other errors
 WARNING: other occurrences of the listed constructs may exist (don't use option -f)
 WARNING: didn't check method calls (use option -m if possible)

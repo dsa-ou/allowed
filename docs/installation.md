@@ -9,7 +9,6 @@ with `allowed` installed, then you may skip this section.
 2. Enter `python -V` to check the version you have installed.
 3. If it's 3.9 or earlier, [download and install](https://www.python.org/downloads)
    the latest version.
-   However, to use `pytype` (see below) you must install Python 3.10 to 3.12.
 
 ### Virtual environments
 Like any other Python package, `allowed` can be installed in your default global environment,
@@ -59,12 +58,5 @@ like `%timeit` and `%run`, then you need IPython.
 
 2. Enter `pip show ipython` to check if your current environment has IPython installed.
 3. If you get a message that there's no such package, then enter `pip install ipython`.
-
-To check method calls of the form `variable.method(...)`, `allowed` needs
-the `pytype` package, to know the type of `variable`.
-`pytype` is only available for Linux and macOS.
-
-4. Enter `pip show pytype` to see if `pytype` is already installed.
-5. If it isn't, enter `pip install pytype`.
 
 ⇧ [Start](../README.md) | [Usage](usage.md) ⇨

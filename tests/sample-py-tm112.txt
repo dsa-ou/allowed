@@ -1,34 +1,35 @@
 tests/sample.py:7: math
 tests/sample.py:8: types
 tests/sample.py:9: shuffle
-tests/sample.py:14: **
-tests/sample.py:15: <<
-tests/sample.py:16: abs()
-tests/sample.py:16: max()
-tests/sample.py:16: min()
-tests/sample.py:22: if expression
-tests/sample.py:27: str()
-tests/sample.py:29: f-string
-tests/sample.py:29: in
-tests/sample.py:33: list comprehension
-tests/sample.py:34: keyword argument
-tests/sample.py:40: tuple literal
-tests/sample.py:40: tuple()
-tests/sample.py:43: not in
-tests/sample.py:43: slice
-tests/sample.py:48: &
-tests/sample.py:48: ^
-tests/sample.py:48: set comprehension
-tests/sample.py:48: set literal
-tests/sample.py:48: set()
-tests/sample.py:48: |
-tests/sample.py:54: tuple literal
-tests/sample.py:55: int()
-tests/sample.py:57: tuple literal
-tests/sample.py:67: break
-tests/sample.py:69: +=
-tests/sample.py:70: while-else
-tests/sample.py:71: continue
-tests/sample.py:72: for-else
-tests/sample.py:75: pass
+tests/sample.py:10: typing
+tests/sample.py:15: **
+tests/sample.py:16: <<
+tests/sample.py:17: abs()
+tests/sample.py:17: max()
+tests/sample.py:17: min()
+tests/sample.py:23: if expression
+tests/sample.py:28: str()
+tests/sample.py:30: f-string
+tests/sample.py:30: in
+tests/sample.py:37: list comprehension
+tests/sample.py:38: keyword argument
+tests/sample.py:44: tuple literal
+tests/sample.py:44: tuple()
+tests/sample.py:47: not in
+tests/sample.py:47: slice
+tests/sample.py:52: &
+tests/sample.py:52: ^
+tests/sample.py:52: set comprehension
+tests/sample.py:52: set literal
+tests/sample.py:52: set()
+tests/sample.py:52: |
+tests/sample.py:58: tuple literal
+tests/sample.py:59: int()
+tests/sample.py:61: tuple literal
+tests/sample.py:71: break
+tests/sample.py:73: +=
+tests/sample.py:74: while-else
+tests/sample.py:75: continue
+tests/sample.py:76: for-else
+tests/sample.py:79: pass
 WARNING: didn't check method calls (use option -m if possible)
