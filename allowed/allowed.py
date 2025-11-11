@@ -9,6 +9,7 @@ import os
 import re
 import sys
 from pathlib import Path
+
 from ls_client import LSClient, PyreflyServer
 
 issues = 0  # number of issues (unknown constructs) found

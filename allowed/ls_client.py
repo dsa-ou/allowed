@@ -97,7 +97,8 @@ class LanguageServer(Protocol):
 
     def choose_location(  # noqa: D102
         self, method_name: Location, receiver: Location
-    ) -> Location: ...
+    ) -> Location:
+        ...
 
     def parse_result(self, result: dict[str, Any] | None) -> str | None:  # noqa: D102
         ...
