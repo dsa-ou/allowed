@@ -8,7 +8,7 @@ tests/sample.py:30: f-string
 tests/sample.py:31: str.upper()
 tests/sample.py:32: str.upper()
 tests/sample.py:33: str.join()
-tests/sample.py:34: str.lower()
+tests/sample.py:34: str.count()
 tests/sample.py:37: list comprehension
 tests/sample.py:52: ^
 tests/sample.py:52: set comprehension

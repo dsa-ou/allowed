@@ -30,8 +30,8 @@ f: float
 f"{f}3" in s
 s.upper()
 "abc".upper()
-",".join(["A", "B", "C"])
-("" + " ").lower()
+s[2].join(["A", "B", "C"])
+("" + " ").count(1)
 
 # Lists
 l = [] + list("abc") + [letter for letter in "abc"]
