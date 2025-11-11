@@ -1,5 +1,6 @@
 tests/sample.py:8: types
 tests/sample.py:9: choice
+tests/sample.py:10: Any
 tests/sample.py:10: Iterable
 tests/sample.py:16: <<
 tests/sample.py:23: if expression
@@ -20,4 +21,5 @@ tests/sample.py:77: assert
 tests/sample.py:91: str.lower()
 tests/sample.py:91: str.strip()
 tests/sample.py:96: str.upper()
-tests/sample.py:100: math.e
+tests/sample.py:104: str.find()
+tests/sample.py:108: math.e

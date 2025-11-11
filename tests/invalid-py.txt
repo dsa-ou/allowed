@@ -1,4 +1,4 @@
-INFO: using configuration /home/michael/OU/ou_opensource/densnow-allowed/allowed/m269.json
+INFO: using configuration /Users/mw4687/GitHub/dsa-ou/allowed/allowed/m269.json
 INFO: checking tests/invalid.py against units 1–3
 tests/invalid.py:2: SYNTAX ERROR: '(' was never closed
 INFO: checked 0 Python files and 0 notebooks

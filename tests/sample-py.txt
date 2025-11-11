@@ -1,5 +1,6 @@
 tests/sample.py:8: types
 tests/sample.py:9: choice
+tests/sample.py:10: Any
 tests/sample.py:10: Iterable
 tests/sample.py:16: <<
 tests/sample.py:23: if expression
@@ -13,5 +14,5 @@ tests/sample.py:74: while-else
 tests/sample.py:75: continue
 tests/sample.py:76: for-else
 tests/sample.py:77: assert
-tests/sample.py:100: math.e
+tests/sample.py:108: math.e
 WARNING: didn't check method calls (use option -m if possible)

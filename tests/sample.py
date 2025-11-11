@@ -7,7 +7,7 @@ This file is NOT meant to cover all Python constructs.
 import math
 import types
 from random import choice, shuffle
-from typing import Iterable
+from typing import Any, Iterable
 
 # Atomic types: literals, operators, functions
 
@@ -94,6 +94,14 @@ def some_function(strings: Iterable[str]) -> list[str]:
 
 def another_test(txt: str):
     print(txt[0].upper())
+
+def text_found(text, substring: str) -> bool:  # Ruff flags missing type hint
+    return text.find(substring) != -1  # find() isn't reported
+
+def text_found_2(text: str, substring: str) -> bool:
+    text_copy: Any = text # Any is reported in line 10
+    text_copy.find(substring) != -1  # find() isn't reported
+    return [text][0].find(substring) != -1  # find() is reported
 
 
 # Imported methods

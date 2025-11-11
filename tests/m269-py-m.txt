@@ -1,5 +1,6 @@
 /Users/mw4687/GitHub/M269-NE/book-25j/python/m269_digraph.py:2: networkx
-/Users/mw4687/GitHub/M269-NE/book-25j/python/m269_digraph.py:125: isinstance()
+/Users/mw4687/GitHub/M269-NE/book-25j/python/m269_digraph.py:125: is
+/Users/mw4687/GitHub/M269-NE/book-25j/python/m269_digraph.py:125: type()
 /Users/mw4687/GitHub/M269-NE/book-25j/python/m269_image.py:1: PIL
 /Users/mw4687/GitHub/M269-NE/book-25j/python/m269_image.py:2: matplotlib.pyplot
 /Users/mw4687/GitHub/M269-NE/book-25j/python/m269_image.py:50: raise
@@ -17,16 +18,17 @@
 /Users/mw4687/GitHub/M269-NE/book-25j/python/04_Iteration/04_2_strings.py:29: SYNTAX ERROR: invalid character '‘' (U+2018)
 /Users/mw4687/GitHub/M269-NE/book-25j/python/05_TMA01-1/05_3_coding_style.py:50: SYNTAX ERROR: expected an indented block after 'if' statement on line 48
 /Users/mw4687/GitHub/M269-NE/book-25j/python/07_Ordered/07_2_stack_usage.py:17: SYNTAX ERROR: closing parenthesis ')' does not match opening parenthesis '['
-/Users/mw4687/GitHub/M269-NE/book-25j/python/08_Unordered/08_2_dictionary.py: WARNING: didn't check method calls
 /Users/mw4687/GitHub/M269-NE/book-25j/python/09_Practice-1/09_5_sms.py:36: open()
 /Users/mw4687/GitHub/M269-NE/book-25j/python/09_Practice-1/09_5_sms.py:36: with
 /Users/mw4687/GitHub/M269-NE/book-25j/python/09_Practice-1/09_5_sms.py:38: str.split()
 /Users/mw4687/GitHub/M269-NE/book-25j/python/09_Practice-1/09_5_sms.py:40: int()
 /Users/mw4687/GitHub/M269-NE/book-25j/python/17_Graphs_1/17_6_classes.py:19: networkx
-/Users/mw4687/GitHub/M269-NE/book-25j/python/17_Graphs_1/17_6_classes.py:143: isinstance()
+/Users/mw4687/GitHub/M269-NE/book-25j/python/17_Graphs_1/17_6_classes.py:143: is
+/Users/mw4687/GitHub/M269-NE/book-25j/python/17_Graphs_1/17_6_classes.py:143: type()
 /Users/mw4687/GitHub/M269-NE/book-25j/python/17_Graphs_1/17_7_traversal.py:96: random.draw
 /Users/mw4687/GitHub/M269-NE/book-25j/python/17_Graphs_1/17_8_bfs_dfs.py:113: random.draw
-/Users/mw4687/GitHub/M269-NE/book-25j/python/18_Greed/18_2_weighted_graph.py:91: isinstance()
+/Users/mw4687/GitHub/M269-NE/book-25j/python/18_Greed/18_2_weighted_graph.py:91: is
+/Users/mw4687/GitHub/M269-NE/book-25j/python/18_Greed/18_2_weighted_graph.py:91: type()
 /Users/mw4687/GitHub/M269-NE/book-25j/python/22_Backtracking/22_3_trackword.py:16: open()
 /Users/mw4687/GitHub/M269-NE/book-25j/python/22_Backtracking/22_3_trackword.py:16: with
 /Users/mw4687/GitHub/M269-NE/book-25j/python/22_Backtracking/22_3_trackword.py:18: str.strip()

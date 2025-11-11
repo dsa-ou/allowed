@@ -1,4 +1,4 @@
-INFO: using configuration /home/michael/OU/ou_opensource/densnow-allowed/allowed/m269.json
+INFO: using configuration /Users/mw4687/GitHub/dsa-ou/allowed/allowed/m269.json
 INFO: checking tests/invalid.ipynb against all units
 tests/invalid.ipynb:1: FORMAT ERROR: invalid notebook format
 INFO: checking tests/invalid.py against all units
@@ -21,6 +21,7 @@ tests/sample.ipynb:cell_6:11: type()
 INFO: checking tests/sample.py against all units
 tests/sample.py:8: types
 tests/sample.py:9: choice
+tests/sample.py:10: Any
 tests/sample.py:10: Iterable
 tests/sample.py:16: <<
 tests/sample.py:23: if expression
@@ -34,7 +35,7 @@ tests/sample.py:74: while-else
 tests/sample.py:75: continue
 tests/sample.py:76: for-else
 tests/sample.py:77: assert
-tests/sample.py:100: math.e
+tests/sample.py:108: math.e
 INFO: checking tests/sample_02.py against units 1–2
 tests/sample_02.py:8: types
 tests/sample_02.py:9: from import
@@ -147,24 +148,24 @@ allowed/allowed.py:8: os
 allowed/allowed.py:9: re
 allowed/allowed.py:10: sys
 allowed/allowed.py:11: pathlib
-allowed/allowed.py:12: ls_client
-allowed/allowed.py:21: try
-allowed/allowed.py:22: IPython.core.inputtransformer2
-allowed/allowed.py:123: dict comprehension
-allowed/allowed.py:261: if expression
-allowed/allowed.py:278: f-string
-allowed/allowed.py:306: :=
-allowed/allowed.py:307: int()
-allowed/allowed.py:405: hasattr()
-allowed/allowed.py:425: isinstance()
-allowed/allowed.py:430: type()
-allowed/allowed.py:473: is not
-allowed/allowed.py:479: is
-allowed/allowed.py:543: global
-allowed/allowed.py:546: with
-allowed/allowed.py:711: break
-allowed/allowed.py:712: for-else
-allowed/allowed.py:719: raise
+allowed/allowed.py:13: ls_client
+allowed/allowed.py:22: try
+allowed/allowed.py:23: IPython.core.inputtransformer2
+allowed/allowed.py:124: dict comprehension
+allowed/allowed.py:262: if expression
+allowed/allowed.py:279: f-string
+allowed/allowed.py:307: :=
+allowed/allowed.py:308: int()
+allowed/allowed.py:406: hasattr()
+allowed/allowed.py:426: isinstance()
+allowed/allowed.py:431: type()
+allowed/allowed.py:474: is not
+allowed/allowed.py:480: is
+allowed/allowed.py:544: global
+allowed/allowed.py:547: with
+allowed/allowed.py:712: break
+allowed/allowed.py:713: for-else
+allowed/allowed.py:720: raise
 INFO: checking allowed/ls_client.py against all units
 allowed/ls_client.py:3: json
 allowed/ls_client.py:4: os
@@ -179,11 +180,11 @@ allowed/ls_client.py:49: f-string
 allowed/ls_client.py:58: is not
 allowed/ls_client.py:64: is
 allowed/ls_client.py:80: try
-allowed/ls_client.py:149: isinstance()
-allowed/ls_client.py:154: :=
-allowed/ls_client.py:193: if expression
+allowed/ls_client.py:150: isinstance()
+allowed/ls_client.py:155: :=
+allowed/ls_client.py:194: if expression
 INFO: checked 9 Python files and 1 notebook
-INFO: the 168 Python constructs listed above are not allowed
+INFO: the 169 Python constructs listed above are not allowed
 INFO: didn't check 2 Python files or notebooks due to syntax or other errors
 WARNING: other occurrences of the listed constructs may exist (don't use option -f)
 WARNING: didn't check method calls (use option -m if possible)
