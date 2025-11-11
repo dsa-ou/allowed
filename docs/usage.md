@@ -73,8 +73,8 @@ the total number of files not processed due to syntax, format or other errors.
 
 ### Extra checks
 
-To check method calls of the form `variable.method(...)`,
-we must know the type of `variable`. For that purpose, `allowed` uses
+To check method calls of the form `expression.method(...)`,
+we must know the type of `expression`. For that purpose, `allowed` uses
 the `pyrefly` type checker.
 
 By default, `allowed` does _not_ check method calls because it slows down the process.
