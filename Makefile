@@ -5,12 +5,12 @@ update:
 	poetry update
 
 format:
-	poetry run ruff format allowed/allowed.py allowed/ls_client.py
+	poetry run ruff format allowed/
 
 lint:
-	poetry run bandit allowed/allowed.py allowed/ls_client.py
-	poetry run mypy --ignore-missing-imports allowed/allowed.py allowed/ls_client.py
-	poetry run ruff check allowed/allowed.py allowed/ls_client.py
+	poetry run bandit allowed/
+	poetry run mypy --ignore-missing-imports allowed/
+	poetry run ruff check allowed/
 
 run_tests:
 	@echo "Tests in poetry environment, WITH ipython installed"
